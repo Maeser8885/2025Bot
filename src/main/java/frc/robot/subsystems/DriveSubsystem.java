@@ -18,9 +18,10 @@ public class DriveSubsystem extends SubsystemBase {
 
 double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
 File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
+  SwerveDrive swerveDrive;
   public DriveSubsystem() {
     try{
-    SwerveDrive swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
+    swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
     }
     catch(Exception e){
       throw new RuntimeException(e);
