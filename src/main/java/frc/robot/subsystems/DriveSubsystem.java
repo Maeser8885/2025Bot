@@ -20,16 +20,20 @@ double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
 File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   SwerveDrive swerveDrive;
   public DriveSubsystem() {
-    try{
-    swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
-    }
-    catch(Exception e){
-      throw new RuntimeException(e);
-    }
+    
   }
 
   public Command getDriveCommand(double translationX, double translationY, double angularRotationX)
   {
+
+    if(swerveDrive == null){
+      try{
+      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
+      }
+    catch(Exception e){
+      throw new RuntimeException(e);
+    }
+    }
     return run(() -> {
       swerveDrive.drive(new Translation2d(translationX * swerveDrive.getMaximumVelocity(),
                                           translationY * swerveDrive.getMaximumVelocity()),
