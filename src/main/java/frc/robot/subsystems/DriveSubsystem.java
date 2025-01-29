@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.parser.SwerveParser;
 import frc.robot.*;
 import swervelib.SwerveDrive;
+import swervelib.math.SwerveMath;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,9 +36,10 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     }
     }
     return run(() -> {
-      swerveDrive.drive(new Translation2d(translationX * swerveDrive.getMaximumVelocity(),
-                                          translationY * swerveDrive.getMaximumVelocity()),
-                        angularRotationX * swerveDrive.getMaximumAngularVelocity(),
+      swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
+                            translationX * swerveDrive.getMaximumChassisVelocity(),
+                            translationY * swerveDrive.getMaximumChassisVelocity()), 0.8),
+                        Math.pow(angularRotationX, 3) * swerveDrive.getMaximumChassisAngularVelocity(),
                         true,
                         false);
     });
