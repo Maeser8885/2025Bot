@@ -1,8 +1,8 @@
 {
   "imu": {
-    "type": "navx_usb",
-    "id": 12,
-    "canbus": 11
+    "type": "navx",
+    "id": 13,
+    "canbus": null
   },
   "invertedIMU": false,
   "modules": [
