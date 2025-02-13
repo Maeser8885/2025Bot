@@ -22,20 +22,16 @@ double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
 File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   SwerveDrive swerveDrive;
   public DriveSubsystem() {
-    
-  }
-
-  public Command getDriveCommand(double translationX, double translationY, double angularRotationX)
-  {
-
-    if(swerveDrive == null){
-      try{
-      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
+    try{
+      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(maximumSpeed));
       }
     catch(Exception e){
       throw new RuntimeException(e);
     }
-    }
+  }
+
+  public Command getDriveCommand(double translationX, double translationY, double angularRotationX)
+  {
     return run(() -> {
       swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
                             translationX * swerveDrive.getMaximumChassisVelocity(),
@@ -45,6 +41,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
                         false);
     });
   }
+
 
   @Override
   public void periodic() {
