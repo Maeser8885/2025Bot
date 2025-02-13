@@ -30,16 +30,19 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     }
   }
 
-  public Command getDriveCommand(double translationX, double translationY, double angularRotationX)
+  public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative)
   {
-    return run(() -> {
-      swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
+
+   swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
                             translationX * swerveDrive.getMaximumChassisVelocity(),
                             translationY * swerveDrive.getMaximumChassisVelocity()), 0.8),
                         Math.pow(angularRotationX, 3) * swerveDrive.getMaximumChassisAngularVelocity(),
-                        true,
+                        isFieldRelative,
                         false);
-    });
+    };
+//change field relativity based on driver preference
+  public Command getDriveCommand(){
+    return this.run(() -> {drive(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getX(), RobotContainer.m_driverController.getTwist(), true);});
   }
 
 
