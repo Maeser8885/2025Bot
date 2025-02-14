@@ -42,7 +42,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     };
 //change field relativity based on driver preference
   public Command getDriveCommand(){
-    return this.run(() -> {drive(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getX(), RobotContainer.m_driverController.getTwist(), true);});
+    return this.run(() -> {drive(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getTwist(), RobotContainer.m_driverController.getY(), true);});
   }
 
 
