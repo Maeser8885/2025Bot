@@ -5,10 +5,14 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+
+
+
 import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.parser.SwerveParser;
 import frc.robot.*;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
@@ -24,6 +28,11 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   public DriveSubsystem() {
     try{
       swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(maximumSpeed));
+      SwerveModule[] modules = swerveDrive.getModules();
+      for(SwerveModule m: modules){
+        m.getAngleMotor().setMotorBrake(true);
+        m.getDriveMotor().setMotorBrake(true);
+      }
       }
     catch(Exception e){
       throw new RuntimeException(e);
@@ -42,8 +51,10 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     };
 //change field relativity based on driver preference
   public Command getDriveCommand(){
-    return this.run(() -> {drive(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getTwist(), RobotContainer.m_driverController.getY(), true);});
+    return this.run(() -> {drive(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getX(), RobotContainer.m_driverController.getTwist(), true);});
   }
+
+  
 
 
   @Override
