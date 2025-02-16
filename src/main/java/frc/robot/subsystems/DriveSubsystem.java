@@ -33,6 +33,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
         m.getAngleMotor().setMotorBrake(true);
         m.getDriveMotor().setMotorBrake(true);
       }
+      SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
       }
     catch(Exception e){
       throw new RuntimeException(e);
