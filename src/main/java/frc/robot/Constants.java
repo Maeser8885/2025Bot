@@ -19,6 +19,6 @@ public final class Constants {
 
   public static class DriveConstants{
     //in .... feet??
-    public static final double maxSpeed = 4.5;
+    public static final double maxSpeed = 30;
   }
 }

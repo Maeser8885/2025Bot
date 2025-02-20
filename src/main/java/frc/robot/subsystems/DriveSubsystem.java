@@ -10,6 +10,8 @@ import java.io.File;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import frc.robot.*;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
@@ -52,7 +54,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     };
 //change field relativity based on driver preference
   public Command getDriveCommand(){
-    return this.run(() -> {drive(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getX(), RobotContainer.m_driverController.getTwist(), true);});
+    return this.run(() -> {drive(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getX(), RobotContainer.m_driverController.getTwist(), !!true);});
   }
 
   
