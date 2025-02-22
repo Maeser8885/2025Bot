@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Meter;
+
 import java.io.File;
 import java.util.function.Supplier;
 
@@ -15,6 +17,8 @@ import frc.robot.*;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -26,37 +30,48 @@ public class DriveSubsystem extends SubsystemBase {
 
 double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
 File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
+
+SwerveModule[] modules;
+
   SwerveDrive swerveDrive;
   public DriveSubsystem() {
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
     try{
-      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(maximumSpeed));
-      SwerveModule[] modules = swerveDrive.getModules();
-      for(SwerveModule m: modules){
-        m.getAngleMotor().setMotorBrake(true);
-        m.getDriveMotor().setMotorBrake(true);
-      }
-      SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(maximumSpeed), new Pose2d(new Translation2d(Meter.of(0), Meter.of(4)), Rotation2d.fromDegrees(0)));
+      modules = swerveDrive.getModules();
       }
     catch(Exception e){
       throw new RuntimeException(e);
     }
+
+    swerveDrive.setHeadingCorrection(false);
+    swerveDrive.setCosineCompensator(false);
+    swerveDrive.setAngularVelocityCompensation(true,
+    true,
+    0.1);
+    swerveDrive.setModuleEncoderAutoSynchronize(false,
+    1);
+
+
   }
 
-  public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative)
+  public Command driveCommand(double translationX, double translationY, double angularRotationX)
   {
-
-   swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
+    return run(() -> {
+      // Make the robot move
+      swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
                             translationX * swerveDrive.getMaximumChassisVelocity(),
                             translationY * swerveDrive.getMaximumChassisVelocity()), 0.8),
                         Math.pow(angularRotationX, 3) * swerveDrive.getMaximumChassisAngularVelocity(),
-                        isFieldRelative,
+                        false,
                         false);
-    };
+    });
+  }
 
     
 //change field relativity based on driver preference
   public Command getDriveCommand(){
-    return this.run(() -> {drive(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getX(), RobotContainer.m_driverController.getTwist(), !!true);});
+    return this.run(() -> {driveCommand(RobotContainer.m_driverController.getY(), RobotContainer.m_driverController.getX(), RobotContainer.m_driverController.getTwist());});
   }
 
   
@@ -74,7 +89,10 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
 
   @Override
   public void periodic() {
-
+      for(SwerveModule m: modules){
+        m.getAngleMotor().setMotorBrake(true);
+        m.getDriveMotor().setMotorBrake(true);
+      }
   }
 
 }
