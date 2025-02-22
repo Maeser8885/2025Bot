@@ -40,7 +40,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    driveSubsystem.setDefaultCommand(driveSubsystem.driveFieldOriented(driveDirectAngle));
+    driveSubsystem.setDefaultCommand(driveSubsystem.getDriveCommand());
 
     
   }
