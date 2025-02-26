@@ -13,14 +13,4 @@ public final class Constants {
     //feet/sec
     public static final double maxSpeed = 13.8940937368;
   }
-
-  public static class ElevatorConstants{
-    public static final int motorId = 9;
-    public static final double downSetpoint = 0;
-    public static final double intakeSetpoint = 0;
-    public static final double L1Setpoint = 0;
-    public static final double L2Setpoint = 0;
-    public static final double L3Setpoint = 0;
-    public static final double L4Setpoint = 0;
-  }
 }

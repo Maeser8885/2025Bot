@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
 
 import java.util.Map;
 
@@ -17,29 +16,11 @@ import frc.robot.commands.*;
 
 
 public class RobotContainer {
-  ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   ExampleSubsystem exampleSubsystem;
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
 
-   public static enum ElevatorPositions {
-    DOWN,
-    INTAKE,
-    L1,
-    L2,
-    L3,
-    L4
-  }
-  public static ElevatorPositions m_elevatorPosition = ElevatorPositions.DOWN;
-  public static Map<ElevatorPositions,Double> m_elevatorPositions = Map.ofEntries(
-          Map.entry(ElevatorPositions.DOWN,Constants.ElevatorConstants.downSetpoint),
-          Map.entry(ElevatorPositions.INTAKE,Constants.ElevatorConstants.intakeSetpoint),
-          Map.entry(ElevatorPositions.L1,Constants.ElevatorConstants.L1Setpoint),
-          Map.entry(ElevatorPositions.L2,Constants.ElevatorConstants.L2Setpoint),
-          Map.entry(ElevatorPositions.L3,Constants.ElevatorConstants.L3Setpoint),
-          Map.entry(ElevatorPositions.L4,Constants.ElevatorConstants.L4Setpoint)
-  );
 
   public RobotContainer() {
     configureBindings();
