@@ -6,7 +6,8 @@ package frc.robot.subsystems;
 
 import java.io.File;
 
-
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import swervelib.parser.SwerveParser;
@@ -18,6 +19,8 @@ import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -25,6 +28,9 @@ public class DriveSubsystem extends SubsystemBase {
 double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
 File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   SwerveDrive swerveDrive;
+  AHRS navx;
+  
+public boolean fieldRel = true;
   public DriveSubsystem() {
     try{
       swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(maximumSpeed));
@@ -38,6 +44,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     catch(Exception e){
       throw new RuntimeException(e);
     }
+    navx = new AHRS(NavXComType.kMXP_SPI);
   }
 
   public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative)
@@ -52,8 +59,14 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     };
 //change field relativity based on driver preference
   public Command getDriveCommand(){
-    return this.run(() -> {drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), true);});
+    return this.run(() -> {drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), fieldRel);});
   }
+  
 
-
+  @Override
+  public void periodic(){
+  if(RobotContainer.m_driverController.button(3).getAsBoolean()){fieldRel = !fieldRel;
+    if(fieldRel)navx.zeroYaw(); System.out.println("yippie");
+    }
+  }
 }
