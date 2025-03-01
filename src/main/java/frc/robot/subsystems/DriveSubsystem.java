@@ -66,7 +66,7 @@ public boolean fieldRel = true;
   @Override
   public void periodic(){
   if(RobotContainer.m_driverController.button(3).getAsBoolean()){fieldRel = !fieldRel;
-    if(fieldRel)navx.zeroYaw(); System.out.println("yippie");
+    if(fieldRel)swerveDrive.zeroGyro(); System.out.println("yippie");
     }
   }
 }
