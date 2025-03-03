@@ -15,7 +15,19 @@ public final class Constants {
   }
 
   public static class ElevatorConstants{
-    public static final int motorId = 9;
+    public static final int motor1Id = 9;
+    public static final int motor2Id = 10;
+    public static final double downSetpoint = 0;
+    public static final double intakeSetpoint = 0;
+    public static final double L1Setpoint = 0;
+    public static final double L2Setpoint = 0;
+    public static final double L3Setpoint = 0;
+    public static final double L4Setpoint = 0;
+  }
+
+  public static class GrabberConstants{
+    public static final int rotationMotorId = 11;
+    public static final int opencloseMotorId = 12;
     public static final double downSetpoint = 0;
     public static final double intakeSetpoint = 0;
     public static final double L1Setpoint = 0;

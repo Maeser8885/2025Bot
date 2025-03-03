@@ -31,6 +31,14 @@ public class RobotContainer {
     L3,
     L4
   }
+  public static enum GrabberPositions {
+    DOWN,
+    INTAKE,
+    L1,
+    L2,
+    L3,
+    L4
+  }
   public static ElevatorPositions m_elevatorPosition = ElevatorPositions.DOWN;
   public static Map<ElevatorPositions,Double> m_elevatorPositions = Map.ofEntries(
           Map.entry(ElevatorPositions.DOWN,Constants.ElevatorConstants.downSetpoint),
@@ -39,6 +47,15 @@ public class RobotContainer {
           Map.entry(ElevatorPositions.L2,Constants.ElevatorConstants.L2Setpoint),
           Map.entry(ElevatorPositions.L3,Constants.ElevatorConstants.L3Setpoint),
           Map.entry(ElevatorPositions.L4,Constants.ElevatorConstants.L4Setpoint)
+  );
+  public static GrabberPositions m_GrabberPosition = GrabberPositions.DOWN;
+  public static Map<GrabberPositions,Double> m_GrabberPositions = Map.ofEntries(
+          Map.entry(GrabberPositions.DOWN,Constants.GrabberConstants.downSetpoint),
+          Map.entry(GrabberPositions.INTAKE,Constants.GrabberConstants.intakeSetpoint),
+          Map.entry(GrabberPositions.L1,Constants.GrabberConstants.L1Setpoint),
+          Map.entry(GrabberPositions.L2,Constants.GrabberConstants.L2Setpoint),
+          Map.entry(GrabberPositions.L3,Constants.GrabberConstants.L3Setpoint),
+          Map.entry(GrabberPositions.L4,Constants.GrabberConstants.L4Setpoint)
   );
 
   public RobotContainer() {
