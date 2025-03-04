@@ -23,6 +23,7 @@ public final class Constants {
     public static final double L2Setpoint = 0;
     public static final double L3Setpoint = 0;
     public static final double L4Setpoint = 0;
+    public static final double upSoftLimit = 0;
   }
 
   public static class GrabberConstants{
@@ -34,5 +35,8 @@ public final class Constants {
     public static final double L2Setpoint = 0;
     public static final double L3Setpoint = 0;
     public static final double L4Setpoint = 0;
+    public static double upSoftLimit = 0;
+    public static final double backSoftLimit = 0;
+    public static final double openclosespeed = 1.0;
   }
 }

@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
@@ -27,17 +28,31 @@ public class ElevatorSubsystem extends SubsystemBase {
   RelativeEncoder encoder;
 
   public ElevatorSubsystem() {
+    //initialize the elevator target
     target = Constants.ElevatorConstants.downSetpoint;
+    //make configs for motors
     SparkMaxConfig otherMotorConfig = new SparkMaxConfig();
+    SparkMaxConfig elevatorMotorConfig = new SparkMaxConfig();
+    //add softlimits
+    SoftLimitConfig softlimits = new SoftLimitConfig();
+    softlimits.forwardSoftLimit(Constants.ElevatorConstants.downSetpoint);
+    softlimits.reverseSoftLimit(Constants.ElevatorConstants.upSoftLimit);
+    //apply softlimits to configs
+    otherMotorConfig.apply(softlimits);
+    elevatorMotorConfig.apply(softlimits);
+    //make motors
     elevatorMotor = new SparkMax(Constants.ElevatorConstants.motor1Id, MotorType.kBrushless);
-    otherMotorConfig.follow(Constants.ElevatorConstants.motor1Id);
-    encoder = elevatorMotor.getEncoder();
     otherMotor = new SparkMax(Constants.ElevatorConstants.motor2Id, MotorType.kBrushless);
+    //set follwer
+    otherMotorConfig.follow(Constants.ElevatorConstants.motor1Id);
+    //get encoder
+    encoder = elevatorMotor.getEncoder();
+    //config motors
     otherMotor.configure(otherMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
+    elevatorMotor.configure(elevatorMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    
     pidController = elevatorMotor.getClosedLoopController();
     encoder.setPosition(0);
-    
   }
 
    public void moveToSetpoint() {
