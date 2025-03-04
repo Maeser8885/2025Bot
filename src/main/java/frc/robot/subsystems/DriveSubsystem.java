@@ -8,6 +8,7 @@ import java.io.File;
 
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -59,7 +60,7 @@ public boolean fieldRel = true;
 
   public Command switchFieldRel(){
    return runOnce(() ->{ fieldRel = !fieldRel;
-    if(fieldRel)swerveDrive.zeroGyro(); SmartDashboard.putBoolean("IsFieldRelative", fieldRel);});
+    if(fieldRel)swerveDrive.zeroGyro(); System.out.println(fieldRel);});
   }
   
 
