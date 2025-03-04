@@ -49,6 +49,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     }
 
     fieldRel = true;
+    setUpAuto();
   }
 
   public void setUpAuto(){
