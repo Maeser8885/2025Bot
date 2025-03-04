@@ -6,10 +6,9 @@ package frc.robot.subsystems;
 
 import java.io.File;
 
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
@@ -57,12 +56,14 @@ public boolean fieldRel = true;
   public Command getDriveCommand(){
     return this.run(() -> {drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), fieldRel);});
   }
+
+  public Command switchFieldRel(){
+   return this.run(() ->{ fieldRel = !fieldRel;
+    if(fieldRel)swerveDrive.zeroGyro(); SmartDashboard.putBoolean("IsFieldRelative", fieldRel);});
+  }
   
 
   @Override
   public void periodic(){
-  if(RobotContainer.m_driverController.button(3).getAsBoolean()){fieldRel = !fieldRel;
-    if(fieldRel)swerveDrive.zeroGyro(); System.out.println("yippie");
-    }
   }
 }
