@@ -28,7 +28,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     driveSubsystem.setDefaultCommand(driveSubsystem.getDriveCommand());
-
+    m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
    
   }
 

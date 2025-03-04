@@ -58,7 +58,7 @@ public boolean fieldRel = true;
   }
 
   public Command switchFieldRel(){
-   return this.run(() ->{ fieldRel = !fieldRel;
+   return runOnce(() ->{ fieldRel = !fieldRel;
     if(fieldRel)swerveDrive.zeroGyro(); SmartDashboard.putBoolean("IsFieldRelative", fieldRel);});
   }
   
