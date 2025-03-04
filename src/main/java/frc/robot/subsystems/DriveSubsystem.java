@@ -19,8 +19,6 @@ import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -28,7 +26,6 @@ public class DriveSubsystem extends SubsystemBase {
 double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
 File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   SwerveDrive swerveDrive;
-  AHRS navx;
   
 public boolean fieldRel = true;
   public DriveSubsystem() {
@@ -44,7 +41,6 @@ public boolean fieldRel = true;
     catch(Exception e){
       throw new RuntimeException(e);
     }
-    navx = new AHRS(NavXComType.kMXP_SPI);
   }
 
   public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative)
@@ -66,7 +62,7 @@ public boolean fieldRel = true;
   @Override
   public void periodic(){
   if(RobotContainer.m_driverController.button(3).getAsBoolean()){fieldRel = !fieldRel;
-    if(fieldRel)navx.zeroYaw(); System.out.println("yippie");
+    if(fieldRel)swerveDrive.zeroGyro(); System.out.println("yippie");
     }
   }
 }
