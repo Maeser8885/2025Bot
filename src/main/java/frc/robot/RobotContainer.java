@@ -67,6 +67,8 @@ public class RobotContainer {
       elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L1Setpoint);
       grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L1Setpoint);
     }));
+    //3 = change field relativity
+    m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
   }
 
 

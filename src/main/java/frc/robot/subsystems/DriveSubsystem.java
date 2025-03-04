@@ -9,6 +9,7 @@ import java.io.File;
 
 
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
@@ -25,6 +26,7 @@ public class DriveSubsystem extends SubsystemBase {
 double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
 File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   SwerveDrive swerveDrive;
+  boolean fieldRel;
   public DriveSubsystem() {
     try{
       swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(maximumSpeed));
@@ -38,6 +40,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     catch(Exception e){
       throw new RuntimeException(e);
     }
+    fieldRel = true;
   }
 
   public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative)
@@ -49,10 +52,15 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
                         Math.pow(angularRotationX, 3) * swerveDrive.getMaximumChassisAngularVelocity(),
                         isFieldRelative,
                         false);
-    };
+    }
+
+    public Command switchFieldRel(){
+   return runOnce(() ->{ fieldRel = !fieldRel;
+    if(fieldRel)swerveDrive.zeroGyro(); SmartDashboard.putBoolean("IsFieldRelative", fieldRel);});
+  }
 //change field relativity based on driver preference
   public Command getDriveCommand(){
-    return this.run(() -> {drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), true);});
+    return this.run(() -> {drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), fieldRel);});
   }
 
 
