@@ -52,6 +52,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   }
 
   public void setUpAuto(){
+    //BRING YOUR CAMERA TO CALCULUS
     //config for auto
     try{
       config = RobotConfig.fromGUISettings();
