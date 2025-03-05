@@ -12,6 +12,11 @@ public final class Constants {
   public static class DriveConstants{
     //feet/sec
     public static final double maxSpeed = 13.8940937368;
+    public static boolean visionEnabled = true;
+  }
+
+  public static class VisionConstants{
+    public static final double maximumAmbiguity = 0.25;
   }
 
   public static class ElevatorConstants{
