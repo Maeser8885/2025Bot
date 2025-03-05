@@ -10,8 +10,12 @@ import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.commands.*;
 
@@ -23,10 +27,20 @@ public class RobotContainer {
   ExampleSubsystem exampleSubsystem;
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
+  SequentialCommandGroup depositCoralL4;
+  PathPlannerAuto driveAuto;
 
   public RobotContainer() {
     configureBindings();
     exampleSubsystem = new ExampleSubsystem();
+
+    depositCoralL4 = new SequentialCommandGroup(
+      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L4Setpoint),
+      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L4Setpoint)
+    );
+
+    NamedCommands.registerCommand("L4Deposit", depositCoralL4);
+    driveAuto = new PathPlannerAuto("Coral+Intake");
   }
 
   private void configureBindings() {
@@ -73,6 +87,6 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    return new ExampleCommand(exampleSubsystem);
+    return depositCoralL4;
   }
 }
