@@ -37,7 +37,7 @@ public class RobotContainer {
     driveAuto = new PathPlannerAuto("Coral+Intake");
     auto = new SequentialCommandGroup(
       driveAuto,
-      new DriveToApriltag(driveSubsystem, 7),
+      new DriveToApriltag(driveSubsystem, Vision.Cameras.CENTER_CAM,7),
       new DepositCoral(elevatorSubsystem, grabberSubsystem, 4)
     );
   }
