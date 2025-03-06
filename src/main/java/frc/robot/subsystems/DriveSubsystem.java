@@ -5,6 +5,9 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+import java.util.Optional;
+
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
@@ -20,8 +23,10 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import frc.robot.*;
 import swervelib.SwerveDrive;
 import swervelib.SwerveModule;
+import frc.robot.Vision.Cameras;
 import swervelib.math.SwerveMath;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
@@ -34,6 +39,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   SwerveDrive swerveDrive;
   boolean fieldRel;
   RobotConfig config;
+  Vision vision;
   public DriveSubsystem() {
     try{
       swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(maximumSpeed));
@@ -50,6 +56,8 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
 
     fieldRel = true;
     setUpAuto();
+    vision = new Vision(swerveDrive::getPose, swerveDrive.field);
+
   }
 
   public void setUpAuto(){
@@ -99,6 +107,25 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     
   }
 
+  public Command aimAtTarget(Cameras camera)
+  {
+
+    return run(() -> {
+      Optional<PhotonPipelineResult> resultO = camera.getBestResult();
+      if (resultO.isPresent())
+      {
+        var result = resultO.get();
+        if (result.hasTargets())
+        {
+          drive(getTargetSpeeds(0,
+                                0,
+                                Rotation2d.fromDegrees(result.getBestTarget()
+                                                             .getYaw())));
+        }
+      }
+    });
+  }
+
   public Command drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative)
   {
     return this.run(() -> {
@@ -122,8 +149,24 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   else{return drive(0, 0, 0, true);}
   }
 
+  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle)
+  {
+    Translation2d scaledInputs = SwerveMath.cubeTranslation(new Translation2d(xInput, yInput));
+
+    return swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(),
+                                                        scaledInputs.getY(),
+                                                        angle.getRadians(),
+                                                        getHeading().getRadians(),
+                                                        Constants.DriveConstants.maxSpeed);
+  }
+
   public Pose2d getPose(){
     return swerveDrive.getPose();
+  }
+
+  public Rotation2d getHeading()
+  {
+    return getPose().getRotation();
   }
 
   public void resetPose(Pose2d initialPose)

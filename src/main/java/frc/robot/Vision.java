@@ -12,18 +12,22 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonUtils;
 import org.photonvision.simulation.PhotonCameraSim;
 import org.photonvision.simulation.SimCameraProperties;
 import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
@@ -62,7 +66,7 @@ public class Vision {
   }
 
 
-  enum Cameras{
+  public enum Cameras{
      CENTER_CAM("center",
                new Rotation3d(0, Units.degreesToRadians(18), 0),
                new Translation3d(Units.inchesToMeters(-4.628),
@@ -117,8 +121,66 @@ public class Vision {
           systemSim.addCamera(cameraSim, robotToCamTransform);
         }
       }
-      
+      public Optional<PhotonPipelineResult> getBestResult()
+    {
+      if (resultsList.isEmpty())
+      {
+        return Optional.empty();
+      }
+
+      PhotonPipelineResult bestResult       = resultsList.get(0);
+      double               amiguity         = bestResult.getBestTarget().getPoseAmbiguity();
+      double               currentAmbiguity = 0;
+      for (PhotonPipelineResult result : resultsList)
+      {
+        currentAmbiguity = result.getBestTarget().getPoseAmbiguity();
+        if (currentAmbiguity < amiguity && currentAmbiguity > 0)
+        {
+          bestResult = result;
+          amiguity = currentAmbiguity;
+        }
+      }
+      return Optional.of(bestResult);
+    }
     }
 
-}
+    public static Pose2d getAprilTagPose(int aprilTag, Transform2d robotOffset){
+    Optional<Pose3d> aprilTagPose3d = fieldLayout.getTagPose(aprilTag);
+    if (aprilTagPose3d.isPresent()){
+      return aprilTagPose3d.get().toPose2d().transformBy(robotOffset);
+    } 
+    else{
+      throw new RuntimeException("Cannot get AprilTag " + aprilTag + " from field " + fieldLayout.toString());
+    }
+  }
+    public double getDistanceFromAprilTag(int id){
+    Optional<Pose3d> tag = fieldLayout.getTagPose(id);
+    return tag.map(pose3d -> PhotonUtils.getDistanceToPose(currentPose.get(), pose3d.toPose2d())).orElse(-1.0);
+  }
+
+  public PhotonTrackedTarget getTargetFromId(int id, Cameras camera){
+    PhotonTrackedTarget target = null;
+    for (PhotonPipelineResult result : camera.resultsList)
+    {
+      if (result.hasTargets())
+      {
+        for (PhotonTrackedTarget i : result.getTargets())
+        {
+          if (i.getFiducialId() == id)
+          {
+            return i;
+          }
+        }
+      }
+    }
+    return target;
+
+  }
+
+
+
+
+  }
+
+
 
