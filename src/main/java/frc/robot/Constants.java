@@ -16,7 +16,7 @@ public final class Constants {
   }
 
   public static class VisionConstants{
-    public static final double maximumAmbiguity = 0.25;
+    public static final String cameraName = "centerCam";
   }
 
   public static class ElevatorConstants{

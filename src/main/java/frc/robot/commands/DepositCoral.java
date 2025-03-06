@@ -13,6 +13,7 @@ public class DepositCoral extends Command {
   ElevatorSubsystem m_elevatorSubsystem;
   GrabberSubsystem m_grabberSubsystem;
   int level;
+  boolean finished;
   //1, 2, 3, 4 - L1, L2, L3, L4
   //0 - down
   //5 - intake
@@ -21,33 +22,35 @@ public class DepositCoral extends Command {
     m_grabberSubsystem = gSubsystem;
     level = rlevel;
     addRequirements(eSubsystem,gSubsystem);
+    finished = false;
   }
 
   @Override
   public void initialize(){
     if(level == 4){
     m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L4Setpoint).andThen(
-    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L4Setpoint));
+    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L4Setpoint)).andThen(()->{finished = true;});
   }
     if(level == 3){
       m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L3Setpoint).andThen(
-      m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L3Setpoint));
+      m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L3Setpoint)).andThen(()->{finished = true;});
     }
     if(level == 2){
         m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L2Setpoint).andThen(
-        m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L2Setpoint));
+        m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L2Setpoint)).andThen(()->{finished = true;});
       }
       if(level == 1){
         m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L1Setpoint).andThen(
-        m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L1Setpoint));
+        m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L1Setpoint)).andThen(()->{finished = true;});
   }
   if(level == 0){
     m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.downSetpoint).andThen(
-    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.downSetpoint));
+    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.downSetpoint)).andThen(()->{finished = true;});
   }
   if(level == 5){
     m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.intakeSetpoint).andThen(
-    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.intakeSetpoint));}
+    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.intakeSetpoint)).andThen(()->{finished = true;});
+  }
   }
 
   @Override
@@ -58,6 +61,6 @@ public class DepositCoral extends Command {
 
   @Override
   public boolean isFinished(){
-    return false;
+    return finished;
   }
 }

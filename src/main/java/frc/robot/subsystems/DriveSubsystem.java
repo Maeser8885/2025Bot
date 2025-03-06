@@ -117,7 +117,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
         var result = resultO.get();
         if (result.hasTargets())
         {
-          drive(getTargetSpeeds(0,
+          driveWithSpeeds(getTargetSpeeds(0,
                                 0,
                                 Rotation2d.fromDegrees(result.getBestTarget()
                                                              .getYaw())));
@@ -126,8 +126,12 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     });
   }
 
-  public Command drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative)
-  {
+  public Command driveTowardTarget(int id){
+    double distance = vision.getDistanceFromAprilTag(id);
+    return drive(distance, 0, 0, false);
+  }
+
+  public Command drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative){
     return this.run(() -> {
    swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
                             translationX * swerveDrive.getMaximumChassisVelocity(),
@@ -149,8 +153,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   else{return drive(0, 0, 0, true);}
   }
 
-  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle)
-  {
+  public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle){
     Translation2d scaledInputs = SwerveMath.cubeTranslation(new Translation2d(xInput, yInput));
 
     return swerveDrive.swerveController.getTargetSpeeds(scaledInputs.getX(),
@@ -164,18 +167,19 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     return swerveDrive.getPose();
   }
 
-  public Rotation2d getHeading()
-  {
+  public Rotation2d getHeading(){
     return getPose().getRotation();
   }
 
-  public void resetPose(Pose2d initialPose)
-  {
+  public void driveWithSpeeds(ChassisSpeeds speeds){
+    swerveDrive.drive(speeds);
+  }
+
+  public void resetPose(Pose2d initialPose){
     swerveDrive.resetOdometry(initialPose);
   }
 
-    public ChassisSpeeds getCurrentSpeeds()
-  {
+    public ChassisSpeeds getCurrentSpeeds(){
     return swerveDrive.getRobotVelocity();
   }
 

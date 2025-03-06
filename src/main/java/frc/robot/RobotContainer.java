@@ -5,7 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Vision.Cameras;
 import frc.robot.commands.DepositCoral;
+import frc.robot.commands.DriveToApriltag;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -14,6 +16,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 
@@ -25,13 +28,18 @@ public class RobotContainer {
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   PathPlannerAuto driveAuto;
+  SequentialCommandGroup auto;
 
   public RobotContainer() {
     configureBindings();
     exampleSubsystem = new ExampleSubsystem();
 
     driveAuto = new PathPlannerAuto("Coral+Intake");
-    driveAuto.event("deposit").onTrue(new DepositCoral(elevatorSubsystem, grabberSubsystem, 4));
+    auto = new SequentialCommandGroup(
+      driveAuto,
+      new DriveToApriltag(driveSubsystem, 7),
+      new DepositCoral(elevatorSubsystem, grabberSubsystem, 4)
+    );
   }
 
   private void configureBindings() {
