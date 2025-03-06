@@ -116,7 +116,10 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   }
 //change field relativity based on driver preference
   public Command getDriveCommand(){
+    if(RobotContainer.m_driverController.getY() < -0.1 || RobotContainer.m_driverController.getY() > 0.1 || RobotContainer.m_driverController.getX() < -0.1 || RobotContainer.m_driverController.getX() > 0.1 || RobotContainer.m_driverController.getTwist() < -0.1 || RobotContainer.m_driverController.getTwist() > 0.1){
     return drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), fieldRel);
+  }
+  else{return drive(0, 0, 0, true);}
   }
 
   public Pose2d getPose(){

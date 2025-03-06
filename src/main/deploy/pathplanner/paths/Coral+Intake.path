@@ -8,36 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.478754145890843,
-        "y": 3.360143076568296
+        "x": 8.524895526840895,
+        "y": 4.173036381384008
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.973501712329253,
-        "y": 3.0858946917765087
+        "x": 4.974897540983607,
+        "y": 3.14390368852459
       },
       "prevControl": {
-        "x": 6.020129741189946,
-        "y": 3.5547861623506036
-      },
-      "nextControl": {
-        "x": 3.8775787066447815,
-        "y": 2.594918972035135
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.41241438356213,
-        "y": 0.5165025684888371
-      },
-      "prevControl": {
-        "x": 1.6391094010743439,
-        "y": 0.6458618237614295
+        "x": 5.195722070351277,
+        "y": 2.981345694666101
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,17 +30,24 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1,
+      "waypointRelativePos": 0.5,
       "rotationDegrees": 90.0
     },
     {
-      "waypointRelativePos": 2,
+      "waypointRelativePos": 1.0,
       "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "deposit",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,

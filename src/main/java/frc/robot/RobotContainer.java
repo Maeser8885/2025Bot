@@ -5,19 +5,16 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.DepositCoral;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import frc.robot.commands.*;
 
 
 public class RobotContainer {
@@ -27,20 +24,14 @@ public class RobotContainer {
   ExampleSubsystem exampleSubsystem;
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
-  SequentialCommandGroup depositCoralL4;
   PathPlannerAuto driveAuto;
 
   public RobotContainer() {
     configureBindings();
     exampleSubsystem = new ExampleSubsystem();
 
-    depositCoralL4 = new SequentialCommandGroup(
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L4Setpoint),
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L4Setpoint)
-    );
-
-    NamedCommands.registerCommand("L4Deposit", depositCoralL4);
     driveAuto = new PathPlannerAuto("Coral+Intake");
+    driveAuto.event("deposit").onTrue(new DepositCoral(elevatorSubsystem, grabberSubsystem, 4));
   }
 
   private void configureBindings() {
@@ -53,33 +44,33 @@ public class RobotContainer {
     m_driverController.button(2).toggleOnFalse(grabberSubsystem.getStopCommand());
     //7 = intake
     m_driverController.button(7).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.intakeSetpoint);
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.intakeSetpoint);
+      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.intakeSetpoint).andThen(
+      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.intakeSetpoint));
     }));
     //8 = L4
     m_driverController.button(8).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L4Setpoint);
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L4Setpoint);
+      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L4Setpoint).andThen(
+      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L4Setpoint));
     }));
     //9 = L2
     m_driverController.button(9).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L2Setpoint);
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L2Setpoint);
+      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L2Setpoint).andThen(
+      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L2Setpoint));
     }));
     //10 = L3
     m_driverController.button(10).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L3Setpoint);
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L3Setpoint);
+      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L3Setpoint).andThen(
+      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L3Setpoint));
     }));
     //11 = DOWN
     m_driverController.button(11).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.downSetpoint);
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.downSetpoint);
+      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.downSetpoint).andThen(
+      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.downSetpoint));
     }));
     //12 = L1
     m_driverController.button(12).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L1Setpoint);
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L1Setpoint);
+      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L1Setpoint).andThen(
+      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L1Setpoint));
     }));
     //3 = change field relativity
     m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
@@ -87,6 +78,6 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    return depositCoralL4;
+    return driveAuto;
   }
 }
