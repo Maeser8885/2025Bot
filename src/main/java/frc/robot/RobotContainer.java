@@ -5,10 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.Vision.Cameras;
 import frc.robot.commands.DepositCoral;
 import frc.robot.commands.DriveToApriltag;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -24,7 +22,6 @@ public class RobotContainer {
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
-  ExampleSubsystem exampleSubsystem;
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   PathPlannerAuto driveAuto;
@@ -32,12 +29,11 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
-    exampleSubsystem = new ExampleSubsystem();
 
     driveAuto = new PathPlannerAuto("Coral+Intake");
     auto = new SequentialCommandGroup(
       driveAuto,
-      new DriveToApriltag(driveSubsystem, Vision.Cameras.CENTER_CAM,7),
+      new DriveToApriltag(driveSubsystem, Vision.Cameras.CENTER_CAM, 7),
       new DepositCoral(elevatorSubsystem, grabberSubsystem, 4)
     );
   }
@@ -80,6 +76,8 @@ public class RobotContainer {
       elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L1Setpoint).andThen(
       grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L1Setpoint));
     }));
+
+    m_driverController.button(4).toggleOnTrue(grabberSubsystem.rotateGrabber());
     //3 = change field relativity
     m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
   }
