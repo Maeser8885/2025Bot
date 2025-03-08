@@ -41,8 +41,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 
 public class Vision {
 
-  public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(
-      AprilTagFields.k2025Reefscape);
+  public static final AprilTagFieldLayout fieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
   public VisionSystemSim visionSim;
   public Supplier<Pose2d> currentPose;
   public Field2d field2d;
