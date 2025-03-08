@@ -34,6 +34,7 @@ public final class Constants {
   public static class GrabberConstants{
     public static final int rotationMotorId = 11;
     public static final int opencloseMotorId = 12;
+    public static final int sidewaysMotorId = 13;
     public static final double downSetpoint = 0;
     public static final double intakeSetpoint = 0;
     public static final double L1Setpoint = 0;
@@ -43,5 +44,8 @@ public final class Constants {
     public static double upSoftLimit = 0;
     public static final double backSoftLimit = 0;
     public static final double openclosespeed = 1.0;
+    
+    public static final double rotationTime = 1.0;
+    public static final double rotationSpeed = 1.0;
   }
 }
