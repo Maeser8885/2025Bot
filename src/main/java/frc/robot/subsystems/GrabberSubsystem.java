@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,11 +24,17 @@ public class GrabberSubsystem extends SubsystemBase {
 
   SparkMax grabberMotor;
   SparkMax releaseMotor;
+  SparkMax sidewaysMotor;
   SparkClosedLoopController pidController;
   double target;
   RelativeEncoder encoder;
+  Timer rotationTimer = new Timer();
 
   public GrabberSubsystem() {
+
+    
+
+
     //initialize the grabber target
     target = Constants.GrabberConstants.downSetpoint;
     //make configs for motor
@@ -40,6 +47,7 @@ public class GrabberSubsystem extends SubsystemBase {
     grabberMotorConfig.apply(softlimits);
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
+    sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
     //get encoder
     encoder = grabberMotor.getEncoder();
     //config motors
@@ -80,11 +88,25 @@ public class GrabberSubsystem extends SubsystemBase {
     });
   }
 
+  public Command rotateGrabber(){
+    return this.run(() -> {
+      if(Math.round(rotationTimer.get()*10) == 0){
+        sidewaysMotor.set(Constants.GrabberConstants.rotationSpeed);
+        rotationTimer.restart();
+      }
+    });
+  }
+
   @Override
   public void periodic(){
     moveToSetpoint();
     SmartDashboard.putNumber("Grabber/Target Position", target);
     SmartDashboard.putNumber("Grabber/Actual Position", encoder.getPosition());
+    if(rotationTimer.hasElapsed(Constants.GrabberConstants.rotationTime)){
+      sidewaysMotor.set(0);
+      rotationTimer.reset();
+      rotationTimer.stop();
+    }
   }
 
 }
