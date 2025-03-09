@@ -22,7 +22,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 public class ElevatorSubsystem extends SubsystemBase {
 
   SparkMax elevatorMotor;
-  SparkMax otherMotor;
   SparkClosedLoopController pidController;
   double target;
   RelativeEncoder encoder;
@@ -31,24 +30,19 @@ public class ElevatorSubsystem extends SubsystemBase {
     //initialize the elevator target
     target = Constants.ElevatorConstants.downSetpoint;
     //make configs for motors
-    SparkMaxConfig otherMotorConfig = new SparkMaxConfig();
     SparkMaxConfig elevatorMotorConfig = new SparkMaxConfig();
     //add softlimits
     SoftLimitConfig softlimits = new SoftLimitConfig();
     softlimits.forwardSoftLimit(Constants.ElevatorConstants.downSetpoint);
     softlimits.reverseSoftLimit(Constants.ElevatorConstants.upSoftLimit);
     //apply softlimits to configs
-    otherMotorConfig.apply(softlimits);
     elevatorMotorConfig.apply(softlimits);
     //make motors
     elevatorMotor = new SparkMax(Constants.ElevatorConstants.motor1Id, MotorType.kBrushless);
-    otherMotor = new SparkMax(Constants.ElevatorConstants.motor2Id, MotorType.kBrushless);
     //set follwer
-    otherMotorConfig.follow(Constants.ElevatorConstants.motor1Id);
     //get encoder
     encoder = elevatorMotor.getEncoder();
     //config motors
-    otherMotor.configure(otherMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     elevatorMotor.configure(elevatorMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     pidController = elevatorMotor.getClosedLoopController();
@@ -70,8 +64,8 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic(){
     moveToSetpoint();
-    SmartDashboard.putNumber("Coral/Elevator/Target Position", target);
-    SmartDashboard.putNumber("Coral/Elevator/Actual Position", encoder.getPosition());
+    SmartDashboard.putNumber("Elevator target", target);
+    SmartDashboard.putNumber("Elevator position", encoder.getPosition());
   }
 
 }
