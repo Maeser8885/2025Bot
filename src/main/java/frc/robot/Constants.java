@@ -20,8 +20,10 @@ public final class Constants {
   }
 
   public static class ElevatorConstants{
+
     public static final int motor1Id = 9;
-    public static final int motor2Id = 10;
+    //shaft diameter = 8mm, gear ratio = 48:1, sprocket size = 22T, conversion factor = 0.458333333333
+    public static final double conversionFactor = 0.458333333333;
     public static final double downSetpoint = 0;
     public static final double intakeSetpoint = 0;
     public static final double L1Setpoint = 0;

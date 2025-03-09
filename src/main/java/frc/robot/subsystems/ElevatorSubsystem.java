@@ -56,7 +56,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public Command setTargetCommand(double setpoint) {
     return this.runOnce(
         () -> {
-          target = setpoint;
+          target = setpoint/Constants.ElevatorConstants.conversionFactor;
         });
   }
 
