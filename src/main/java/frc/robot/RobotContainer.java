@@ -15,6 +15,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 
@@ -34,7 +35,10 @@ public class RobotContainer {
     auto = new SequentialCommandGroup(
       driveAuto,
       new DriveToApriltag(driveSubsystem, Vision.Cameras.CENTER_CAM, 7),
-      new DepositCoral(elevatorSubsystem, grabberSubsystem, 4)
+      new DepositCoral(elevatorSubsystem, grabberSubsystem, 4),
+      grabberSubsystem.getOuttakeCommand(),
+      new WaitCommand(1),
+      grabberSubsystem.getStopCommand()
     );
   }
 
@@ -84,6 +88,6 @@ public class RobotContainer {
 
 
   public Command getAutonomousCommand() {
-    return driveAuto;
+    return auto;
   }
 }

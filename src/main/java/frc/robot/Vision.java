@@ -156,7 +156,7 @@ public class Vision {
 
   public enum Cameras {
     CENTER_CAM("center",
-        new Rotation3d(0, Units.degreesToRadians(18), 0),
+        new Rotation3d(0, 0, 0),
         new Translation3d(Units.inchesToMeters(-4.628),
             Units.inchesToMeters(-10.687),
             Units.inchesToMeters(16.129)),

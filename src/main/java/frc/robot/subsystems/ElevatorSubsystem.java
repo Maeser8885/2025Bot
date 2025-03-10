@@ -50,13 +50,13 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
    public void moveToSetpoint() {
-    pidController.setReference(target, ControlType.kMAXMotionPositionControl);
+    pidController.setReference(target/Constants.ElevatorConstants.conversionFactor, ControlType.kMAXMotionPositionControl);
   }
 
     public Command setTargetCommand(double setpoint) {
     return this.runOnce(
         () -> {
-          target = setpoint/Constants.ElevatorConstants.conversionFactor;
+          target = setpoint;
         });
   }
 
