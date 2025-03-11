@@ -22,21 +22,19 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class GrabberSubsystem extends SubsystemBase {
 
-  SparkMax grabberMotor;
+  public SparkMax grabberMotor;
   SparkMax releaseMotor;
   SparkMax sidewaysMotor;
   SparkClosedLoopController pidController;
   double target;
   RelativeEncoder encoder;
   Timer rotationTimer = new Timer();
+  boolean rotated;
 
   public GrabberSubsystem() {
-
-    
-
-
+    rotated = false;
     //initialize the grabber target
-    target = Constants.GrabberConstants.downSetpoint;
+    target = -8;
     //make configs for motor
     SparkMaxConfig grabberMotorConfig = new SparkMaxConfig();
     //add softlimits
@@ -45,6 +43,7 @@ public class GrabberSubsystem extends SubsystemBase {
     softlimits.reverseSoftLimit(Constants.GrabberConstants.backSoftLimit);
     //apply softlimits to config
     grabberMotorConfig.apply(softlimits);
+    grabberMotorConfig.closedLoop.p(0.09).i(0).d(0);
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
@@ -61,6 +60,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
    public void moveToSetpoint() {
     pidController.setReference(target, ControlType.kMAXMotionPositionControl);
+    System.out.println("running");
   }
 
     public Command setTargetCommand(double setpoint) {
@@ -90,8 +90,13 @@ public class GrabberSubsystem extends SubsystemBase {
 
   public Command rotateGrabber(){
     return this.run(() -> {
-      if(Math.round(rotationTimer.get()*10) == 0){
+      if(Math.round(rotationTimer.get()*10) == 0 && rotated == true){
         sidewaysMotor.set(Constants.GrabberConstants.rotationSpeed);
+        rotationTimer.restart();
+      }
+
+      else if(Math.round(rotationTimer.get()*10) == 0){
+        sidewaysMotor.set(-Constants.GrabberConstants.rotationSpeed);
         rotationTimer.restart();
       }
     });
@@ -100,8 +105,8 @@ public class GrabberSubsystem extends SubsystemBase {
   @Override
   public void periodic(){
     moveToSetpoint();
-    SmartDashboard.putNumber("Grabber/Target Position", target);
-    SmartDashboard.putNumber("Grabber/Actual Position", encoder.getPosition());
+    SmartDashboard.putNumber("Grabber target", target);
+    SmartDashboard.putNumber("Grabber position", encoder.getPosition());
     if(rotationTimer.hasElapsed(Constants.GrabberConstants.rotationTime)){
       sidewaysMotor.set(0);
       rotationTimer.reset();

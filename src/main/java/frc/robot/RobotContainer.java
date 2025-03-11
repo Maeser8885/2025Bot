@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 public class RobotContainer {
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   DriveSubsystem driveSubsystem = new DriveSubsystem();
-  GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
+  public GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   PathPlannerAuto driveAuto;
@@ -51,10 +51,10 @@ public class RobotContainer {
     m_driverController.button(2).toggleOnTrue(grabberSubsystem.getIntakeCommand());
     m_driverController.button(2).toggleOnFalse(grabberSubsystem.getStopCommand());
     //7 = intake
-    m_driverController.button(7).onTrue(new InstantCommand(() -> {
+    m_driverController.button(7).onTrue(
       elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.intakeSetpoint).andThen(
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.intakeSetpoint));
-    }));
+      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.intakeSetpoint))
+    );
     //8 = L4
     m_driverController.button(8).onTrue(new InstantCommand(() -> {
       elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L4Setpoint).andThen(

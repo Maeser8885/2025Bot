@@ -37,6 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     softlimits.reverseSoftLimit(Constants.ElevatorConstants.upSoftLimit);
     //apply softlimits to configs
     elevatorMotorConfig.apply(softlimits);
+    elevatorMotorConfig.closedLoop.p(0.01).i(0).d(0);
     //make motors
     elevatorMotor = new SparkMax(Constants.ElevatorConstants.motor1Id, MotorType.kBrushless);
     //set follwer
@@ -50,11 +51,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
    public void moveToSetpoint() {
-    pidController.setReference(target/Constants.ElevatorConstants.conversionFactor, ControlType.kMAXMotionPositionControl);
+    pidController.setReference(target, ControlType.kMAXMotionPositionControl);
   }
 
     public Command setTargetCommand(double setpoint) {
-    return this.runOnce(
+      return this.runOnce(
         () -> {
           target = setpoint;
         });
@@ -65,7 +66,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic(){
     moveToSetpoint();
     SmartDashboard.putNumber("Elevator target", target);
-    SmartDashboard.putNumber("Elevator position", encoder.getPosition());
+    SmartDashboard.putNumber("Elevator position", elevatorMotor.getEncoder().getPosition());
   }
 
 }

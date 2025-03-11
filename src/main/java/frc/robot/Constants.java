@@ -25,26 +25,26 @@ public final class Constants {
     //shaft diameter = 8mm, gear ratio = 48:1, sprocket size = 22T, conversion factor = 0.458333333333
     public static final double conversionFactor = 0.458333333333;
     public static final double downSetpoint = 0;
-    public static final double intakeSetpoint = 0;
+    public static final double intakeSetpoint = 130;
     public static final double L1Setpoint = 0;
-    public static final double L2Setpoint = 0;
-    public static final double L3Setpoint = 0;
-    public static final double L4Setpoint = 0;
-    public static final double upSoftLimit = 0;
+    public static final double L2Setpoint = 90;
+    public static final double L3Setpoint = 150;
+    public static final double L4Setpoint = 235;
+    public static final double upSoftLimit = 235;
   }
 
   public static class GrabberConstants{
-    public static final int rotationMotorId = 11;
+    public static final int rotationMotorId = 13;
     public static final int opencloseMotorId = 12;
-    public static final int sidewaysMotorId = 13;
+    public static final int sidewaysMotorId = 11;
     public static final double downSetpoint = 0;
-    public static final double intakeSetpoint = 0;
-    public static final double L1Setpoint = 0;
-    public static final double L2Setpoint = 0;
-    public static final double L3Setpoint = 0;
-    public static final double L4Setpoint = 0;
-    public static double upSoftLimit = 0;
-    public static final double backSoftLimit = 0;
+    public static final double intakeSetpoint = -5.8;
+    public static final double L1Setpoint = -9.24;
+    public static final double L2Setpoint = -6.929;
+    public static final double L3Setpoint = -6.929;
+    public static final double L4Setpoint = -12.2;
+    public static double upSoftLimit = 0.214;
+    public static final double backSoftLimit = -14;
     public static final double openclosespeed = 1.0;
     
     public static final double rotationTime = 1.0;
