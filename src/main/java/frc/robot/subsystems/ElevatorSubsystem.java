@@ -23,7 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   SparkMax elevatorMotor;
   SparkClosedLoopController pidController;
   double target;
-  RelativeEncoder encoder;
+  public RelativeEncoder encoder;
 
   public ElevatorSubsystem() {
     //initialize the elevator target
