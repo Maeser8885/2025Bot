@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -51,14 +50,11 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
    public void moveToSetpoint() {
-    pidController.setReference(target, ControlType.kMAXMotionPositionControl);
+    pidController.setReference(target, ControlType.kPosition);
   }
 
-    public Command setTargetCommand(double setpoint) {
-      return this.runOnce(
-        () -> {
-          target = setpoint;
-        });
+    public void setTarget(double setpoint) {
+        target = setpoint;
   }
 
 

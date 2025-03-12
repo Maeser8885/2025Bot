@@ -10,6 +10,8 @@ import frc.robot.commands.DriveToApriltag;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,35 +53,34 @@ public class RobotContainer {
     m_driverController.button(2).toggleOnTrue(grabberSubsystem.getIntakeCommand());
     m_driverController.button(2).toggleOnFalse(grabberSubsystem.getStopCommand());
     //7 = intake
-    m_driverController.button(7).onTrue(
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.intakeSetpoint).andThen(
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.intakeSetpoint))
-    );
+    m_driverController.button(7).onTrue(new InstantCommand(() -> {
+      elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.intakeSetpoint);
+    }));
     //8 = L4
     m_driverController.button(8).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L4Setpoint).andThen(
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L4Setpoint));
+      elevatorSubsystem.setTarget(Constants.ElevatorConstants.L4Setpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.L4Setpoint);
     }));
     //9 = L2
     m_driverController.button(9).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L2Setpoint).andThen(
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L2Setpoint));
+      elevatorSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
     }));
     //10 = L3
     m_driverController.button(10).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L3Setpoint).andThen(
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L3Setpoint));
+      elevatorSubsystem.setTarget(Constants.ElevatorConstants.L3Setpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.L3Setpoint);
     }));
     //11 = DOWN
-    m_driverController.button(11).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.downSetpoint).andThen(
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.downSetpoint));
-    }));
+    m_driverController.button(11).onTrue(
+      new InstantCommand(() -> {elevatorSubsystem.setTarget(Constants.ElevatorConstants.downSetpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.downSetpoint);}));
     //12 = L1
-    m_driverController.button(12).onTrue(new InstantCommand(() -> {
-      elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L1Setpoint).andThen(
-      grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L1Setpoint));
-    }));
+    m_driverController.button(12).onTrue(
+      new InstantCommand(() -> {elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);})
+      );
 
     m_driverController.button(4).toggleOnTrue(grabberSubsystem.rotateGrabber());
     //3 = change field relativity

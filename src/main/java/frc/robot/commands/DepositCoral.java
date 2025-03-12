@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 
@@ -27,31 +26,9 @@ public class DepositCoral extends Command {
 
   @Override
   public void initialize(){
-    if(level == 4){
-    m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L4Setpoint).andThen(
-    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L4Setpoint)).andThen(()->{finished = true;});
+    
   }
-    if(level == 3){
-      m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L3Setpoint).andThen(
-      m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L3Setpoint)).andThen(()->{finished = true;});
-    }
-    if(level == 2){
-        m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L2Setpoint).andThen(
-        m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L2Setpoint)).andThen(()->{finished = true;});
-      }
-      if(level == 1){
-        m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.L1Setpoint).andThen(
-        m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.L1Setpoint)).andThen(()->{finished = true;});
-  }
-  if(level == 0){
-    m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.downSetpoint).andThen(
-    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.downSetpoint)).andThen(()->{finished = true;});
-  }
-  if(level == 5){
-    m_elevatorSubsystem.setTargetCommand(Constants.ElevatorConstants.intakeSetpoint).andThen(
-    m_grabberSubsystem.setTargetCommand(Constants.GrabberConstants.intakeSetpoint)).andThen(()->{finished = true;});
-  }
-  }
+  
 
   @Override
   public void execute(){

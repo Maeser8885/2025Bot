@@ -47,7 +47,7 @@ public final class Constants {
     public static final double backSoftLimit = -14;
     public static final double openclosespeed = 1.0;
     
-    public static final double rotationTime = 1.0;
-    public static final double rotationSpeed = 1.0;
+    public static final double rotationTime = 0.5;
+    public static final double rotationSpeed = 0.3;
   }
 }

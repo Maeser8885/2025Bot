@@ -43,7 +43,7 @@ public class GrabberSubsystem extends SubsystemBase {
     softlimits.reverseSoftLimit(Constants.GrabberConstants.backSoftLimit);
     //apply softlimits to config
     grabberMotorConfig.apply(softlimits);
-    grabberMotorConfig.closedLoop.p(0.09).i(0).d(0);
+    grabberMotorConfig.closedLoop.p(0.05).i(0).d(0.8);
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
@@ -59,15 +59,12 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
    public void moveToSetpoint() {
-    pidController.setReference(target, ControlType.kMAXMotionPositionControl);
+    pidController.setReference(target, ControlType.kPosition);
     System.out.println("running");
   }
 
-    public Command setTargetCommand(double setpoint) {
-    return this.runOnce(
-        () -> {
+    public void setTarget(double setpoint) {
           target = setpoint;
-        });
   }
 
   public Command getIntakeCommand(){
