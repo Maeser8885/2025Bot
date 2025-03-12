@@ -41,11 +41,12 @@ public class GrabberSubsystem extends SubsystemBase {
 
     //make configs for motor
     SparkMaxConfig grabberMotorConfig = new SparkMaxConfig();
+    
     //add softlimits
     SoftLimitConfig softlimits = new SoftLimitConfig();
     SoftLimitConfig rSoftLimits = new SoftLimitConfig();
     SparkMaxConfig rMotorConfig = new SparkMaxConfig();
-    rMotorConfig.closedLoop.p(1).i(0).d(0.1);
+    rMotorConfig.closedLoop.p(0.05).i(0).d(0.8);
     softlimits.forwardSoftLimit(Constants.ElevatorConstants.upSoftLimit);
     softlimits.reverseSoftLimit(Constants.GrabberConstants.backSoftLimit);
     rSoftLimits.forwardSoftLimit(0);
@@ -79,12 +80,12 @@ public class GrabberSubsystem extends SubsystemBase {
     rPidController.setReference(rTarget, ControlType.kPosition);
   }
 
-    public void setTarget(double setpoint) {
+    public void setTarget(double setpoint){
           target = setpoint;
   }
 
   public void intake(){
-      releaseMotor.set(Constants.GrabberConstants.openclosespeed);
+    releaseMotor.set(Constants.GrabberConstants.openclosespeed);
   }
 
   public void outtake(){
@@ -96,8 +97,8 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   public void rotateGrabber(){
-    if(!rotated){rTarget = 5.071; rotated=true;}
-    else{rTarget=0;rotated=false;}
+    if(rotated){rTarget = 0; rotated = false;}
+    else{rTarget = 5.071; rotated = true;}
   }
 
   @Override
