@@ -22,8 +22,6 @@ public final class Constants {
   public static class ElevatorConstants{
 
     public static final int motor1Id = 9;
-    //shaft diameter = 8mm, gear ratio = 48:1, sprocket size = 22T, conversion factor = 0.458333333333
-    public static final double conversionFactor = 0.458333333333;
     public static final double downSetpoint = 0;
     public static final double intakeSetpoint = 130;
     public static final double L1Setpoint = 0;
@@ -42,12 +40,12 @@ public final class Constants {
     public static final double L1Setpoint = -9.24;
     public static final double L2Setpoint = -6.929;
     public static final double L3Setpoint = -6.929;
-    public static final double L4Setpoint = -12.2;
+    public static final double L4Setpoint = -4;
     public static double upSoftLimit = 0.214;
     public static final double backSoftLimit = -14;
     public static final double openclosespeed = 1.0;
     
-    public static final double rotationTime = 0.5;
-    public static final double rotationSpeed = 0.3;
+    public static final double rotationTime = 0.02;
+    public static final double rotationSpeed = 0.1;
   }
 }

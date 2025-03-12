@@ -128,17 +128,16 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
 
   public Command driveTowardTarget(int id){
     double distance = vision.getDistanceFromAprilTag(id);
-    return drive(distance, 0, 0, false);
+    return this.run(()->{drive(distance, 0, 0, false);});
   }
 
-  public Command drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative){
-    return this.run(() -> {
+  public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative){
    swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
                             translationX * swerveDrive.getMaximumChassisVelocity(),
                             translationY * swerveDrive.getMaximumChassisVelocity()), 0.8),
                         Math.pow(angularRotationX, 3) * swerveDrive.getMaximumChassisAngularVelocity(),
                         isFieldRelative,
-                        false);});
+                        false);
     }
 
     public Command switchFieldRel(){
@@ -147,8 +146,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   }
 //change field relativity based on driver preference
   public Command getDriveCommand(){
-
-    return drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), fieldRel);
+    return this.run(()->{drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), fieldRel);});
   }
 
   public ChassisSpeeds getTargetSpeeds(double xInput, double yInput, Rotation2d angle){

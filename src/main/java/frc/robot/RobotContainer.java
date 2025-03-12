@@ -38,20 +38,20 @@ public class RobotContainer {
       driveAuto,
       new DriveToApriltag(driveSubsystem, Vision.Cameras.CENTER_CAM, 7),
       new DepositCoral(elevatorSubsystem, grabberSubsystem, 4),
-      grabberSubsystem.getOuttakeCommand(),
-      new WaitCommand(1),
-      grabberSubsystem.getStopCommand()
+     // grabberSubsystem.getOuttakeCommand(),
+      new WaitCommand(1)
+      //grabberSubsystem.getStopCommand()
     );
   }
 
   private void configureBindings() {
     driveSubsystem.setDefaultCommand(driveSubsystem.getDriveCommand());
     //trigger
-    m_driverController.button(1).toggleOnTrue(grabberSubsystem.getOuttakeCommand());
-    m_driverController.button(1).toggleOnFalse(grabberSubsystem.getStopCommand());
+    m_driverController.button(1).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
+    m_driverController.button(1).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     //sideButton
-    m_driverController.button(2).toggleOnTrue(grabberSubsystem.getIntakeCommand());
-    m_driverController.button(2).toggleOnFalse(grabberSubsystem.getStopCommand());
+    m_driverController.button(2).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.outtake();}));
+    m_driverController.button(2).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     //7 = intake
     m_driverController.button(7).onTrue(new InstantCommand(() -> {
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
@@ -81,8 +81,8 @@ public class RobotContainer {
       new InstantCommand(() -> {elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);
       grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);})
       );
-
-    m_driverController.button(4).toggleOnTrue(grabberSubsystem.rotateGrabber());
+        //rotate grabber
+    m_driverController.button(4).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabber();}));
     //3 = change field relativity
     m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
   }
