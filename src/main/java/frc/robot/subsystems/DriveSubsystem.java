@@ -134,7 +134,7 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative){
    swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
                             translationX * swerveDrive.getMaximumChassisVelocity(),
-                            translationY * swerveDrive.getMaximumChassisVelocity()), 0.8),
+                            translationY * swerveDrive.getMaximumChassisVelocity()), 1.0),
                         Math.pow(angularRotationX, 3) * swerveDrive.getMaximumChassisAngularVelocity(),
                         isFieldRelative,
                         false);

@@ -11,8 +11,7 @@ public final class Constants {
 
   public static class DriveConstants{
     //feet/sec
-    public static final double maxSpeed = 13.8940937368;
-    public static boolean visionEnabled = true;
+    public static final double maxSpeed = 20;
   }
 
   public static class VisionConstants{
@@ -20,8 +19,7 @@ public final class Constants {
   }
 
   public static class ElevatorConstants{
-
-    public static final int motor1Id = 9;
+    public static final int motorId = 9;
     public static final double downSetpoint = 0;
     public static final double intakeSetpoint = 130;
     public static final double L1Setpoint = 0;

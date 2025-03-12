@@ -38,7 +38,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     elevatorMotorConfig.apply(softlimits);
     elevatorMotorConfig.closedLoop.p(0.01).i(0).d(0);
     //make motors
-    elevatorMotor = new SparkMax(Constants.ElevatorConstants.motor1Id, MotorType.kBrushless);
+    elevatorMotor = new SparkMax(Constants.ElevatorConstants.motorId, MotorType.kBrushless);
     //set follwer
     //get encoder
     encoder = elevatorMotor.getEncoder();
