@@ -83,12 +83,14 @@ public class GrabberSubsystem extends SubsystemBase {
     if(encoder.getPosition() < -3){
     if(Math.round(rotationTimer.get()*10) == 0 && rotated == false){
       sidewaysMotor.set(-Constants.GrabberConstants.rotationSpeed);
+      rotated = true;
       System.out.println("Rotating to 90");
       rotationTimer.restart();
     }
     else if(Math.round(rotationTimer.get()*10) == 0 && rotated == true){
       sidewaysMotor.set(Constants.GrabberConstants.rotationSpeed);
       System.out.println("Rotating to 0");
+      rotated = false;
       rotationTimer.restart();
     }}
     else{
