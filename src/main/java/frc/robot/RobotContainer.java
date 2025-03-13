@@ -57,40 +57,37 @@ public class RobotContainer {
     m_driverController.button(2).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     //7 = intake
     m_driverController.button(7).onTrue(new InstantCommand(() -> {
-      if(grabberSubsystem.encoder.getPosition() < -2){
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
       grabberSubsystem.setTarget(Constants.GrabberConstants.intakeSetpoint);
-    }}));
+    }));
     //8 = L4
     m_driverController.button(8).onTrue(new InstantCommand(() -> {
-      if(grabberSubsystem.encoder.getPosition() < -2){
+
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.L4Setpoint);
       grabberSubsystem.setTarget(Constants.GrabberConstants.L4Setpoint);
-    }}));
+    }));
     //9 = L2
     m_driverController.button(9).onTrue(new InstantCommand(() -> {
-      if(grabberSubsystem.encoder.getPosition() < -2){
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
       grabberSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
-    }}));
+    }));
     //10 = L3
     m_driverController.button(10).onTrue(new InstantCommand(() -> {
-      if(grabberSubsystem.encoder.getPosition() < -2){
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.L3Setpoint);
       grabberSubsystem.setTarget(Constants.GrabberConstants.L3Setpoint);
-    }}));
+    }));
     //11 = DOWN
     m_driverController.button(11).onTrue(
       new InstantCommand(() -> {
-        if(grabberSubsystem.encoder.getPosition() < -2){
         elevatorSubsystem.setTarget(Constants.ElevatorConstants.downSetpoint);
-      grabberSubsystem.setTarget(Constants.GrabberConstants.downSetpoint);}}));
+      grabberSubsystem.setTarget(Constants.GrabberConstants.downSetpoint);
+    }));
     //12 = L1
     m_driverController.button(12).onTrue(
       new InstantCommand(() -> {
-        if(grabberSubsystem.encoder.getPosition() < -2){
+       
         elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);
-      grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);}})
+      grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);})
       );
         //rotate grabber
     m_driverController.button(5).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabber();}));
