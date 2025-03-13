@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -27,7 +26,6 @@ public class GrabberSubsystem extends SubsystemBase {
   SparkClosedLoopController pidController;
   double target;
   public RelativeEncoder encoder;
-  Timer rotationTimer = new Timer();
   boolean rotated;
 
   public GrabberSubsystem() {
@@ -79,9 +77,13 @@ public class GrabberSubsystem extends SubsystemBase {
       releaseMotor.set(0);
   }
 
+  public void stopGrabber(){
+    sidewaysMotor.set(0);
+  }
+
   public void rotateGrabber(){
     if(encoder.getPosition() < -3){
-      sidewaysMotor.set(0.5);
+      sidewaysMotor.set(0.1);
     }
     else{
       System.out.println("Grabber Not In Position");
@@ -90,7 +92,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
   public void rotateGrabberB(){
     if(encoder.getPosition() < -3){
-      sidewaysMotor.set(-0.5);
+      sidewaysMotor.set(-0.1);
     }
     else{
       System.out.println("Grabber Not In Position");
@@ -111,11 +113,6 @@ public class GrabberSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Grabber target", target);
     SmartDashboard.putNumber("Grabber position", encoder.getPosition());
 
-    if(rotationTimer.hasElapsed(Constants.GrabberConstants.rotationTime)){
-      sidewaysMotor.set(0);
-      rotationTimer.reset();
-      rotationTimer.stop();
-    }
   }
 
 }

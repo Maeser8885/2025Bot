@@ -33,7 +33,7 @@ public final class Constants {
     public static final int rotationMotorId = 13;
     public static final int opencloseMotorId = 12;
     public static final int sidewaysMotorId = 11;
-    public static final double downSetpoint = 0;
+    public static final double downSetpoint = -3;
     public static final double intakeSetpoint = -5.8;
     public static final double L1Setpoint = -7;
     public static final double L2Setpoint = -6.929;

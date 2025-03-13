@@ -21,8 +21,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-//TODO:  Vary Drive Speed
-
 public class RobotContainer {
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   DriveSubsystem driveSubsystem = new DriveSubsystem();
@@ -92,6 +90,10 @@ public class RobotContainer {
         //rotate grabber
     m_driverController.button(5).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabber();}));
     m_driverController.button(6).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabberB();}));
+
+    m_driverController.button(5).onFalse(new InstantCommand(()->{grabberSubsystem.stopGrabber();}));
+    m_driverController.button(6).onFalse(new InstantCommand(()->{grabberSubsystem.stopGrabber();}));
+
     //3 = change field relativity
     m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
           //manual elbow rotation with xbox controller bumpers
@@ -100,9 +102,41 @@ public class RobotContainer {
     //manual elevator movement with xbox controller triggers
     m_xboxController.leftTrigger().onTrue(new InstantCommand(()->{elevatorSubsystem.moveDown();}));
     m_xboxController.rightTrigger().onTrue(new InstantCommand(()->{elevatorSubsystem.moveUp();}));
+        //xbox presets - y:L1 b:L2 a:L3 b:L4 dpadl:down dpadr:up 
+    m_xboxController.y().onTrue(new InstantCommand(() -> {
+       
+      elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);
+    grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);}));
+
+  m_xboxController.b().onTrue(new InstantCommand(() -> {
+    elevatorSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
+    grabberSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
+  }));
+
+  m_xboxController.a().onTrue(new InstantCommand(() -> {
+    elevatorSubsystem.setTarget(Constants.ElevatorConstants.L3Setpoint);
+    grabberSubsystem.setTarget(Constants.GrabberConstants.L3Setpoint);
+  }));
+
+  m_xboxController.x().onTrue(
+    new InstantCommand(() -> {
+
+      elevatorSubsystem.setTarget(Constants.ElevatorConstants.L4Setpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.L4Setpoint);
+    })
+  );
+
+  m_xboxController.povLeft().onTrue(new InstantCommand(() -> {
+    elevatorSubsystem.setTarget(Constants.ElevatorConstants.downSetpoint);
+  grabberSubsystem.setTarget(Constants.GrabberConstants.downSetpoint);
+}));
+
+m_xboxController.povRight().onTrue(new InstantCommand(() -> {
+  elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
+  grabberSubsystem.setTarget(Constants.GrabberConstants.intakeSetpoint);
+}));
+
   }
-
-
   public Command getAutonomousCommand() {
     return auto;
   }
