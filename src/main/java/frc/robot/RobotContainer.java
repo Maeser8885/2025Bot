@@ -19,8 +19,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-//TODO: Increase L4, Vary Drive Speed, and Controller button, increase wrist angle
+//TODO:  Vary Drive Speed
 
 public class RobotContainer {
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
@@ -28,6 +29,7 @@ public class RobotContainer {
   public GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
+  public static final CommandXboxController m_xboxController = new CommandXboxController(1);
   PathPlannerAuto driveAuto;
   SequentialCommandGroup auto;
 
@@ -91,9 +93,16 @@ public class RobotContainer {
       grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);}})
       );
         //rotate grabber
-    m_driverController.button(4).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabber();}));
+    m_driverController.button(5).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabber();}));
+    m_driverController.button(6).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabberB();}));
     //3 = change field relativity
     m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
+          //manual elbow rotation with xbox controller bumpers
+    m_xboxController.leftBumper().onTrue(new InstantCommand(() -> {grabberSubsystem.rotateElbowB();}));
+    m_xboxController.rightBumper().onTrue(new InstantCommand(() -> {grabberSubsystem.rotateElbow();}));
+    //manual elevator movement with xbox controller triggers
+    m_xboxController.leftTrigger().onTrue(new InstantCommand(()->{elevatorSubsystem.moveDown();}));
+    m_xboxController.rightTrigger().onTrue(new InstantCommand(()->{elevatorSubsystem.moveUp();}));
   }
 
 
