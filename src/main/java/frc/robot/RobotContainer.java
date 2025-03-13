@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
+//TODO: Increase L4, Vary Drive Speed, and Controller button, increase wrist angle
 
 public class RobotContainer {
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
