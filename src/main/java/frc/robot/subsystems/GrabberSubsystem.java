@@ -81,21 +81,28 @@ public class GrabberSubsystem extends SubsystemBase {
 
   public void rotateGrabber(){
     if(encoder.getPosition() < -3){
-    if(Math.round(rotationTimer.get()*10) == 0 && rotated == false){
-      sidewaysMotor.set(-Constants.GrabberConstants.rotationSpeed);
-      rotated = true;
-      System.out.println("Rotating to 90");
-      rotationTimer.restart();
+      sidewaysMotor.set(0.5);
     }
-    else if(Math.round(rotationTimer.get()*10) == 0 && rotated == true){
-      sidewaysMotor.set(Constants.GrabberConstants.rotationSpeed);
-      System.out.println("Rotating to 0");
-      rotated = false;
-      rotationTimer.restart();
-    }}
     else{
       System.out.println("Grabber Not In Position");
     }
+  }
+
+  public void rotateGrabberB(){
+    if(encoder.getPosition() < -3){
+      sidewaysMotor.set(-0.5);
+    }
+    else{
+      System.out.println("Grabber Not In Position");
+    }
+  }
+
+  public void rotateElbow(){
+    target += -0.1;
+  }
+
+  public void rotateElbowB(){
+    target += 0.1;
   }
 
   @Override

@@ -57,6 +57,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         target = setpoint;
   }
 
+  public void moveUp(){
+    target += 1;
+  }
+
+  public void moveDown(){
+    target -= 1;
+  }
+
 
   @Override
   public void periodic(){
