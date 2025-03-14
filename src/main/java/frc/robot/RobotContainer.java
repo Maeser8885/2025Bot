@@ -32,9 +32,9 @@ public class RobotContainer {
   public RobotContainer() {
     configureBindings();
     camera = CameraServer.startAutomaticCapture(0);
-    camera.setFPS(20);
+    camera.setFPS(30);
     auto = new SequentialCommandGroup(
-      new DriveDistance(driveSubsystem, -0.4,1.5, 0),
+      new DriveDistance(driveSubsystem,-0.4 ,0.5, 1),
       new DepositCoral(elevatorSubsystem, grabberSubsystem)
     );
   }

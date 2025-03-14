@@ -24,6 +24,8 @@ public class DepositCoral extends Command {
   public void initialize(){
     m_elevatorSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
     m_grabberSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
+
+    timer.restart();
   }
   
 
