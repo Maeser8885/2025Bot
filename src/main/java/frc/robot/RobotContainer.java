@@ -6,18 +6,15 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DepositCoral;
-import frc.robot.commands.DriveToApriltag;
+import frc.robot.commands.DriveDistance;
 import frc.robot.subsystems.GrabberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
-
-
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -25,23 +22,20 @@ public class RobotContainer {
   ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   DriveSubsystem driveSubsystem = new DriveSubsystem();
   public GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
+
+  UsbCamera camera;
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   public static final CommandXboxController m_xboxController = new CommandXboxController(1);
-  PathPlannerAuto driveAuto;
   SequentialCommandGroup auto;
 
   public RobotContainer() {
     configureBindings();
-
-    driveAuto = new PathPlannerAuto("Coral+Intake");
+    camera = CameraServer.startAutomaticCapture(0);
+    camera.setFPS(20);
     auto = new SequentialCommandGroup(
-      driveAuto,
-      new DriveToApriltag(driveSubsystem, Vision.Cameras.CENTER_CAM, 7),
-      new DepositCoral(elevatorSubsystem, grabberSubsystem, 4),
-     // grabberSubsystem.getOuttakeCommand(),
-      new WaitCommand(1)
-      //grabberSubsystem.getStopCommand()
+      new DriveDistance(driveSubsystem, -0.4,1.5, 0),
+      new DepositCoral(elevatorSubsystem, grabberSubsystem)
     );
   }
 
@@ -53,6 +47,9 @@ public class RobotContainer {
     //sideButton
     m_driverController.button(2).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.outtake();}));
     m_driverController.button(2).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
+    //fast intake
+    m_driverController.button(5).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.fastOuttake();}));
+    m_driverController.button(5).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     //7 = intake
     m_driverController.button(7).onTrue(new InstantCommand(() -> {
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
@@ -88,21 +85,28 @@ public class RobotContainer {
       grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);})
       );
         //rotate grabber
-    m_driverController.button(5).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabber();}));
-    m_driverController.button(6).onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabberB();}));
+    m_xboxController.leftTrigger().onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabber();}));
+    m_xboxController.rightTrigger().onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabberB();}));
 
-    m_driverController.button(5).onFalse(new InstantCommand(()->{grabberSubsystem.stopGrabber();}));
-    m_driverController.button(6).onFalse(new InstantCommand(()->{grabberSubsystem.stopGrabber();}));
+    m_xboxController.leftTrigger().onFalse(new InstantCommand(()->{grabberSubsystem.stopGrabber();}));
+    m_xboxController.rightTrigger().onFalse(new InstantCommand(()->{grabberSubsystem.stopGrabber();}));
 
     //3 = change field relativity
     m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
           //manual elbow rotation with xbox controller bumpers
-    m_xboxController.leftBumper().onTrue(new InstantCommand(() -> {grabberSubsystem.rotateElbowB();}));
-    m_xboxController.rightBumper().onTrue(new InstantCommand(() -> {grabberSubsystem.rotateElbow();}));
+    m_xboxController.povUp().onTrue(new InstantCommand(() -> {grabberSubsystem.rotateElbowB();}));
+    m_xboxController.povDown().onTrue(new InstantCommand(() -> {grabberSubsystem.rotateElbow();}));
+
+    m_xboxController.povUp().onFalse(new InstantCommand(() -> {grabberSubsystem.stopElbow();}));
+    m_xboxController.povDown().onFalse(new InstantCommand(() -> {grabberSubsystem.stopElbow();}));
     //manual elevator movement with xbox controller triggers
-    m_xboxController.leftTrigger().onTrue(new InstantCommand(()->{elevatorSubsystem.moveDown();}));
-    m_xboxController.rightTrigger().onTrue(new InstantCommand(()->{elevatorSubsystem.moveUp();}));
-        //xbox presets - y:L1 b:L2 a:L3 b:L4 dpadl:down dpadr:up 
+    m_xboxController.rightStick().onTrue(new InstantCommand(()->{elevatorSubsystem.moveDown();}));
+    m_xboxController.leftStick().onTrue(new InstantCommand(()->{elevatorSubsystem.moveUp();}));
+
+    m_xboxController.rightStick().onFalse(new InstantCommand(()-> {elevatorSubsystem.stop();}));
+    m_xboxController.leftStick().onFalse(new InstantCommand(()-> {elevatorSubsystem.stop();}));
+
+        //xbox presets - y:L1 b:L2 a:L3 x:L4 dpadl:down dpadr:up 
     m_xboxController.y().onTrue(new InstantCommand(() -> {
        
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);

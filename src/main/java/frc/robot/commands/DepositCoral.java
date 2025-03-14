@@ -4,35 +4,35 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 
 public class DepositCoral extends Command {
   ElevatorSubsystem m_elevatorSubsystem;
   GrabberSubsystem m_grabberSubsystem;
-  int level;
-  boolean finished;
+  Timer timer = new Timer();
   //1, 2, 3, 4 - L1, L2, L3, L4
   //0 - down
   //5 - intake
-  public DepositCoral(ElevatorSubsystem eSubsystem, GrabberSubsystem gSubsystem, int rlevel) {
+  public DepositCoral(ElevatorSubsystem eSubsystem, GrabberSubsystem gSubsystem) {
     m_elevatorSubsystem = eSubsystem;
     m_grabberSubsystem = gSubsystem;
-    level = rlevel;
     addRequirements(eSubsystem,gSubsystem);
-    finished = false;
   }
 
   @Override
   public void initialize(){
-    
+    m_elevatorSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
+    m_grabberSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
   }
   
 
   @Override
   public void execute(){
-    
+    m_grabberSubsystem.outtake();
   }
 
   @Override
@@ -40,6 +40,6 @@ public class DepositCoral extends Command {
 
   @Override
   public boolean isFinished(){
-    return finished;
+    return timer.get() >= 0.5;
   }
 }

@@ -25,6 +25,9 @@ public class ElevatorSubsystem extends SubsystemBase {
   double target;
   public RelativeEncoder encoder;
 
+  boolean goUp = false;
+  boolean goDown = false;
+
   public ElevatorSubsystem() {
     //initialize the elevator target
     target = Constants.ElevatorConstants.downSetpoint;
@@ -58,16 +61,26 @@ public class ElevatorSubsystem extends SubsystemBase {
   }
 
   public void moveUp(){
-    target += 1;
+    goUp = true;
   }
 
   public void moveDown(){
-    target -= 1;
+    goDown = true;
   }
 
+  public void stop(){
+    goUp = false;
+    goDown = false;
+  }
 
   @Override
   public void periodic(){
+    if(goUp && target < 240){
+      target += 0.2;
+    }
+    if(goDown && target > 1){
+      target -= 0.2;
+    }
     moveToSetpoint();
     SmartDashboard.putNumber("Elevator target", target);
     SmartDashboard.putNumber("Elevator position", elevatorMotor.getEncoder().getPosition());

@@ -24,7 +24,7 @@ public final class Constants {
     public static final double intakeSetpoint = 70;
     public static final double L1Setpoint = 50;
     public static final double L2Setpoint = 90;
-    public static final double L3Setpoint = 150;
+    public static final double L3Setpoint = 146.8;
     public static final double L4Setpoint = 240;
     public static final double upSoftLimit = 242;
   }
@@ -36,12 +36,12 @@ public final class Constants {
     public static final double downSetpoint = -3;
     public static final double intakeSetpoint = -5.8;
     public static final double L1Setpoint = -7;
-    public static final double L2Setpoint = -6.929;
-    public static final double L3Setpoint = -6.929;
+    public static final double L2Setpoint = -6.229;
+    public static final double L3Setpoint = -6.229;
     public static final double L4Setpoint = -3.4;
     public static double upSoftLimit = 0.214;
     public static final double backSoftLimit = -14;
-    public static final double openclosespeed = 1.0;
+    public static final double openclosespeed = 0.6;
     
     public static final double rotationTime = 0.1;
     public static final double rotationSpeed = 0.3;

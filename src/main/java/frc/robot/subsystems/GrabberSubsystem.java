@@ -16,6 +16,12 @@ import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
+
+
+
+
+
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class GrabberSubsystem extends SubsystemBase {
@@ -27,11 +33,15 @@ public class GrabberSubsystem extends SubsystemBase {
   double target;
   public RelativeEncoder encoder;
   boolean rotated;
+  boolean goUp;
+  boolean goDown;
 
   public GrabberSubsystem() {
     rotated = false;
     //initialize the grabber target
     target = -8;
+
+
 
     //make configs for motor
     SparkMaxConfig grabberMotorConfig = new SparkMaxConfig();
@@ -73,6 +83,10 @@ public class GrabberSubsystem extends SubsystemBase {
     releaseMotor.set(-Constants.GrabberConstants.openclosespeed);
   }
 
+  public void fastOuttake(){
+    releaseMotor.set(1);
+  }
+
   public void stop(){
       releaseMotor.set(0);
   }
@@ -82,16 +96,7 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   public void rotateGrabber(){
-    if(encoder.getPosition() < -3){
-      sidewaysMotor.set(0.1);
-    }
-    else{
-      System.out.println("Grabber Not In Position");
-    }
-  }
-
-  public void rotateGrabberB(){
-    if(encoder.getPosition() < -3){
+    if(encoder.getPosition() < -0.1){
       sidewaysMotor.set(-0.1);
     }
     else{
@@ -99,17 +104,40 @@ public class GrabberSubsystem extends SubsystemBase {
     }
   }
 
+  public void rotateGrabberB(){
+    if(encoder.getPosition() < -0.1){
+      sidewaysMotor.set(0.1);
+    }
+    else{
+      System.out.println("Grabber Not In Position");
+    }
+  }
+
   public void rotateElbow(){
-    target += -0.1;
+    goUp = true;
+    goDown = false;
   }
 
   public void rotateElbowB(){
-    target += 0.1;
+    goDown = true;
+    goUp = false;
+  }
+
+  public void stopElbow(){
+    goUp = false;
+    goDown = false;
   }
 
   @Override
   public void periodic(){
     moveToSetpoint();
+    if(goUp && target < -1){
+      target -= 0.1;
+    }
+    if(goDown && target > -9){
+      target += 0.1;
+    }
+    
     SmartDashboard.putNumber("Grabber target", target);
     SmartDashboard.putNumber("Grabber position", encoder.getPosition());
 
