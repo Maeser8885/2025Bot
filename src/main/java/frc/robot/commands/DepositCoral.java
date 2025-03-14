@@ -14,9 +14,6 @@ public class DepositCoral extends Command {
   ElevatorSubsystem m_elevatorSubsystem;
   GrabberSubsystem m_grabberSubsystem;
   Timer timer = new Timer();
-  //1, 2, 3, 4 - L1, L2, L3, L4
-  //0 - down
-  //5 - intake
   public DepositCoral(ElevatorSubsystem eSubsystem, GrabberSubsystem gSubsystem) {
     m_elevatorSubsystem = eSubsystem;
     m_grabberSubsystem = gSubsystem;
@@ -25,8 +22,8 @@ public class DepositCoral extends Command {
 
   @Override
   public void initialize(){
-    m_elevatorSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
-    m_grabberSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
+    m_elevatorSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
+    m_grabberSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
   }
   
 
