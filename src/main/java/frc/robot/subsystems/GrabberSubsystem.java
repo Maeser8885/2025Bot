@@ -32,9 +32,11 @@ public class GrabberSubsystem extends SubsystemBase {
   SparkClosedLoopController pidController;
   double target;
   public RelativeEncoder encoder;
+  public SparkClosedLoopController rPid;
   boolean rotated;
   boolean goUp;
   boolean goDown;
+  RelativeEncoder rEncoder;
 
   public GrabberSubsystem() {
     rotated = false;
@@ -45,6 +47,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
     //make configs for motor
     SparkMaxConfig grabberMotorConfig = new SparkMaxConfig();
+   // SparkMaxConfig rMotorConfig = new SparkMaxConfig();
     
     //add softlimits
     SoftLimitConfig softlimits = new SoftLimitConfig();
@@ -53,6 +56,8 @@ public class GrabberSubsystem extends SubsystemBase {
     //apply softlimits to config
     grabberMotorConfig.apply(softlimits);
     grabberMotorConfig.closedLoop.p(0.05).i(0).d(0.8);
+    //rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
+    
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
@@ -60,9 +65,11 @@ public class GrabberSubsystem extends SubsystemBase {
     encoder = grabberMotor.getEncoder();
     //config motors
     grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+   // sidewaysMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     pidController = grabberMotor.getClosedLoopController();
-    encoder.setPosition(0);
+    //rPid = sidewaysMotor.getClosedLoopController();
+   // rEncoder = sidewaysMotor.getEncoder();
 
     releaseMotor = new SparkMax(Constants.GrabberConstants.opencloseMotorId, MotorType.kBrushless);
   }
@@ -131,10 +138,10 @@ public class GrabberSubsystem extends SubsystemBase {
   @Override
   public void periodic(){
     moveToSetpoint();
-    if(goUp && target < -1){
+    if(goUp){
       target -= 0.1;
     }
-    if(goDown && target > -9){
+    if(goDown){
       target += 0.1;
     }
     
