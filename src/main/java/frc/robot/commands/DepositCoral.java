@@ -31,7 +31,8 @@ public class DepositCoral extends Command {
 
   @Override
   public void execute(){
-    m_grabberSubsystem.outtake();
+    if(timer.get() >= 0.3){
+    m_grabberSubsystem.outtake();}
   }
 
   @Override
