@@ -9,8 +9,11 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 
 public class StandardControlScheme extends ControlScheme{
-     public StandardControlScheme(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, GrabberSubsystem grabberSubsystem, CommandJoystick joystick, CommandXboxController xboxController) {
-        super(driveSubsystem, elevatorSubsystem, grabberSubsystem);
+
+    String name = "Standard Controls";
+
+     public StandardControlScheme() {
+        super();
     }
 
     public void configureBindings(){
@@ -112,6 +115,7 @@ m_xboxController.povRight().onTrue(new InstantCommand(() -> {
   elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
   grabberSubsystem.setTarget(Constants.GrabberConstants.intakeSetpoint);
 }));
+
 
     }
 }

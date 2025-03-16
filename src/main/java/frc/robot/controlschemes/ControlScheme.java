@@ -14,12 +14,13 @@ public abstract class ControlScheme {
     GrabberSubsystem grabberSubsystem;
     CommandJoystick m_driverController;
     CommandXboxController m_xboxController;
+    public String name = "NO-NAME-ASSIGNED";
 
 
-    public ControlScheme(DriveSubsystem _driveSubsystem, ElevatorSubsystem _elevatorSubsystem, GrabberSubsystem _grabberSubsystem) {
-        driveSubsystem = _driveSubsystem;
-        grabberSubsystem = _grabberSubsystem;
-        elevatorSubsystem = _elevatorSubsystem;
+    public ControlScheme() {
+        driveSubsystem = RobotContainer.instance.driveSubsystem;
+        grabberSubsystem = RobotContainer.instance.grabberSubsystem;
+        elevatorSubsystem = RobotContainer.instance.elevatorSubsystem;
         m_driverController = RobotContainer.m_driverController;
         m_xboxController = RobotContainer.m_xboxController;
     }
