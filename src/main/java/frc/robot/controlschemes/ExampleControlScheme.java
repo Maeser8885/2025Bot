@@ -8,7 +8,7 @@ import frc.robot.subsystems.GrabberSubsystem;
 
 public class ExampleControlScheme extends ControlScheme {
     public ExampleControlScheme(DriveSubsystem driveSubsystem, ElevatorSubsystem elevatorSubsystem, GrabberSubsystem grabberSubsystem, CommandJoystick joystick, CommandXboxController xboxController) {
-        super(driveSubsystem, elevatorSubsystem, grabberSubsystem, joystick, xboxController);
+        super(driveSubsystem, elevatorSubsystem, grabberSubsystem);
     }
 
     public void configureBindings(){
