@@ -27,6 +27,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 public class GrabberSubsystem extends SubsystemBase {
 
   public SparkMax grabberMotor;
+  double rTarget;
   SparkMax releaseMotor;
   SparkMax sidewaysMotor;
   SparkClosedLoopController pidController;
@@ -42,12 +43,12 @@ public class GrabberSubsystem extends SubsystemBase {
     rotated = false;
     //initialize the grabber target
     target = -8;
-
+    rTarget = 0;
 
 
     //make configs for motor
     SparkMaxConfig grabberMotorConfig = new SparkMaxConfig();
-   // SparkMaxConfig rMotorConfig = new SparkMaxConfig();
+    SparkMaxConfig rMotorConfig = new SparkMaxConfig();
     
     //add softlimits
     SoftLimitConfig softlimits = new SoftLimitConfig();
@@ -56,7 +57,7 @@ public class GrabberSubsystem extends SubsystemBase {
     //apply softlimits to config
     grabberMotorConfig.apply(softlimits);
     grabberMotorConfig.closedLoop.p(0.05).i(0).d(0.8);
-    //rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
+    rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
     
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
@@ -65,17 +66,18 @@ public class GrabberSubsystem extends SubsystemBase {
     encoder = grabberMotor.getEncoder();
     //config motors
     grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-   // sidewaysMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+   sidewaysMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     pidController = grabberMotor.getClosedLoopController();
-    //rPid = sidewaysMotor.getClosedLoopController();
-   // rEncoder = sidewaysMotor.getEncoder();
+    rPid = sidewaysMotor.getClosedLoopController();
+    rEncoder = sidewaysMotor.getEncoder();
 
     releaseMotor = new SparkMax(Constants.GrabberConstants.opencloseMotorId, MotorType.kBrushless);
   }
 
    public void moveToSetpoint() {
     pidController.setReference(target, ControlType.kPosition);
+    rPid.setReference(rTarget, ControlType.kPosition);
   }
 
     public void setTarget(double setpoint){
@@ -118,6 +120,11 @@ public class GrabberSubsystem extends SubsystemBase {
     else{
       System.out.println("Grabber Not In Position");
     }
+  }
+
+  public void rotateGrabberPID(){
+    if(rotated)rTarget = 0;
+    else{rTarget = 5.071;}
   }
 
   public void rotateElbow(){
