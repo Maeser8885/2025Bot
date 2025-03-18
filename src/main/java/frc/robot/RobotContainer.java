@@ -12,9 +12,13 @@ import frc.robot.subsystems.ElevatorSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,6 +33,7 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   UsbCamera camera;
+  RobotConfig config;
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   public static final CommandXboxController m_xboxController = new CommandXboxController(1);
@@ -37,12 +42,44 @@ public class RobotContainer {
     configureBindings();
     camera = CameraServer.startAutomaticCapture(0);
     camera.setFPS(30);
-
+    setupPathPlanner();
     PathPlannerAuto centerSingleAuto = new PathPlannerAuto("SingleCoralCenter");
     centerSingleAuto.event("Arrived").onTrue(new DepositCoral(elevatorSubsystem, grabberSubsystem));
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Choose Autonomous Command", autoChooser);
+  }
 
+  public void setupPathPlanner(){
+    try{
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    // Configure AutoBuilder last
+    AutoBuilder.configure(
+            driveSubsystem::getPose, //gets pose
+            driveSubsystem::resetPose, // resetOdometry
+            driveSubsystem::getSpeeds, // MUST BE ROBOT RELATIVE
+            (speeds, feedforwards) -> driveSubsystem.driveRobotRelativeWithSpeeds(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
+                    new PIDConstants(0.1, 0.0, 0.0), // Translation PID constants
+                    new PIDConstants(0.1, 0.0, 0.0) // Rotation PID constants
+            ),
+            config, // The robot configuration
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            driveSubsystem
+    );
   }
 
   private void configureBindings() {

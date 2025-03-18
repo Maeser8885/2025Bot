@@ -7,7 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Single Coral Center"
+            "pathName": "SingleCoralCenter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Arrived"
           }
         }
       ]
