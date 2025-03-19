@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import java.io.File;
+import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -71,8 +72,8 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     if(fieldRel)swerveDrive.zeroGyro(); SmartDashboard.putBoolean("IsFieldRelative", fieldRel);});
   }
 //change field relativity based on driver preference
-  public Command getDriveCommand(){
-    return this.run(()->{drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(), -RobotContainer.m_driverController.getTwist(), fieldRel, -RobotContainer.m_driverController.getThrottle()/2 + 0.5);});
+  public Command getNormalDriveCommand(){
+    return this.run(()->{drive(-RobotContainer.m_xboxController.getLeftY(), -RobotContainer.m_xboxController.getLeftX(), -RobotContainer.m_xboxController.getRightX(), fieldRel, -RobotContainer.m_driverController.getThrottle()/2 + 0.5);});
   }
 
   public Pose2d getPose(){
@@ -91,5 +92,16 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   public void periodic(){
     SmartDashboard.putBoolean("Is It Field Relative?", fieldRel);
     m_field.setRobotPose(getPose());
+  }
+
+  public SwerveDrive getDrive(){
+    return this.swerveDrive;
+  }
+
+   public Command driveFieldOrientedSpeeds(Supplier<ChassisSpeeds> velocity)
+  {
+    return run(() -> {
+      swerveDrive.driveFieldOriented(velocity.get());
+    });
   }
 }

@@ -33,9 +33,11 @@ public class GrabberSubsystem extends SubsystemBase {
   double target;
   public RelativeEncoder encoder;
   boolean rotated;
+  RelativeEncoder rEncoder;
   boolean goUp;
   boolean goDown;
   public double rTarget;
+  SparkClosedLoopController rPid;
 
   public GrabberSubsystem() {
     rotated = false;
@@ -47,7 +49,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
     //make configs for motor
     SparkMaxConfig grabberMotorConfig = new SparkMaxConfig();
-   // SparkMaxConfig rMotorConfig = new SparkMaxConfig();
+    SparkMaxConfig rMotorConfig = new SparkMaxConfig();
     
     //add softlimits
     SoftLimitConfig softlimits = new SoftLimitConfig();
@@ -56,7 +58,7 @@ public class GrabberSubsystem extends SubsystemBase {
     //apply softlimits to config
     grabberMotorConfig.apply(softlimits);
     grabberMotorConfig.closedLoop.p(0.05).i(0).d(0.8);
-    //rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
+    rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
     
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
@@ -65,11 +67,11 @@ public class GrabberSubsystem extends SubsystemBase {
     encoder = grabberMotor.getEncoder();
     //config motors
     grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-   // sidewaysMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    sidewaysMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     pidController = grabberMotor.getClosedLoopController();
-    //rPid = sidewaysMotor.getClosedLoopController();
-   // rEncoder = sidewaysMotor.getEncoder();
+    rPid = sidewaysMotor.getClosedLoopController();
+    rEncoder = sidewaysMotor.getEncoder();
 
     releaseMotor = new SparkMax(Constants.GrabberConstants.opencloseMotorId, MotorType.kBrushless);
   }
@@ -104,11 +106,11 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   public void rotateGrabber(){
-    rTarget = 5.071;
+    rTarget = -0.1;
   }
 
   public void rotateGrabberB(){
-   rTarget = 0;
+   rTarget = 5.071;
   }
 
   public void rotateElbow(){

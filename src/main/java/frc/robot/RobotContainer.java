@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DepositCoral;
 import frc.robot.subsystems.GrabberSubsystem;
+import swervelib.SwerveInputStream;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
@@ -83,7 +84,20 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    driveSubsystem.setDefaultCommand(driveSubsystem.getDriveCommand());
+    SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
+                                                                () -> m_xboxController.getLeftY() * -1,
+                                                                () -> m_xboxController.getLeftX() * -1)
+                                                            //.withControllerRotationAxis(m_xboxController::getRightX)
+                                                            .deadband(0.2)
+                                                            .scaleTranslation(0.9)
+                                                            .allianceRelativeControl(true);
+
+  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_xboxController.getRightX() * -1,
+                                                                                             ()->m_xboxController.getRightY() * -1)
+                                                           .headingWhile(true);
+
+ Command driveFieldOrientedDirectAngle = driveSubsystem.driveFieldOrientedSpeeds(driveDirectAngle);
+    driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
     //trigger
     m_driverController.button(1).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
     m_driverController.button(1).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
