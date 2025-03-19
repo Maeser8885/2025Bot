@@ -57,4 +57,39 @@ public final class Constants {
             Units.inchesToMeters(25.824),
             Rotation2d.fromDegrees(54.011));
   }
+
+    public static final Pose2d rightIntake =  new Pose2d(
+            leftIntake.getX(),
+            Units.inchesToMeters(317) - leftIntake.getY(),
+            Rotation2d.fromRadians(-leftIntake.getRotation().getRadians()));
+
+    public static final Pose2d Processer = new Pose2d(Units.inchesToMeters(235.726), 0, Rotation2d.fromDegrees(90));
+
+    public static final Pose2d[] reefPositions = new Pose2d[]{
+            new Pose2d(
+                Units.inchesToMeters(144.003),
+                Units.inchesToMeters(158.500),
+                Rotation2d.fromDegrees(180)),
+            new Pose2d(
+                Units.inchesToMeters(160.373),
+                Units.inchesToMeters(186.857),
+                Rotation2d.fromDegrees(120)),
+            new Pose2d(
+                Units.inchesToMeters(193.116),
+                Units.inchesToMeters(186.858),
+                Rotation2d.fromDegrees(60)),
+            new Pose2d(
+                Units.inchesToMeters(209.489),
+                Units.inchesToMeters(158.502),
+                Rotation2d.fromDegrees(0)),
+            new Pose2d(
+                Units.inchesToMeters(193.118),
+                Units.inchesToMeters(130.145),
+                Rotation2d.fromDegrees(-60)),
+            new Pose2d(
+                Units.inchesToMeters(160.375),
+                Units.inchesToMeters(130.144),
+                Rotation2d.fromDegrees(-120))
+        }; // Starting from driver station going in clockwise order
+
 }
