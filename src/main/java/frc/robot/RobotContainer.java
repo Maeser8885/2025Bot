@@ -92,6 +92,37 @@ public class RobotContainer {
     }
   }
 
+  public Command driveToRightIntake(){
+    if (PoseAlliances.shouldFlip())
+    {
+      return driveSubsystem.driveToPose(PoseAlliances.flip(Constants.FieldConstants.rightIntake));
+    } else
+    {
+      return driveSubsystem.driveToPose(Constants.FieldConstants.rightIntake);
+    }
+  }
+
+  public Command driveToProcesser(){
+    if (PoseAlliances.shouldFlip())
+    {
+      return driveSubsystem.driveToPose(PoseAlliances.flip(Constants.FieldConstants.Processer));
+    } else
+    {
+      return driveSubsystem.driveToPose(Constants.FieldConstants.Processer);
+    }
+  }
+
+//pos starting from 0 = driverstation going clockwise
+  public Command driveToReefPosition(int pos){
+    if (PoseAlliances.shouldFlip())
+    {
+      return driveSubsystem.driveToPose(PoseAlliances.flip(Constants.FieldConstants.reefPositions[pos]));
+    } else
+    {
+      return driveSubsystem.driveToPose(Constants.FieldConstants.reefPositions[pos]);
+    }
+  }
+
   private void configureBindings() {
     
 
