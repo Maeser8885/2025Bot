@@ -35,16 +35,19 @@ public class GrabberSubsystem extends SubsystemBase {
   boolean rotated;
   boolean goUp;
   boolean goDown;
+  public double rTarget;
 
   public GrabberSubsystem() {
     rotated = false;
     //initialize the grabber target
     target = -8;
+    rTarget = 0;
 
 
 
     //make configs for motor
     SparkMaxConfig grabberMotorConfig = new SparkMaxConfig();
+   // SparkMaxConfig rMotorConfig = new SparkMaxConfig();
     
     //add softlimits
     SoftLimitConfig softlimits = new SoftLimitConfig();
@@ -53,6 +56,8 @@ public class GrabberSubsystem extends SubsystemBase {
     //apply softlimits to config
     grabberMotorConfig.apply(softlimits);
     grabberMotorConfig.closedLoop.p(0.05).i(0).d(0.8);
+    //rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
+    
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
@@ -60,15 +65,18 @@ public class GrabberSubsystem extends SubsystemBase {
     encoder = grabberMotor.getEncoder();
     //config motors
     grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+   // sidewaysMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
     pidController = grabberMotor.getClosedLoopController();
-    encoder.setPosition(0);
+    //rPid = sidewaysMotor.getClosedLoopController();
+   // rEncoder = sidewaysMotor.getEncoder();
 
     releaseMotor = new SparkMax(Constants.GrabberConstants.opencloseMotorId, MotorType.kBrushless);
   }
 
    public void moveToSetpoint() {
     pidController.setReference(target, ControlType.kPosition);
+    rPid.setReference(rTarget, ControlType.kPosition);
   }
 
     public void setTarget(double setpoint){
@@ -96,21 +104,11 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   public void rotateGrabber(){
-    if(encoder.getPosition() < -0.1){
-      sidewaysMotor.set(-0.1);
-    }
-    else{
-      System.out.println("Grabber Not In Position");
-    }
+    rTarget = 5.071;
   }
 
   public void rotateGrabberB(){
-    if(encoder.getPosition() < -0.1){
-      sidewaysMotor.set(0.1);
-    }
-    else{
-      System.out.println("Grabber Not In Position");
-    }
+   rTarget = 0;
   }
 
   public void rotateElbow(){
