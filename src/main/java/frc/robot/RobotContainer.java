@@ -11,13 +11,14 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -43,8 +44,7 @@ public class RobotContainer {
     camera = CameraServer.startAutomaticCapture(0);
     camera.setFPS(30);
     setupPathPlanner();
-    PathPlannerAuto centerSingleAuto = new PathPlannerAuto("SingleCoralCenter");
-    centerSingleAuto.event("Arrived").onTrue(new DepositCoral(elevatorSubsystem, grabberSubsystem));
+    NamedCommands.registerCommand("DepositCoral", new DepositCoral(elevatorSubsystem, grabberSubsystem));
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Choose Autonomous Command", autoChooser);
   }
@@ -82,8 +82,20 @@ public class RobotContainer {
     );
   }
 
+  public Command driveToLeftIntake(){
+    if (PoseAlliances.shouldFlip())
+    {
+      return driveSubsystem.driveToPose(PoseAlliances.flip(Constants.FieldConstants.leftIntake));
+    } else
+    {
+      return driveSubsystem.driveToPose(Constants.FieldConstants.leftIntake);
+    }
+  }
+
   private void configureBindings() {
-    driveSubsystem.setDefaultCommand(driveSubsystem.getDriveCommand());
+    
+
+    driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());
     //trigger
     m_driverController.button(1).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
     m_driverController.button(1).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));

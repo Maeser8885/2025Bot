@@ -22,8 +22,9 @@ public class DepositCoral extends Command {
 
   @Override
   public void initialize(){
-    m_elevatorSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
-    m_grabberSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
+    m_elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);
+    m_grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);
+    m_grabberSubsystem.rotateGrabber();
 
     timer.restart();
   }
@@ -31,7 +32,7 @@ public class DepositCoral extends Command {
 
   @Override
   public void execute(){
-    if(timer.get() >= 0.3){
+    if(timer.get() >= 0.6){
     m_grabberSubsystem.outtake();}
   }
 

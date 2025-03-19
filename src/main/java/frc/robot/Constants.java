@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -45,5 +49,12 @@ public final class Constants {
     
     public static final double rotationTime = 0.1;
     public static final double rotationSpeed = 0.3;
+  }
+
+  public static class FieldConstants{
+    public static final Pose2d leftIntake = new Pose2d(
+            Units.inchesToMeters(33.526),
+            Units.inchesToMeters(25.824),
+            Rotation2d.fromDegrees(54.011));
   }
 }
