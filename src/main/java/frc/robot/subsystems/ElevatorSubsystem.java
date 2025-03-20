@@ -29,56 +29,56 @@ public class ElevatorSubsystem extends SubsystemBase {
   boolean goDown = false;
 
   public ElevatorSubsystem() {
-    //initialize the elevator target
+    // initialize the elevator target
     target = Constants.ElevatorConstants.downSetpoint;
-    //make configs for motors
+    // make configs for motors
     SparkMaxConfig elevatorMotorConfig = new SparkMaxConfig();
-    //add softlimits
+    // add softlimits
     SoftLimitConfig softlimits = new SoftLimitConfig();
     softlimits.forwardSoftLimit(Constants.ElevatorConstants.downSetpoint);
     softlimits.reverseSoftLimit(Constants.ElevatorConstants.upSoftLimit);
-    //apply softlimits to configs
+    // apply softlimits to configs
     elevatorMotorConfig.apply(softlimits);
     elevatorMotorConfig.closedLoop.p(0.01).i(0).d(0);
-    //make motors
+    // make motors
     elevatorMotor = new SparkMax(Constants.ElevatorConstants.motorId, MotorType.kBrushless);
-    //set follwer
-    //get encoder
+    // set follwer
+    // get encoder
     encoder = elevatorMotor.getEncoder();
-    //config motors
+    // config motors
     elevatorMotor.configure(elevatorMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    
+
     pidController = elevatorMotor.getClosedLoopController();
     encoder.setPosition(0);
   }
 
-   public void moveToSetpoint() {
+  public void moveToSetpoint() {
     pidController.setReference(target, ControlType.kPosition);
   }
 
-    public void setTarget(double setpoint) {
-        target = setpoint;
+  public void setTarget(double setpoint) {
+    target = setpoint;
   }
 
-  public void moveUp(){
+  public void moveUp() {
     goUp = true;
   }
 
-  public void moveDown(){
+  public void moveDown() {
     goDown = true;
   }
 
-  public void stop(){
+  public void stop() {
     goUp = false;
     goDown = false;
   }
 
   @Override
-  public void periodic(){
-    if(goUp && target < 240){
+  public void periodic() {
+    if (goUp && target < 240) {
       target += 0.2;
     }
-    if(goDown && target > 1){
+    if (goDown && target > 1) {
       target -= 0.2;
     }
     moveToSetpoint();
