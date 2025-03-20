@@ -12,13 +12,14 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,8 +45,7 @@ public class RobotContainer {
     camera = CameraServer.startAutomaticCapture(0);
     camera.setFPS(30);
     setupPathPlanner();
-    PathPlannerAuto centerSingleAuto = new PathPlannerAuto("SingleCoralCenter");
-    centerSingleAuto.event("Arrived").onTrue(new DepositCoral(elevatorSubsystem, grabberSubsystem));
+    NamedCommands.registerCommand("DepositCoral", new DepositCoral(elevatorSubsystem, grabberSubsystem));
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Choose Autonomous Command", autoChooser);
   }
@@ -81,6 +81,47 @@ public class RobotContainer {
             },
             driveSubsystem
     );
+  }
+
+  public Command driveToLeftIntake(){
+    if (PoseAlliances.shouldFlip())
+    {
+      return driveSubsystem.driveToPose(PoseAlliances.flip(Constants.FieldConstants.leftIntake));
+    } else
+    {
+      return driveSubsystem.driveToPose(Constants.FieldConstants.leftIntake);
+    }
+  }
+
+  public Command driveToRightIntake(){
+    if (PoseAlliances.shouldFlip())
+    {
+      return driveSubsystem.driveToPose(PoseAlliances.flip(Constants.FieldConstants.rightIntake));
+    } else
+    {
+      return driveSubsystem.driveToPose(Constants.FieldConstants.rightIntake);
+    }
+  }
+
+  public Command driveToProcesser(){
+    if (PoseAlliances.shouldFlip())
+    {
+      return driveSubsystem.driveToPose(PoseAlliances.flip(Constants.FieldConstants.Processer));
+    } else
+    {
+      return driveSubsystem.driveToPose(Constants.FieldConstants.Processer);
+    }
+  }
+
+//pos starting from 0 = driverstation going clockwise
+  public Command driveToReefPosition(int pos){
+    if (PoseAlliances.shouldFlip())
+    {
+      return driveSubsystem.driveToPose(PoseAlliances.flip(Constants.FieldConstants.reefPositions[pos]));
+    } else
+    {
+      return driveSubsystem.driveToPose(Constants.FieldConstants.reefPositions[pos]);
+    }
   }
 
   private void configureBindings() {
