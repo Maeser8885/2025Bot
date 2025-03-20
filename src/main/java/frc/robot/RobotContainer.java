@@ -39,6 +39,7 @@ public class RobotContainer {
   
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   public static final CommandXboxController m_xboxController = new CommandXboxController(1);
+  SendableChooser<String> driveChooser;
 
   public RobotContainer() {
     configureBindings();
@@ -48,6 +49,11 @@ public class RobotContainer {
     NamedCommands.registerCommand("DepositCoral", new DepositCoral(elevatorSubsystem, grabberSubsystem));
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Choose Autonomous Command", autoChooser);
+    // driveChooser = new SendableChooser<String>();
+    // driveChooser.addOption("Joystick", "Joystick");
+    // driveChooser.addOption("Xbox Controller", "Xbox Controller");
+    // driveChooser.addOption("Richard Command", "Richard Command");
+    // SmartDashboard.putData(driveChooser);
   }
 
   public void setupPathPlanner(){
@@ -128,7 +134,7 @@ public class RobotContainer {
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
                                                                 () -> m_xboxController.getLeftY() * -1,
                                                                 () -> m_xboxController.getLeftX() * -1)
-                                                            //.withControllerRotationAxis(m_xboxController::getRightX)
+                                                            .withControllerRotationAxis(() -> m_xboxController.getRightX() * -1)
                                                             .deadband(0.2)
                                                             .scaleTranslation(0.9)
                                                             .allianceRelativeControl(true);
@@ -136,9 +142,13 @@ public class RobotContainer {
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_xboxController.getRightX() * -1,
                                                                                              ()->m_xboxController.getRightY() * -1)
                                                            .headingWhile(true);
-
- Command driveFieldOrientedDirectAngle = driveSubsystem.driveFieldOrientedSpeeds(driveDirectAngle);
-    driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
+Command driveFieldOrientedAngular = driveSubsystem.driveFieldOrientedSpeeds(driveAngularVelocity);
+  Command driveFieldOrientedDirectAngle = driveSubsystem.driveFieldOrientedSpeeds(driveDirectAngle);
+  //if(driveChooser.getSelected() == "Joystick"){  
+  //driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());}
+  //if(driveChooser.getSelected() == "Xbox Controller"){ 
+    driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);//}
+  //if(driveChooser.getSelected() == "Richard Command"){ driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);}
     //trigger
     m_driverController.button(1).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
     m_driverController.button(1).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
@@ -149,16 +159,18 @@ public class RobotContainer {
     m_driverController.button(5).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.fastOuttake();}));
     m_driverController.button(5).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     //7 = intake
-    m_driverController.button(7).onTrue(new InstantCommand(() -> {
+    m_driverController.button(7).onTrue(driveToLeftIntake().alongWith(new InstantCommand(() -> {
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
       grabberSubsystem.setTarget(Constants.GrabberConstants.intakeSetpoint);
-    }));
-    //8 = L4
-    m_driverController.button(8).onTrue(new InstantCommand(() -> {
+    })));
+    //8 = Processor
+    m_driverController.button(8).onTrue(
+      
+    driveToProcesser().alongWith(new InstantCommand(() -> {
 
-      elevatorSubsystem.setTarget(Constants.ElevatorConstants.L4Setpoint);
-      grabberSubsystem.setTarget(Constants.GrabberConstants.L4Setpoint);
-    }));
+      elevatorSubsystem.setTarget(Constants.ElevatorConstants.downSetpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.pSetpoint);
+    })));
     //9 = L2
     m_driverController.button(9).onTrue(new InstantCommand(() -> {
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
@@ -177,10 +189,7 @@ public class RobotContainer {
     }));
     //12 = L1
     m_driverController.button(12).onTrue(
-      new InstantCommand(() -> {
-       
-        elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);
-      grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);})
+      driveToProcesser()
       );
         //rotate grabber
     m_xboxController.leftTrigger().onTrue(new InstantCommand(()->{grabberSubsystem.rotateGrabber();}));
@@ -222,9 +231,8 @@ public class RobotContainer {
 
   m_xboxController.x().onTrue(
     new InstantCommand(() -> {
-
-      elevatorSubsystem.setTarget(Constants.ElevatorConstants.L4Setpoint);
-      grabberSubsystem.setTarget(Constants.GrabberConstants.L4Setpoint);
+      elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
+      grabberSubsystem.setTarget(Constants.GrabberConstants.intakeSetpoint);
     })
   );
 
