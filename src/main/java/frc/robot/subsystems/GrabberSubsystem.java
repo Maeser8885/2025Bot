@@ -17,11 +17,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 
-
-
-
-
-
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class GrabberSubsystem extends SubsystemBase {
@@ -38,106 +33,102 @@ public class GrabberSubsystem extends SubsystemBase {
 
   public GrabberSubsystem() {
     rotated = false;
-    //initialize the grabber target
+    // initialize the grabber target
     target = -8;
 
-
-
-    //make configs for motor
+    // make configs for motor
     SparkMaxConfig grabberMotorConfig = new SparkMaxConfig();
-    
-    //add softlimits
+
+    // add softlimits
     SoftLimitConfig softlimits = new SoftLimitConfig();
     softlimits.forwardSoftLimit(Constants.ElevatorConstants.upSoftLimit);
     softlimits.reverseSoftLimit(Constants.GrabberConstants.backSoftLimit);
-    //apply softlimits to config
+    // apply softlimits to config
     grabberMotorConfig.apply(softlimits);
     grabberMotorConfig.closedLoop.p(0.05).i(0).d(0.8);
-    //make motors
+    // make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
-    //get encoder
+    // get encoder
     encoder = grabberMotor.getEncoder();
-    //config motors
+    // config motors
     grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    
+
     pidController = grabberMotor.getClosedLoopController();
     encoder.setPosition(0);
 
     releaseMotor = new SparkMax(Constants.GrabberConstants.opencloseMotorId, MotorType.kBrushless);
   }
 
-   public void moveToSetpoint() {
+  public void moveToSetpoint() {
     pidController.setReference(target, ControlType.kPosition);
   }
 
-    public void setTarget(double setpoint){
-          target = setpoint;
+  public void setTarget(double setpoint) {
+    target = setpoint;
   }
 
-  public void intake(){
+  public void intake() {
     releaseMotor.set(Constants.GrabberConstants.openclosespeed);
   }
 
-  public void outtake(){
+  public void outtake() {
     releaseMotor.set(-Constants.GrabberConstants.openclosespeed);
   }
 
-  public void fastOuttake(){
+  public void fastOuttake() {
     releaseMotor.set(1);
   }
 
-  public void stop(){
-      releaseMotor.set(0);
+  public void stop() {
+    releaseMotor.set(0);
   }
 
-  public void stopGrabber(){
+  public void stopGrabber() {
     sidewaysMotor.set(0);
   }
 
-  public void rotateGrabber(){
-    if(encoder.getPosition() < -0.1){
+  public void rotateGrabber() {
+    if (encoder.getPosition() < -0.1) {
       sidewaysMotor.set(-0.1);
-    }
-    else{
+    } else {
       System.out.println("Grabber Not In Position");
     }
   }
 
-  public void rotateGrabberB(){
-    if(encoder.getPosition() < -0.1){
+  public void rotateGrabberB() {
+    if (encoder.getPosition() < -0.1) {
       sidewaysMotor.set(0.1);
-    }
-    else{
+    } else {
       System.out.println("Grabber Not In Position");
     }
   }
 
-  public void rotateElbow(){
+  public void rotateElbow() {
     goUp = true;
     goDown = false;
   }
 
-  public void rotateElbowB(){
+  public void rotateElbowB() {
     goDown = true;
     goUp = false;
   }
 
-  public void stopElbow(){
+  public void stopElbow() {
     goUp = false;
     goDown = false;
   }
 
   @Override
-  public void periodic(){
+  public void periodic() {
     moveToSetpoint();
-    if(goUp && target < -1){
+    if (goUp && target < -1) {
       target -= 0.1;
     }
-    if(goDown && target > -9){
+    if (goDown && target > -9) {
       target += 0.1;
     }
-    
+
     SmartDashboard.putNumber("Grabber target", target);
     SmartDashboard.putNumber("Grabber position", encoder.getPosition());
 
