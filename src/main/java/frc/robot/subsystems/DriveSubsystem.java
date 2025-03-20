@@ -37,6 +37,8 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   SwerveDrive swerveDrive;
   boolean fieldRel;
   RobotConfig config;
+  public final boolean visionDriveTest = false;
+  public Vision vision;
   private Field2d m_field;
   public DriveSubsystem() {
     try{
@@ -52,6 +54,11 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
       throw new RuntimeException(e);
     }
 
+    if(visionDriveTest){
+      setupPhotonVision();
+      swerveDrive.stopOdometryThread();
+    }
+
     fieldRel = true;
     m_field = new Field2d();
     SmartDashboard.putData("Field", m_field);
@@ -64,6 +71,8 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
     } catch (Exception e) {
       e.printStackTrace();
     }
+
+  
 
     // Configure AutoBuilder last
     AutoBuilder.configure(
@@ -90,6 +99,10 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
             this
     );
     PathfindingCommand.warmupCommand().schedule();
+  }
+
+  public void setupPhotonVision(){
+    vision = new Vision(swerveDrive::getPose, swerveDrive.field);
   }
 
   
@@ -148,5 +161,9 @@ File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(),"swerve");
   public void periodic(){
     SmartDashboard.putBoolean("Is It Field Relative?", fieldRel);
     m_field.setRobotPose(getPose());
+  if(visionDriveTest){
+    swerveDrive.updateOdometry();
+    vision.updatePoseEstimation(swerveDrive);
+  }
   }
 }

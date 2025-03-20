@@ -56,11 +56,10 @@ public final class Constants {
             Units.inchesToMeters(33.526),
             Units.inchesToMeters(25.824),
             Rotation2d.fromDegrees(54.011));
-  }
-
-    public static final Pose2d rightIntake =  new Pose2d(
-            leftIntake.getX(),
-            Units.inchesToMeters(317) - leftIntake.getY(),
+  
+      public static final Pose2d rightIntake =  new Pose2d(
+              leftIntake.getX(),
+              Units.inchesToMeters(317) - leftIntake.getY(),
             Rotation2d.fromRadians(-leftIntake.getRotation().getRadians()));
 
     public static final Pose2d Processer = new Pose2d(Units.inchesToMeters(235.726), 0, Rotation2d.fromDegrees(90));
@@ -92,4 +91,4 @@ public final class Constants {
                 Rotation2d.fromDegrees(-120))
         }; // Starting from driver station going in clockwise order
 
-}
+}}
