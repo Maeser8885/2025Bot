@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class RobotContainer {
@@ -39,6 +40,7 @@ public class RobotContainer {
 
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   public static final CommandXboxController m_xboxController = new CommandXboxController(1);
+  public static final CommandPS4Controller m_logitechController = new CommandPS4Controller(2);
   SendableChooser<String> driveChooser;
 
   public RobotContainer() {
@@ -48,12 +50,13 @@ public class RobotContainer {
     setupPathPlanner();
     NamedCommands.registerCommand("DepositCoral", new DepositCoral(elevatorSubsystem, grabberSubsystem));
     autoChooser = AutoBuilder.buildAutoChooser();
+
     SmartDashboard.putData("Choose Autonomous Command", autoChooser);
-    // driveChooser = new SendableChooser<String>();
-    // driveChooser.addOption("Joystick", "Joystick");
-    // driveChooser.addOption("Xbox Controller", "Xbox Controller");
-    // driveChooser.addOption("Richard Command", "Richard Command");
-    // SmartDashboard.putData(driveChooser);
+    driveChooser = new SendableChooser<>();
+    driveChooser.addOption("Joystick", "Joystick");
+    driveChooser.addOption("Controller", "Controller");
+    driveChooser.addOption("Richard Command", "Richard Command");
+    SmartDashboard.putData(driveChooser);
   }
 
   public void setupPathPlanner() {
@@ -129,23 +132,35 @@ public class RobotContainer {
 
   private void configureBindings() {
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-                                                                () -> m_xboxController.getLeftY() * -1,
-                                                                () -> m_xboxController.getLeftX() * -1)
-                                                            .withControllerRotationAxis(() -> m_xboxController.getRightX() * -1)
+                                                                () -> m_logitechController.getLeftY() * -1,
+                                                                () -> m_logitechController.getLeftX() * -1)
+                                                            .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
                                                             .deadband(0.2)
                                                             .scaleTranslation(0.9)
                                                             .allianceRelativeControl(true);
 
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_xboxController.getRightX() * -1,
-                                                                                             ()->m_xboxController.getRightY() * -1)
+  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
+                                                                                             ()->m_logitechController.getRightY() * -1)
                                                            .headingWhile(true);
 Command driveFieldOrientedAngular = driveSubsystem.driveFieldOrientedSpeeds(driveAngularVelocity);
   Command driveFieldOrientedDirectAngle = driveSubsystem.driveFieldOrientedSpeeds(driveDirectAngle);
-  //if(driveChooser.getSelected() == "Joystick"){  
-  //driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());}
-  //if(driveChooser.getSelected() == "Xbox Controller"){ 
-    driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);//}
-  //if(driveChooser.getSelected() == "Richard Command"){ driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);}
+    if(driveChooser != null){
+  switch (driveChooser.getSelected()) {
+    case "Joystick":
+      driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());
+      break;
+    case "Controller":
+      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+      break;
+    case "Richard Command":
+      driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
+      break;
+    default:
+      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+      break;
+  }}
+  else{driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);}
+
     //trigger
     m_driverController.button(1).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
     m_driverController.button(1).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
