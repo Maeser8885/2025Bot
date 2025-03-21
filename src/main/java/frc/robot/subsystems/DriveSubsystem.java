@@ -181,10 +181,54 @@ public class DriveSubsystem extends SubsystemBase {
     return this.swerveDrive;
   }
 
-   public Command driveFieldOrientedSpeeds(Supplier<ChassisSpeeds> velocity)
+   public Command driveWithTheSpeeds(Supplier<ChassisSpeeds> velocity)
   {
-    return run(() -> {
+    if(fieldRel){return run(() -> {
       swerveDrive.driveFieldOriented(velocity.get());
+    });}
+    return run(() -> {
+      driveRobotRelativeWithSpeeds(velocity.get());
     });
+  }
+
+  public Command driveToLeftIntake() {
+    if (PoseAlliances.shouldFlip()) {
+      return driveToPose(PoseAlliances.flip(Constants.FieldConstants.leftIntake));
+    } else {
+      return driveToPose(Constants.FieldConstants.leftIntake);
+    }
+  }
+
+  public Command driveToRightIntake() {
+    if (PoseAlliances.shouldFlip()) {
+      return driveToPose(PoseAlliances.flip(Constants.FieldConstants.rightIntake));
+    } else {
+      return driveToPose(Constants.FieldConstants.rightIntake);
+    }
+  }
+
+  public Command driveToProcesser() {
+    if (PoseAlliances.shouldFlip()) {
+      return driveToPose(PoseAlliances.flip(Constants.FieldConstants.Processer));
+    } else {
+      return driveToPose(Constants.FieldConstants.Processer);
+    }
+  }
+
+  // pos starting from 0 = driverstation going clockwise
+  public Command driveToReefPosition(int pos) {
+    if (PoseAlliances.shouldFlip()) {
+      return driveToPose(PoseAlliances.flip(Constants.FieldConstants.reefPositions[pos]));
+    } else {
+      return driveToPose(Constants.FieldConstants.reefPositions[pos]);
+    }
+  }
+
+  public Command driveToCages(){
+    if (PoseAlliances.shouldFlip()) {
+      return driveToPose(PoseAlliances.flip(Constants.FieldConstants.middleOfCages));
+    } else {
+      return driveToPose(Constants.FieldConstants.middleOfCages);
+    }
   }
 }

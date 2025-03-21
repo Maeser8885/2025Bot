@@ -2,7 +2,7 @@ package frc.robot.controlschemes;
 
 public class ExampleControlScheme extends ControlScheme {
 
-    String name = "Drive Only";
+    String name = "Example(DONT USE)";
 
     public ExampleControlScheme() {
         super();

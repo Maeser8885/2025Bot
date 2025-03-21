@@ -159,7 +159,7 @@ public class Vision {
         CENTER_CAM("centerCam",
                 new Rotation3d(0, Math.toRadians(10), 0),
                 new Translation3d(Units.inchesToMeters(7.9),
-                        Units.inchesToMeters(-9.8),
+                        Units.inchesToMeters(-5.2),
                         Units.inchesToMeters(14)),
                 VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
 

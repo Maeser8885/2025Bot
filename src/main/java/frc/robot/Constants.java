@@ -95,5 +95,6 @@ public final class Constants {
             Rotation2d.fromDegrees(-120))
     }; // Starting from driver station going in clockwise order
 
+    public static Pose2d middleOfCages = new Pose2d(Units.inchesToMeters(345.428), Units.inchesToMeters(230), Rotation2d.fromDegrees(0));
   }
 }
