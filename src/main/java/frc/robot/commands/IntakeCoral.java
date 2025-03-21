@@ -10,11 +10,11 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
 
-public class DepositCoral extends Command {
+public class IntakeCoral extends Command {
   ElevatorSubsystem m_elevatorSubsystem;
   GrabberSubsystem m_grabberSubsystem;
   Timer timer = new Timer();
-  public DepositCoral(ElevatorSubsystem eSubsystem, GrabberSubsystem gSubsystem) {
+  public IntakeCoral(ElevatorSubsystem eSubsystem, GrabberSubsystem gSubsystem) {
     m_elevatorSubsystem = eSubsystem;
     m_grabberSubsystem = gSubsystem;
     addRequirements(eSubsystem,gSubsystem);
@@ -28,12 +28,12 @@ public class DepositCoral extends Command {
 
   @Override
   public void execute(){
-    m_elevatorSubsystem.setTarget(Constants.ElevatorConstants.autoSetpoint);
-    m_grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);
+    m_elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
+    m_grabberSubsystem.setTarget(Constants.GrabberConstants.intakeSetpoint);
     m_grabberSubsystem.rotateGrabberB();
 
     if(timer.get() >= 0.6){
-    m_grabberSubsystem.intake();}
+    m_grabberSubsystem.outtake();}
 
     if(timer.get() >= 0.99){
       m_grabberSubsystem.stop();

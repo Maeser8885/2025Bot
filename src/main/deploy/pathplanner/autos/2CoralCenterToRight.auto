@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SingleCoralCenter"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DepositCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Go To Right Intake Station"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Go To Beginning Of Reef"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DepositCoral"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

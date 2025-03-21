@@ -18,8 +18,6 @@ public abstract class ControlScheme {
     CommandJoystick m_driverController;
     CommandXboxController m_xboxController;
     CommandPS4Controller m_logitechController;
-    public String name = "NO-NAME-ASSIGNED";
-
 
     public ControlScheme() {
         driveSubsystem = RobotContainer.instance.driveSubsystem;
@@ -30,13 +28,15 @@ public abstract class ControlScheme {
         m_logitechController = RobotContainer.m_logitechController;
     }
 
+    public abstract String getName();
+
     public final void configureUniversalBindings(){
         SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
                                                                 () -> m_logitechController.getLeftY() * -1,
                                                                 () -> m_logitechController.getLeftX() * -1)
                                                             .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
                                                             .deadband(0.2)
-                                                            .scaleTranslation(0.9)
+                                                            .scaleTranslation( ((RobotContainer.m_driverController.getThrottle() - 1)*-0.35) + 0.3)
                                                             .allianceRelativeControl(true);
 
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,

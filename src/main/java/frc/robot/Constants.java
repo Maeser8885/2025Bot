@@ -25,7 +25,7 @@ public final class Constants {
   public static class ElevatorConstants {
     public static final int motorId = 9;
     public static final double downSetpoint = 0;
-    public static final double autoSetPoint = 60;
+    public static final double autoSetpoint = 60;
     public static final double intakeSetpoint = 70;
     public static final double L1Setpoint = 50;
     public static final double L2Setpoint = 41.73;

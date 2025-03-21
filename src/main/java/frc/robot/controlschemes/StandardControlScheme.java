@@ -5,10 +5,13 @@ import frc.robot.Constants;
 
 public class StandardControlScheme extends ControlScheme {
 
-  String name = "Standard Controls";
-
   public StandardControlScheme() {
     super();
+  }
+
+  @Override
+  public String getName(){
+    return "Standard Controls";
   }
 
   public void configureBindings(){
@@ -136,6 +139,7 @@ public class StandardControlScheme extends ControlScheme {
     }));
 
     m_logitechController.button(8).toggleOnTrue(driveSubsystem.switchFieldRel());
+    
     //dpad down - drives to nearest branch
     //dpad up - drives to furthest branch
     //dpad up-left - drives to topleft branch

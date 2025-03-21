@@ -2,7 +2,10 @@ package frc.robot.controlschemes;
 
 public class ExampleControlScheme extends ControlScheme {
 
-    String name = "Example(DONT USE)";
+    @Override
+    public String getName(){
+        return "Example Controls(DO NOT USE)";
+      }
 
     public ExampleControlScheme() {
         super();
