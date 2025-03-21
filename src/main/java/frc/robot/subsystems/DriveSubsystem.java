@@ -130,6 +130,7 @@ public class DriveSubsystem extends SubsystemBase {
     });
   }
 //change field relativity based on driver preference
+
   public Command getNormalDriveCommand(){
     return this.run(()->{drive(-RobotContainer.m_xboxController.getLeftY(), -RobotContainer.m_xboxController.getLeftX(), -RobotContainer.m_xboxController.getRightX(), fieldRel, -RobotContainer.m_driverController.getThrottle()/2 + 0.5);});}
 
