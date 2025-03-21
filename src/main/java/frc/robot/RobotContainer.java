@@ -58,6 +58,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     camera = CameraServer.startAutomaticCapture(0);
+    instance = this;
     camera.setFPS(30);
     setupDashboard();
     setupPathPlanner();
