@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.ReefTarget;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -15,6 +16,7 @@ public abstract class ControlScheme {
     DriveSubsystem driveSubsystem;
     ElevatorSubsystem elevatorSubsystem;
     GrabberSubsystem grabberSubsystem;
+    ReefTarget reefTargeter;
     CommandJoystick m_driverController;
     CommandXboxController m_xboxController;
     CommandPS4Controller m_logitechController;
@@ -23,6 +25,7 @@ public abstract class ControlScheme {
         driveSubsystem = RobotContainer.instance.driveSubsystem;
         grabberSubsystem = RobotContainer.instance.grabberSubsystem;
         elevatorSubsystem = RobotContainer.instance.elevatorSubsystem;
+        reefTargeter = RobotContainer.instance.reefTargeter;
         m_driverController = RobotContainer.m_driverController;
         m_xboxController = RobotContainer.m_xboxController;
         m_logitechController = RobotContainer.m_logitechController;

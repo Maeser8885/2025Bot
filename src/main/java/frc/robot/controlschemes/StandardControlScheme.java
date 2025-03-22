@@ -1,6 +1,8 @@
 package frc.robot.controlschemes;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.ReefTarget.ReefBranchSide;
 import frc.robot.Constants;
 
 public class StandardControlScheme extends ControlScheme {
@@ -150,6 +152,8 @@ public class StandardControlScheme extends ControlScheme {
     //left trigger - LeftIntake
     //Left bumper - processor
     //right bumper - cages
+    //left stick - auto targets left branch
+    //right stick - auto targets right branch
 
     m_logitechController.povDown().onTrue(driveSubsystem.driveToReefPosition(0));
     m_logitechController.povUp().onTrue(driveSubsystem.driveToReefPosition(3));
@@ -163,5 +167,18 @@ public class StandardControlScheme extends ControlScheme {
 
     m_logitechController.R1().onTrue(driveSubsystem.driveToCages());
     m_logitechController.L1().onTrue(driveSubsystem.driveToProcesser());
+
+    m_logitechController.L3().onTrue((reefTargeter.setBranchSide(ReefBranchSide.LEFT)
+    .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
+                                                 "target")
+                                                                    .setPose(
+                                                                        reefTargeter.getCoralTargetPose())))));
+
+    m_logitechController.R3().onTrue(reefTargeter.setBranchSide(ReefBranchSide.RIGHT)
+    .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
+                                                 "target")
+                                                                    .setPose(
+                                                                        reefTargeter.getCoralTargetPose()))));
     }
+
 }

@@ -39,6 +39,7 @@ public class RobotContainer {
   public ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   public DriveSubsystem driveSubsystem = new DriveSubsystem();
   public GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
+  public ReefTarget reefTargeter = new ReefTarget();
   private final SendableChooser<Command> autoChooser;
 
   public ControlScheme defaultControlScheme;
