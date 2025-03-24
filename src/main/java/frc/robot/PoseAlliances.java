@@ -34,7 +34,7 @@ public class PoseAlliances {
   }
 
   public static boolean shouldFlip() {
-    return (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red);
+   return (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red);
   }
 
 }
