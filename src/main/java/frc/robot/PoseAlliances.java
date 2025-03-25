@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class PoseAlliances {
   public static double applyX(double x) {
@@ -34,7 +35,10 @@ public class PoseAlliances {
   }
 
   public static boolean shouldFlip() {
-   return (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red);
+   while (!DriverStation.getAlliance().isPresent()) {
+    DriverStation.refreshData();
+   }
+   return DriverStation.getAlliance().get() == Alliance.Red;
   }
 
 }

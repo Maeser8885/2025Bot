@@ -66,6 +66,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Go To Right Intake Station", driveSubsystem.driveToRightIntake());
     NamedCommands.registerCommand("Go To Left Intake Station", driveSubsystem.driveToLeftIntake());
     NamedCommands.registerCommand("Go To Beginning Of Reef", driveSubsystem.driveToReefPosition(0));
+    NamedCommands.registerCommand("Go To Bottom-Left Of Reef", driveSubsystem.driveToReefPosition(1));
+    NamedCommands.registerCommand("Go To Bottom-Right Of Reef", driveSubsystem.driveToReefPosition(5));
     NamedCommands.registerCommand("Intake Coral", new IntakeCoral(elevatorSubsystem, grabberSubsystem));
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.setDefaultOption("SingleCoralCenter", new PathPlannerAuto("SingleCoralCenter"));

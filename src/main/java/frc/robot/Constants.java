@@ -71,21 +71,21 @@ public final class Constants {
 
     public static final Translation2d center = new Translation2d(Units.inchesToMeters(176.746),
         Units.inchesToMeters(158.501));
-    public static final Pose2d leftIntake = new Pose2d(
+    public static final Pose2d rightIntake = new Pose2d(
         Units.inchesToMeters(33.526),
         Units.inchesToMeters(25.824),
         Rotation2d.fromDegrees(54.011));
 
-    public static final Pose2d rightIntake = new Pose2d(
-        leftIntake.getX(),
-        Units.inchesToMeters(317) - leftIntake.getY(),
-        Rotation2d.fromRadians(-leftIntake.getRotation().getRadians()));
+    public static final Pose2d leftIntake = new Pose2d(
+        rightIntake.getX(),
+        Units.inchesToMeters(317) - rightIntake.getY(),
+        Rotation2d.fromRadians(-rightIntake.getRotation().getRadians()));
 
     public static final Pose2d Processer = new Pose2d(Units.inchesToMeters(235.726), 0, Rotation2d.fromDegrees(90));
 
     public static final Pose2d[] reefPositions = new Pose2d[] {
         new Pose2d(
-            Units.inchesToMeters(144.003),
+            Units.inchesToMeters(135),
             Units.inchesToMeters(158.500),
             Rotation2d.fromDegrees(180)),
         new Pose2d(

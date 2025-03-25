@@ -136,6 +136,7 @@ public class GrabberSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Grabber target", target);
     SmartDashboard.putNumber("Grabber position", encoder.getPosition());
+    SmartDashboard.putNumber("Flywheel Speed", releaseMotor.get());
 
   }
 
