@@ -157,10 +157,11 @@ public class Vision {
 
     public enum Cameras {
         CENTER_CAM("centerCam",
-                new Rotation3d(0, Math.toRadians(10), 0),
-                new Translation3d(Units.inchesToMeters(7.9),
-                        Units.inchesToMeters(-5.2),
-                        Units.inchesToMeters(14)),
+                //roll might be negative
+                new Rotation3d(Math.toRadians(130), Math.toRadians(10), 0),
+                new Translation3d(Units.inchesToMeters(7.75),
+                        Units.inchesToMeters(6.5),
+                        Units.inchesToMeters(12.75)),
                 VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
 
         public final Alert latencyAlert;
