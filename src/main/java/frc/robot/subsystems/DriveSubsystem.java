@@ -44,7 +44,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public DriveSubsystem() {
     try {
-      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(Units.feetToMeters(maximumSpeed));
+      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(maximumSpeed);
       SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
       SwerveModule[] modules = swerveDrive.getModules();
       for (SwerveModule m : modules) {
@@ -132,7 +132,7 @@ public class DriveSubsystem extends SubsystemBase {
 //change field relativity based on driver preference
 
   public Command getNormalDriveCommand(){
-    return this.run(()->{drive(-RobotContainer.m_xboxController.getLeftY(), -RobotContainer.m_xboxController.getLeftX(), -RobotContainer.m_xboxController.getRightX(), fieldRel, -RobotContainer.m_driverController.getThrottle()/2 + 0.5);});}
+    return this.run(()->{drive(-RobotContainer.m_xboxController.getLeftY(), -RobotContainer.m_xboxController.getLeftX(), -RobotContainer.m_xboxController.getRightX(), fieldRel, 1);});}
 
   // change field relativity based on driver preference
   public Command getDriveCommand() {

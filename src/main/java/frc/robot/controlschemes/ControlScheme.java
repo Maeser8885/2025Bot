@@ -1,6 +1,5 @@
 package frc.robot.controlschemes;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.ReefTarget;
@@ -8,7 +7,6 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
-import swervelib.SwerveInputStream;
 
 public abstract class ControlScheme {
 
@@ -33,35 +31,7 @@ public abstract class ControlScheme {
     public abstract String getName();
 
     public final void configureUniversalBindings(){
-        SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-                                                                () -> m_logitechController.getLeftY() * -1,
-                                                                () -> m_logitechController.getLeftX() * -1)
-                                                            .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
-                                                            .deadband(0.2)
-                                                            .scaleTranslation(0.9)
-                                                            .allianceRelativeControl(true);
-
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
-                                                                                             ()->m_logitechController.getRightY() * -1)
-                                                           .headingWhile(true);
-Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
-  Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
-    if(RobotContainer.instance.driveChooser != null){
-  switch (RobotContainer.instance.driveChooser.getSelected()) {
-    case "Joystick":
-      driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());
-      break;
-    case "Controller":
-      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
-      break;
-    case "Richard Command":
-      driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
-      break;
-    default:
-      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
-      break;
-  }}
-  else{driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);}
+       
     }
 
     public void configureBindings(){
