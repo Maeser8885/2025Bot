@@ -39,7 +39,7 @@ public abstract class ControlScheme {
                                                                 () -> m_logitechController.getLeftX() * -1)
                                                             .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
                                                             .deadband(0.2)
-                                                            .scaleTranslation( ((RobotContainer.m_driverController.getThrottle() - 1)*-0.35) + 0.3)
+                                                            .scaleTranslation(0.9)
                                                             .allianceRelativeControl(true);
 
   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
