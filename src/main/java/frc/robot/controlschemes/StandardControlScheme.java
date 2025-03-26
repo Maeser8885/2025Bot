@@ -168,7 +168,7 @@ public class StandardControlScheme extends ControlScheme {
     m_logitechController.rightBumper().onTrue(driveSubsystem.driveToCages());
     m_logitechController.leftBumper().onTrue(driveSubsystem.driveToProcesser());
 
-    m_logitechController.leftStick().onTrue((reefTargeter.`etBranchSide(ReefBranchSide.LEFT)
+    m_logitechController.leftStick().onTrue((reefTargeter.getBranchSide(ReefBranchSide.LEFT)
     .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
                                                  "target")
                                                                     .setPose(
