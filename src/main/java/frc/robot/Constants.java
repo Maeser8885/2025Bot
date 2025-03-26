@@ -27,7 +27,7 @@ public final class Constants {
 
   public static class DriveConstants {
     // feet/sec
-    public static final double maxSpeed = 14.3;
+    public static final double maxSpeed = 20;
   }
 
   public static class VisionConstants {
