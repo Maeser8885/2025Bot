@@ -162,19 +162,19 @@ public class StandardControlScheme extends ControlScheme {
     m_logitechController.povDownLeft().onTrue(driveSubsystem.driveToReefPosition(5));
     m_logitechController.povDownRight().onTrue(driveSubsystem.driveToReefPosition(1));
 
-    m_logitechController.R2().onTrue(driveSubsystem.driveToRightIntake());
-    m_logitechController.L2().onTrue(driveSubsystem.driveToLeftIntake());
+    m_logitechController.rightTrigger().onTrue(driveSubsystem.driveToRightIntake());
+    m_logitechController.leftTrigger().onTrue(driveSubsystem.driveToLeftIntake());
 
-    m_logitechController.R1().onTrue(driveSubsystem.driveToCages());
-    m_logitechController.L1().onTrue(driveSubsystem.driveToProcesser());
+    m_logitechController.rightBumper().onTrue(driveSubsystem.driveToCages());
+    m_logitechController.leftBumper().onTrue(driveSubsystem.driveToProcesser());
 
-    m_logitechController.L3().onTrue((reefTargeter.setBranchSide(ReefBranchSide.LEFT)
+    m_logitechController.leftStick().onTrue((reefTargeter.`etBranchSide(ReefBranchSide.LEFT)
     .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
                                                  "target")
                                                                     .setPose(
                                                                         reefTargeter.getCoralTargetPose())))));
 
-    m_logitechController.R3().onTrue(reefTargeter.setBranchSide(ReefBranchSide.RIGHT)
+    m_logitechController.rightStick().onTrue(reefTargeter.setBranchSide(ReefBranchSide.RIGHT)
     .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
                                                  "target")
                                                                     .setPose(

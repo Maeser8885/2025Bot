@@ -129,17 +129,22 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("IsFieldRelative", fieldRel);
     });
   }
-//change field relativity based on driver preference
+  // change field relativity based on driver preference
 
-  public Command getNormalDriveCommand(){
-    return this.run(()->{drive(-RobotContainer.m_xboxController.getLeftY(), -RobotContainer.m_xboxController.getLeftX(), -RobotContainer.m_xboxController.getRightX(), fieldRel, -RobotContainer.m_driverController.getThrottle()/2 + 0.5);});}
+  public Command getNormalDriveCommand() {
+    return this.run(() -> {
+      drive(-RobotContainer.m_xboxController.getLeftY(), -RobotContainer.m_xboxController.getLeftX(),
+          -RobotContainer.m_xboxController.getRightX(), fieldRel,
+          -RobotContainer.m_driverController.getThrottle() / 2 + 0.5);
+    });
+  }
 
   // change field relativity based on driver preference
   public Command getDriveCommand() {
     return this.run(() -> {
       drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(),
           -RobotContainer.m_driverController.getTwist(), fieldRel,
-          ((RobotContainer.m_driverController.getThrottle() - 1)*-0.35) + 0.3);
+          ((RobotContainer.m_driverController.getThrottle() - 1) * -0.35) + 0.3);
     });
   }
 
@@ -157,7 +162,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public Command driveToPose(Pose2d poseTarget) {
     PathConstraints constraints = new PathConstraints(
-        swerveDrive.getMaximumChassisVelocity(), 5.6,
+        swerveDrive.getMaximumChassisVelocity() - 7, 5.6,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(1947));
 
     return AutoBuilder.pathfindToPose(
@@ -177,15 +182,16 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public SwerveDrive getDrive(){
+  public SwerveDrive getDrive() {
     return this.swerveDrive;
   }
 
-   public Command driveWithTheSpeeds(Supplier<ChassisSpeeds> velocity)
-  {
-    if(fieldRel){return run(() -> {
-      swerveDrive.driveFieldOriented(velocity.get());
-    });}
+  public Command driveWithTheSpeeds(Supplier<ChassisSpeeds> velocity) {
+    if (fieldRel) {
+      return run(() -> {
+        swerveDrive.driveFieldOriented(velocity.get());
+      });
+    }
     return run(() -> {
       driveRobotRelativeWithSpeeds(velocity.get());
     });
@@ -224,7 +230,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public Command driveToCages(){
+  public Command driveToCages() {
     if (PoseAlliances.shouldFlip()) {
       return driveToPose(PoseAlliances.flip(Constants.FieldConstants.middleOfCages));
     } else {

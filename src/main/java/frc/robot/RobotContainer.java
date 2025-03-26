@@ -53,7 +53,7 @@ public class RobotContainer {
 
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   public static final CommandXboxController m_xboxController = new CommandXboxController(1);
-  public static final CommandPS4Controller m_logitechController = new CommandPS4Controller(2);
+  public static final CommandXboxController m_logitechController = new CommandXboxController(2);
   public SendableChooser<String> driveChooser;
 
   public RobotContainer() {

@@ -19,7 +19,7 @@ public abstract class ControlScheme {
     ReefTarget reefTargeter;
     CommandJoystick m_driverController;
     CommandXboxController m_xboxController;
-    CommandPS4Controller m_logitechController;
+    CommandXboxController m_logitechController;
 
     public ControlScheme() {
         driveSubsystem = RobotContainer.instance.driveSubsystem;

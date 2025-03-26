@@ -16,6 +16,7 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
@@ -24,7 +25,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   SparkMax elevatorMotor;
   SparkClosedLoopController pidController;
   double target;
-  public AbsoluteEncoder encoder;
+  public RelativeEncoder encoder;
 
   boolean goUp = false;
   boolean goDown = false;
@@ -40,12 +41,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     softlimits.reverseSoftLimit(Constants.ElevatorConstants.upSoftLimit);
     // apply softlimits to configs
     elevatorMotorConfig.apply(softlimits);
-    elevatorMotorConfig.closedLoop.p(0.01).i(0).d(0).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+    elevatorMotorConfig.closedLoop.p(0.01).i(0).d(0);
     // make motors
     elevatorMotor = new SparkMax(Constants.ElevatorConstants.motorId, MotorType.kBrushless);
     // set follwer
     // get encoder
-    encoder = elevatorMotor.getAbsoluteEncoder();
+    encoder = elevatorMotor.getEncoder();
     // config motors
     elevatorMotor.configure(elevatorMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

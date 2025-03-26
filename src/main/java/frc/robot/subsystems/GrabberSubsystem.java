@@ -28,7 +28,7 @@ public class GrabberSubsystem extends SubsystemBase {
   SparkMax sidewaysMotor;
   SparkClosedLoopController pidController;
   double target;
-  public AbsoluteEncoder encoder;
+  public RelativeEncoder encoder;
   boolean rotated;
   RelativeEncoder rEncoder;
   boolean goUp;
@@ -52,14 +52,14 @@ public class GrabberSubsystem extends SubsystemBase {
     softlimits.reverseSoftLimit(Constants.GrabberConstants.backSoftLimit);
     // apply softlimits to config
     grabberMotorConfig.apply(softlimits);
-    grabberMotorConfig.closedLoop.p(0.1).i(0).d(0.8).outputRange(-0.5, 0.5).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
+    grabberMotorConfig.closedLoop.p(0.1).i(0).d(0.8).outputRange(-0.5, 0.5);
     rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
     
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
     // get encoder
-    encoder = grabberMotor.getAbsoluteEncoder();
+    encoder = grabberMotor.getEncoder();
  
     // config motors
     grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

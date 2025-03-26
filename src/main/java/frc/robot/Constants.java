@@ -31,7 +31,7 @@ public final class Constants {
   }
 
   public static class VisionConstants {
-    public static final String cameraName = "centerCam";
+    public static final String cameraName = "Arducam OV9782 USB Camera";
   }
 
   public static class ElevatorConstants {
