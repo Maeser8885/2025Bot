@@ -13,6 +13,7 @@ import frc.robot.controlschemes.ExampleControlScheme;
 import frc.robot.controlschemes.OliviaAndCharlesControlScheme;
 import frc.robot.controlschemes.StandardControlScheme;
 import frc.robot.subsystems.GrabberSubsystem;
+import swervelib.SwerveInputStream;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 
@@ -85,7 +86,8 @@ public class RobotContainer {
     driveChooser.addOption("Controller", "Controller");
     driveChooser.addOption("Richard Command", "Richard Command");
     driveChooser.setDefaultOption("Controller", "Controller");
-    SmartDashboard.putData(driveChooser);
+    SmartDashboard.putData("Choose the Drive", driveChooser);
+    
   }
 
   public void teleopInit(){
@@ -93,6 +95,40 @@ public class RobotContainer {
     controls.configureUniversalBindings();
     controls.configureBindings();
   }
+
+  public void teleopPeriodic(){
+     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
+                                                                () -> m_logitechController.getLeftY() * -1,
+                                                                () -> m_logitechController.getLeftX() * -1)
+                                                            .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
+                                                            .deadband(0.2)
+                                                            .scaleTranslation(1)
+                                                            .allianceRelativeControl(true);
+
+  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
+                                                                                             ()->m_logitechController.getRightY() * -1)
+                                                           .headingWhile(true);
+Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
+  Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
+    if(RobotContainer.instance.driveChooser != null){
+  switch (driveChooser.getSelected()) {
+    case "Joystick":
+      driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());
+      break;
+    case "Controller":
+      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+      break;
+    case "Richard Command":
+      driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
+      break;
+    default:
+      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+      break;
+  }}
+  else{driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);}
+    }
+
+  
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
