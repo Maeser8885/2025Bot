@@ -33,13 +33,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
+  private Vision vision;
+
   double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
   File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
   SwerveDrive swerveDrive;
   boolean fieldRel;
   RobotConfig config;
   public final boolean visionDriveTest = true;
-  public Field2d m_field;
+  
 
   public DriveSubsystem() {
     try {
@@ -53,15 +55,22 @@ public class DriveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+    if(visionDriveTest){
+    setupPhotonVision();
 
+    swerveDrive.stopOdometryThread();
+    }
     swerveDrive.stopOdometryThread();
 
     fieldRel = true;
-    m_field = new Field2d();
-    SmartDashboard.putData("Field", m_field);
+    SmartDashboard.putData("Field", swerveDrive.field);
+  
     setupPathPlanner();
   }
 
+  public void setupPhotonVision(){
+    vision = new Vision(swerveDrive::getPose, swerveDrive.field);
+  }
   public void setupPathPlanner() {
     try {
       config = RobotConfig.fromGUISettings();
@@ -164,17 +173,11 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putBoolean("Is It Field Relative?", fieldRel);
     
-      
-      RobotContainer.instance.vision.updatePoseEstimation(swerveDrive);
-      var pose = RobotContainer.instance.vision.getEstimatedGlobalPose(Vision.Cameras.CENTER_CAM);
-      if(pose.isPresent()){
-      m_field.setRobotPose(pose.get().estimatedPose.toPose2d());
-      
-
-      }else{
-      swerveDrive.updateOdometry();
+      if(visionDriveTest){
+        swerveDrive.updateOdometry();
+        vision.updatePoseEstimation(swerveDrive);
       }
-  }
+      }
 
   public SwerveDrive getDrive(){
     return this.swerveDrive;
