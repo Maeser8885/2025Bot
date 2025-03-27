@@ -49,8 +49,8 @@ public class OliviaAndCharlesControlScheme extends ControlScheme {
             grabberSubsystem.rotateGrabberB();
           }));
 
-          elevatorSubsystem.setDefaultCommand(elevatorSubsystem.elevatorJoystickMoveCommand(),elevatorSubsystem);
-          grabberSubsystem.setDefaultCommand(grabberSubsystem.grabberMoveCommand(),grabberSubsystem);
+          elevatorSubsystem.setDefaultCommand(elevatorSubsystem.elevatorJoystickMoveCommand());
+          grabberSubsystem.setDefaultCommand(grabberSubsystem.grabberMoveCommand());
 
           m_xboxController.povRight().onTrue(new InstantCommand(() -> {
             elevatorSubsystem.setTarget(Constants.ElevatorConstants.downSetpoint);
