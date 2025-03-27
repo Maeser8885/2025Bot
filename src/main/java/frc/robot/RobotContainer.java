@@ -80,7 +80,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("SingleCoralCenter", new PathPlannerAuto("SingleCoralCenter"));
     setupDashboard();
 
-    vision = new Vision(() -> (driveSubsystem.getPose()), driveSubsystem.m_field);
+
   }
 
   public void setupDashboard(){
