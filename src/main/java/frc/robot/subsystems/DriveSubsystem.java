@@ -60,7 +60,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     swerveDrive.stopOdometryThread();
     }
-    swerveDrive.stopOdometryThread();
+  
 
     fieldRel = true;
     SmartDashboard.putData("Field", swerveDrive.field);
