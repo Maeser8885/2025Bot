@@ -1,5 +1,6 @@
 package frc.robot.controlschemes;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.ReefTarget;
@@ -7,6 +8,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.GrabberSubsystem;
+import swervelib.SwerveInputStream;
 
 public abstract class ControlScheme {
 
@@ -31,7 +33,6 @@ public abstract class ControlScheme {
     public abstract String getName();
 
     public final void configureUniversalBindings(){
-<<<<<<< HEAD
       SwerveInputStream xboxDriveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
                                                                 () -> m_xboxController.getLeftY() * -1,
                                                                 () -> m_xboxController.getLeftX() * -1)
@@ -68,14 +69,15 @@ Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngul
     case "Richard Command":
       driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
       break;
+    case "Xbox Drive":
+      driveSubsystem.setDefaultCommand(driveSubsystem.driveWithTheSpeeds(xboxDriveDirectAngle));
+
+      
     default:
       driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
       break;
   }}
   else{driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);}
-=======
-       
->>>>>>> 312c23796d8d66b9dea761433e03c7eec81bcb31
     }
 
     public void configureBindings(){

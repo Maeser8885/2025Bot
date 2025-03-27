@@ -38,9 +38,8 @@ public class DriveSubsystem extends SubsystemBase {
   SwerveDrive swerveDrive;
   boolean fieldRel;
   RobotConfig config;
-  public final boolean visionDriveTest = false;
-  public Vision vision;
-  private Field2d m_field;
+  public final boolean visionDriveTest = true;
+  public Field2d m_field;
 
   public DriveSubsystem() {
     try {
@@ -55,10 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
-    if (visionDriveTest) {
-      setupPhotonVision();
-      swerveDrive.stopOdometryThread();
-    }
+    swerveDrive.stopOdometryThread();
 
     fieldRel = true;
     m_field = new Field2d();
@@ -103,9 +99,6 @@ public class DriveSubsystem extends SubsystemBase {
     PathfindingCommand.warmupCommand().schedule();
   }
 
-  public void setupPhotonVision() {
-    vision = new Vision(swerveDrive::getPose, swerveDrive.field);
-  }
 
   public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative,
       double speedFactor) {
@@ -170,11 +163,17 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Is It Field Relative?", fieldRel);
-    m_field.setRobotPose(getPose());
-    if (visionDriveTest) {
+    
+      
+      RobotContainer.instance.vision.updatePoseEstimation(swerveDrive);
+      var pose = RobotContainer.instance.vision.getEstimatedGlobalPose(Vision.Cameras.CENTER_CAM);
+      if(pose.isPresent()){
+      m_field.setRobotPose(pose.get().estimatedPose.toPose2d());
+      
+
+      }else{
       swerveDrive.updateOdometry();
-      vision.updatePoseEstimation(swerveDrive);
-    }
+      }
   }
 
   public SwerveDrive getDrive(){

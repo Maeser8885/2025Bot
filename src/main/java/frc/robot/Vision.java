@@ -70,7 +70,6 @@ public class Vision {
         } else {
             throw new RuntimeException("Cannot get AprilTag " + aprilTag + " from field " + fieldLayout.toString());
         }
-
     }
 
     public void updatePoseEstimation(SwerveDrive swerveDrive) {

@@ -90,10 +90,6 @@ public class OliviaAndCharlesControlScheme extends ControlScheme {
     m_logitechController.rightTrigger().onTrue(driveSubsystem.driveToRightIntake());
     m_logitechController.leftTrigger().onTrue(driveSubsystem.driveToLeftIntake());
 
-    m_logitechController.rightBumper().onTrue(driveSubsystem.driveToCages());
-    m_logitechController.leftBumper().onTrue(driveSubsystem.driveToProcesser());
-
-            
     m_logitechController.leftBumper().toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
     m_logitechController.leftBumper().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     

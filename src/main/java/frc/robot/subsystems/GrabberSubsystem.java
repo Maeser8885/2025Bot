@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -14,6 +15,7 @@ import frc.robot.RobotContainer;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SoftLimitConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -30,7 +32,7 @@ public class GrabberSubsystem extends SubsystemBase {
   SparkMax sidewaysMotor;
   SparkClosedLoopController pidController;
   double target;
-  public AbsoluteEncoder encoder;
+  public RelativeEncoder encoder;
   boolean rotated;
   RelativeEncoder rEncoder;
   boolean goUp;
@@ -58,14 +60,14 @@ public class GrabberSubsystem extends SubsystemBase {
     softlimits.reverseSoftLimit(Constants.GrabberConstants.backSoftLimit);
     // apply softlimits to config
     grabberMotorConfig.apply(softlimits);
-    grabberMotorConfig.closedLoop.p(0.1).i(0).d(0.8).outputRange(-0.5, 0.5).feedbackSensor(feedback.kAbsolute);
+    grabberMotorConfig.closedLoop.p(0.1).i(0).d(0.8).outputRange(-0.5, 0.5);
     rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
     
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
     // get encoder
-    encoder = grabberMotor.getAbsoluteEncoder();
+    encoder = grabberMotor.getEncoder();
  
     // config motors
     grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -88,11 +90,11 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   public void intake() {
-    releaseMotor.set(Constants.GrabberConstants.openclosespeed);
+    releaseMotor.set(-Constants.GrabberConstants.openclosespeed);
   }
 
   public void outtake() {
-    releaseMotor.set(-Constants.GrabberConstants.openclosespeed);
+    releaseMotor.set(Constants.GrabberConstants.openclosespeed);
   }
 
   public void fastOuttake() {
@@ -131,7 +133,7 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   public Command grabberMoveCommand(){
-    return new InstantCommand(() -> {
+    return new RunCommand(() -> {
       if(RobotContainer.m_xboxController.getRightY() > 0){
         goUp = true;
         goDown = false;
@@ -141,11 +143,11 @@ public class GrabberSubsystem extends SubsystemBase {
         goDown = true;
         m_speed = RobotContainer.m_xboxController.getRightY();
       }
-    });
+    }, this);
   }
 
   public Command logitechGrabberMoveCommand(){
-    return new InstantCommand(() -> {
+    return new RunCommand(() -> {
       if(RobotContainer.m_logitechController.getRightY() > 0){
         goUp = true;
         goDown = false;
@@ -155,19 +157,21 @@ public class GrabberSubsystem extends SubsystemBase {
         goDown = true;
         m_speed = RobotContainer.m_logitechController.getRightY();
       }
-    });
+    }, this);
   }
 
 
   @Override
   public void periodic() {
     moveToSetpoint();
+    if(Math.abs(m_speed) >= 0.1){
     if (goUp && target < -1) {
       target -= 0.1 * Math.abs(m_speed);
     }
     if (goDown && target > -9) {
       target += 0.1 * Math.abs(m_speed);
     }
+  }
 
     SmartDashboard.putNumber("Grabber target", target);
     SmartDashboard.putNumber("Grabber position", encoder.getPosition());

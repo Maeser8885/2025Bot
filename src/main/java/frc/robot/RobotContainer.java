@@ -44,6 +44,10 @@ public class RobotContainer {
   public ReefTarget reefTargeter = new ReefTarget();
   private final SendableChooser<Command> autoChooser;
 
+  public boolean controlsConfigured = false;
+
+  public Vision vision;
+
   public ControlScheme defaultControlScheme;
   public List<ControlScheme> controlSchemes;
 
@@ -59,6 +63,7 @@ public class RobotContainer {
   public SendableChooser<String> driveChooser;
 
   public RobotContainer() {
+    
     camera = CameraServer.startAutomaticCapture(0);
     camera.setFPS(30);
     instance = this;
@@ -74,6 +79,8 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser.setDefaultOption("SingleCoralCenter", new PathPlannerAuto("SingleCoralCenter"));
     setupDashboard();
+
+    vision = new Vision(() -> (driveSubsystem.getPose()), driveSubsystem.m_field);
   }
 
   public void setupDashboard(){
@@ -85,15 +92,19 @@ public class RobotContainer {
     driveChooser.addOption("Joystick", "Joystick");
     driveChooser.addOption("Controller", "Controller");
     driveChooser.addOption("Richard Command", "Richard Command");
+    driveChooser.addOption("Xbox Drive", "Xbox Drive");
     driveChooser.setDefaultOption("Controller", "Controller");
     SmartDashboard.putData("Choose the Drive", driveChooser);
     
   }
 
   public void teleopInit(){
+    if(!controlsConfigured){
     controls = m_controlsChooser.getSelected();
     controls.configureUniversalBindings();
     controls.configureBindings();
+    controlsConfigured = true;
+    }
   }
 
   public void teleopPeriodic(){

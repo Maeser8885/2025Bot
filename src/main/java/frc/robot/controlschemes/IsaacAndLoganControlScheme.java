@@ -102,6 +102,8 @@ public class IsaacAndLoganControlScheme extends ControlScheme {
                                                  "target")
                                                                     .setPose(
                                                                         reefTargeter.getCoralTargetPose()))));
+
+    m_logitechController.button(8).toggleOnTrue(driveSubsystem.switchFieldRel());
     }
     
 }

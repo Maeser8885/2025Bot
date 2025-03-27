@@ -33,7 +33,7 @@ public class DepositCoral extends Command {
     m_grabberSubsystem.rotateGrabberB();
 
     if(timer.get() >= 0.6){
-    m_grabberSubsystem.intake();}
+    m_grabberSubsystem.outtake();}
 
     if(timer.get() >= 0.99){
       m_grabberSubsystem.stop();
