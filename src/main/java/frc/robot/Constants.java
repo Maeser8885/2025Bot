@@ -43,8 +43,8 @@ public final class Constants {
     public static final double L2Setpoint = 41.73;
     public static final double L3Setpoint = 146.8;
     public static final double L4Setpoint = 240;
-    // public static final double Algae1Setpoint = 127.6;
-    // public static final double Algae2Setpoint = 193.4;
+    public static final double Algae1Setpoint = 127.6;
+    public static final double Algae2Setpoint = 193.4;
     public static final double upSoftLimit = 242;
   }
 
@@ -59,8 +59,8 @@ public final class Constants {
     public static final double L2Setpoint = -1.73;
     public static final double L3Setpoint = -3.7;
     public static final double L4Setpoint = -3.4;
-    // public static final double Algae1Setpoint = -7.6;
-    // public static final double Algae2Setpoint = -7.6;
+    public static final double Algae1Setpoint = -7.6;
+    public static final double Algae2Setpoint = -7.6;
     public static double upSoftLimit = 0.214;
     public static final double backSoftLimit = -14;
     public static final double openclosespeed = 0.6;

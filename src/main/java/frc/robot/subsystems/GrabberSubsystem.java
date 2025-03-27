@@ -5,8 +5,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SoftLimitConfig;
@@ -34,7 +37,11 @@ public class GrabberSubsystem extends SubsystemBase {
   public double rTarget;
   SparkClosedLoopController rPid;
 
+  double m_speed = 1;
+
   public GrabberSubsystem() {
+
+    
     rotated = false;
     // initialize the grabber target
     target = -8;
@@ -122,14 +129,43 @@ public class GrabberSubsystem extends SubsystemBase {
     goDown = false;
   }
 
+  public Command grabberMoveCommand(){
+    return new InstantCommand(() -> {
+      if(RobotContainer.m_xboxController.getRightY() > 0){
+        goUp = true;
+        goDown = false;
+        m_speed = RobotContainer.m_xboxController.getRightY();
+      }else{
+        goUp = false;
+        goDown = true;
+        m_speed = RobotContainer.m_xboxController.getRightY();
+      }
+    });
+  }
+
+  public Command logitechGrabberMoveCommand(){
+    return new InstantCommand(() -> {
+      if(RobotContainer.m_logitechController.getRightY() > 0){
+        goUp = true;
+        goDown = false;
+        m_speed = RobotContainer.m_logitechController.getRightY();
+      }else{
+        goUp = false;
+        goDown = true;
+        m_speed = RobotContainer.m_logitechController.getRightY();
+      }
+    });
+  }
+
+
   @Override
   public void periodic() {
     moveToSetpoint();
     if (goUp && target < -1) {
-      target -= 0.1;
+      target -= 0.1 * Math.abs(m_speed);
     }
     if (goDown && target > -9) {
-      target += 0.1;
+      target += 0.1 * Math.abs(m_speed);
     }
 
     SmartDashboard.putNumber("Grabber target", target);

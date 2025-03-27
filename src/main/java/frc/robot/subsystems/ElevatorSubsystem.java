@@ -5,8 +5,11 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SoftLimitConfig;
@@ -23,6 +26,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   SparkMax elevatorMotor;
   SparkClosedLoopController pidController;
   double target;
+  double m_speed = 1;
   public RelativeEncoder encoder;
 
   boolean goUp = false;
@@ -67,18 +71,31 @@ public class ElevatorSubsystem extends SubsystemBase {
     goDown = true;
   }
 
+  public void move(double speed){
+    m_speed = speed;
+    goUp = true;
+  }
+
   public void stop() {
     goUp = false;
     goDown = false;
   }
 
+  public Command elevatorJoystickMoveCommand(){
+    return new InstantCommand(() -> move(RobotContainer.m_xboxController.getLeftY()));
+  }
+
+  public Command logitechElevatorCommand(){
+    return new InstantCommand(() -> move(RobotContainer.m_logitechController.getLeftY()));
+  }
+
   @Override
   public void periodic() {
     if (goUp && target < 240) {
-      target += 0.2;
+      target += 0.4 * m_speed;
     }
     if (goDown && target > 1) {
-      target -= 0.2;
+      target -= 0.4 * m_speed;
     }
     moveToSetpoint();
     SmartDashboard.putNumber("Elevator target", target);

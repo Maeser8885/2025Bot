@@ -33,6 +33,18 @@ public abstract class ControlScheme {
     public abstract String getName();
 
     public final void configureUniversalBindings(){
+      SwerveInputStream xboxDriveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
+                                                                () -> m_xboxController.getLeftY() * -1,
+                                                                () -> m_xboxController.getLeftX() * -1)
+                                                            .withControllerRotationAxis(() -> m_xboxController.getRightX() * -1)
+                                                            .deadband(0.2)
+                                                            .scaleTranslation(0.9)
+                                                            .allianceRelativeControl(true);
+
+  SwerveInputStream xboxDriveDirectAngle = xboxDriveAngularVelocity.copy().withControllerHeadingAxis(() -> m_xboxController.getRightX() * -1,
+                                                                                             ()->m_xboxController.getRightY() * -1)
+                                                           .headingWhile(true);
+
         SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
                                                                 () -> m_logitechController.getLeftY() * -1,
                                                                 () -> m_logitechController.getLeftX() * -1)
