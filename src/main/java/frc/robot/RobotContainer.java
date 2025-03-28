@@ -7,7 +7,6 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DepositCoral;
 import frc.robot.commands.IntakeCoral;
-import frc.robot.controlschemes.AbrarAndGavinControlScheme;
 import frc.robot.controlschemes.ControlScheme;
 import frc.robot.controlschemes.ExampleControlScheme;
 import frc.robot.controlschemes.OliviaAndCharlesControlScheme;
@@ -68,7 +67,7 @@ public class RobotContainer {
     camera.setFPS(30);
     instance = this;
     defaultControlScheme = new StandardControlScheme();
-    controlSchemes = Arrays.asList(new ExampleControlScheme(), new OliviaAndCharlesControlScheme(), new AbrarAndGavinControlScheme());
+    controlSchemes = Arrays.asList(new ExampleControlScheme(), new OliviaAndCharlesControlScheme());
     NamedCommands.registerCommand("DepositCoral", new DepositCoral(elevatorSubsystem, grabberSubsystem));
     NamedCommands.registerCommand("Go To Right Intake Station", driveSubsystem.driveToRightIntake());
     NamedCommands.registerCommand("Go To Left Intake Station", driveSubsystem.driveToLeftIntake());

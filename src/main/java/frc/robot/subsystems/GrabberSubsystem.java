@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -32,7 +31,7 @@ public class GrabberSubsystem extends SubsystemBase {
   SparkMax sidewaysMotor;
   SparkClosedLoopController pidController;
   double target;
-  public RelativeEncoder encoder;
+  public AbsoluteEncoder encoder;
   boolean rotated;
   RelativeEncoder rEncoder;
   boolean goUp;
@@ -60,14 +59,14 @@ public class GrabberSubsystem extends SubsystemBase {
     softlimits.reverseSoftLimit(Constants.GrabberConstants.backSoftLimit);
     // apply softlimits to config
     grabberMotorConfig.apply(softlimits);
-    grabberMotorConfig.closedLoop.p(0.1).i(0).d(0.8).outputRange(-0.5, 0.5);
+    grabberMotorConfig.closedLoop.p(0.1).i(0).d(0.8).outputRange(-0.5, 0.5).feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
     
     //make motors
     grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
     // get encoder
-    encoder = grabberMotor.getEncoder();
+    encoder = grabberMotor.getAbsoluteEncoder();
  
     // config motors
     grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

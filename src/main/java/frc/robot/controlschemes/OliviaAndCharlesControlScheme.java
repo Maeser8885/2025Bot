@@ -3,7 +3,6 @@ package frc.robot.controlschemes;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import frc.robot.ReefTarget.ReefBranchSide;
 
 public class OliviaAndCharlesControlScheme extends ControlScheme {

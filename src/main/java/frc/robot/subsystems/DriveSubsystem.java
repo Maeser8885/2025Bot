@@ -16,7 +16,6 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -177,7 +176,9 @@ public class DriveSubsystem extends SubsystemBase {
         swerveDrive.updateOdometry();
         vision.updatePoseEstimation(swerveDrive);
       }
-      }
+
+      
+  }
 
   public SwerveDrive getDrive(){
     return this.swerveDrive;
