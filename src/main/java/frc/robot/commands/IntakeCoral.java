@@ -33,9 +33,9 @@ public class IntakeCoral extends Command {
     m_grabberSubsystem.rotateGrabberB();
 
     if(timer.get() >= 0.6){
-    m_grabberSubsystem.outtake();}
+    m_grabberSubsystem.intake();}
 
-    if(timer.get() >= 0.99){
+    if(timer.get() >= 1.4){
       m_grabberSubsystem.stop();
     }
   }
@@ -45,6 +45,6 @@ public class IntakeCoral extends Command {
 
   @Override
   public boolean isFinished(){
-    return timer.get() >= 1.0;
+    return timer.get() >= 1.5;
   }
 }
