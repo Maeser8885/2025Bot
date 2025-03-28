@@ -9,7 +9,6 @@ public class IsaacAndLoganControlScheme extends ControlScheme {
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
         return "Isaac and Logan";
     }
 
