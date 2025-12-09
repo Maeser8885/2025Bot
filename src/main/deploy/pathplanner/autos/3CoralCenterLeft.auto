@@ -13,6 +13,12 @@
         {
           "type": "named",
           "data": {
+            "name": "DepositCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "Go To Left Intake Station"
           }
         },

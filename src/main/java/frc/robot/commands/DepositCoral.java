@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+/* 
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -32,10 +32,10 @@ public class DepositCoral extends Command {
     m_grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);
     m_grabberSubsystem.rotateGrabberB();
 
-    if(timer.get() >= 0.6){
+    if(timer.get() >= 1.2){
     m_grabberSubsystem.outtake();}
 
-    if(timer.get() >= 0.99){
+    if(timer.get() >= 2.0){
       m_grabberSubsystem.stop();
     }
   }
@@ -45,6 +45,6 @@ public class DepositCoral extends Command {
 
   @Override
   public boolean isFinished(){
-    return timer.get() >= 1.0;
+    return timer.get() >= 3.0;
   }
-}
+} */

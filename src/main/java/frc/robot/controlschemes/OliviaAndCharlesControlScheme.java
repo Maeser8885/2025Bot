@@ -1,6 +1,6 @@
-package frc.robot.controlschemes;
+/*package frc.robot.controlschemes;
 
-import edu.wpi.first.wpilibj2.command.Commands;
+//import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -17,22 +17,22 @@ public class OliviaAndCharlesControlScheme extends ControlScheme {
 
         //OLIVIA
         //l1
-        m_xboxController.y().onTrue(new InstantCommand(() -> {
+      /*   m_xboxController.y().onTrue(new InstantCommand(() -> {
 
-          elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);
-          grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint);
+           elevatorSubsystem.setTarget(Constants.ElevatorConstants.L1Setpoint);
+          grabberSubsystem.setTarget(Constants.GrabberConstants.L1Setpoint); 
         }));
         //l2
         m_xboxController.b().onTrue(new InstantCommand(() -> {
 
             elevatorSubsystem.setTarget(Constants.ElevatorConstants.L2Setpoint);
-            grabberSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint);
+            grabberSubsystem.setTarget(Constants.GrabberConstants.L2Setpoint); 
         }));
         //l3
         m_xboxController.a().onTrue(new InstantCommand(() -> {
 
-            elevatorSubsystem.setTarget(Constants.ElevatorConstants.L3Setpoint);
-            grabberSubsystem.setTarget(Constants.GrabberConstants.L3Setpoint);
+             elevatorSubsystem.setTarget(Constants.ElevatorConstants.L3Setpoint);
+            grabberSubsystem.setTarget(Constants.GrabberConstants.L3Setpoint); 
           }));
         //loading station
         m_xboxController.x().onTrue(new InstantCommand(() -> {
@@ -80,37 +80,37 @@ public class OliviaAndCharlesControlScheme extends ControlScheme {
         //right bumper - cages
         //left stick - auto targets left branch
         //right stick - auto targets right branch
-          m_logitechController.povDown().onTrue(driveSubsystem.driveToReefPosition(0));
-    m_logitechController.povUp().onTrue(driveSubsystem.driveToReefPosition(3));
-    m_logitechController.povUpLeft().onTrue(driveSubsystem.driveToReefPosition(4));
-    m_logitechController.povUpRight().onTrue(driveSubsystem.driveToReefPosition(2));
-    m_logitechController.povDownLeft().onTrue(driveSubsystem.driveToReefPosition(5));
-    m_logitechController.povDownRight().onTrue(driveSubsystem.driveToReefPosition(1));
-
-    m_logitechController.rightTrigger().onTrue(driveSubsystem.driveToRightIntake());
-    m_logitechController.leftTrigger().onTrue(driveSubsystem.driveToLeftIntake());
-
+    //       m_logitechController.povDown().whileTrue(driveSubsystem.driveToReefPosition(0));
+    // m_logitechController.povUp().whileTrue(driveSubsystem.driveToReefPosition(3));
+    // m_logitechController.povUpLeft().whileTrue(driveSubsystem.driveToReefPosition(4));
+    // m_logitechController.povUpRight().whileTrue(driveSubsystem.driveToReefPosition(2));
+    // m_logitechController.povDownLeft().whileTrue(driveSubsystem.driveToReefPosition(5));
+    // m_logitechController.povDownRight().whileTrue(driveSubsystem.driveToReefPosition(1));
+                                                            
+    // m_logitechController.rightTrigger().whileTrue(driveSubsystem.driveToRightIntake());
+    // m_logitechController.leftTrigger().whileTrue(driveSubsystem.driveToLeftIntake());
+ 
     m_logitechController.leftBumper().toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
     m_logitechController.leftBumper().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     
     m_logitechController.rightBumper().toggleOnTrue(new InstantCommand(()->{grabberSubsystem.outtake();}));
-    m_logitechController.rightBumper().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
+    m_logitechController.rightBumper().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();})); */
 
-    m_logitechController.leftStick().onTrue((reefTargeter.setBranchSide(ReefBranchSide.LEFT)
-    .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
-                                                 "target")
-                                                                    .setPose(
-                                                                        reefTargeter.getCoralTargetPose())))));
+    // m_logitechController.leftStick().onTrue((reefTargeter.setBranchSide(ReefBranchSide.LEFT)
+    // .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
+    //                                              "target")
+    //                                                                 .setPose(
+    //                                                                     reefTargeter.getCoralTargetPose())))));
 
-    m_logitechController.rightStick().onTrue(reefTargeter.setBranchSide(ReefBranchSide.RIGHT)
-    .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
-                                                 "target")
-                                                                    .setPose(
-                                                                        reefTargeter.getCoralTargetPose()))));
+    // m_logitechController.rightStick().onTrue(reefTargeter.setBranchSide(ReefBranchSide.RIGHT)
+    // .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
+    //                                              "target")
+    //                                                                 .setPose(
+    //                                                                     reefTargeter.getCoralTargetPose()))));
 
-    m_logitechController.button(8).toggleOnTrue(driveSubsystem.switchFieldRel());
+   // m_logitechController.button(8).toggleOnTrue(driveSubsystem.switchFieldRel());
     
-    m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel());
-    
-        }
-}
+     // m_driverController.button(3).toggleOnTrue(driveSubsystem.switchFieldRel()); 
+     // m_logitechController.b().whileTrue(new InstantCommand(()->{driveSubsystem.lockModules();}));
+     //   }
+//}

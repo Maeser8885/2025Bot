@@ -16,7 +16,7 @@ import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+//import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
@@ -179,6 +179,10 @@ public class DriveSubsystem extends SubsystemBase {
       }
       }
 
+  public void lockModules(){
+    swerveDrive.lockPose();
+  }
+
   public SwerveDrive getDrive(){
     return this.swerveDrive;
   }
@@ -211,7 +215,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   public Command driveToProcesser() {
     if (PoseAlliances.shouldFlip()) {
-      return driveToPose(PoseAlliances.flip(Constants.FieldConstants.Processer));
+      var pose = PoseAlliances.flip(Constants.FieldConstants.Processer);
+      //8 is here because field height is 8m
+      return driveToPose(new Pose2d(pose.getX(), 8-pose.getY(), pose.getRotation()));
     } else {
       return driveToPose(Constants.FieldConstants.Processer);
     }

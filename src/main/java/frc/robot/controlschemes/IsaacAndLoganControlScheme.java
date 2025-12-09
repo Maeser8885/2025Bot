@@ -9,11 +9,10 @@ public class IsaacAndLoganControlScheme extends ControlScheme {
 
     @Override
     public String getName() {
-        // TODO Auto-generated method stub
         return "Isaac and Logan";
-    }
+    }}
 
-    public void configureBindings(){
+  /*   public void configureBindings(){
         elevatorSubsystem.setDefaultCommand(elevatorSubsystem.logitechElevatorCommand());
         grabberSubsystem.setDefaultCommand(grabberSubsystem.logitechGrabberMoveCommand());
 
@@ -68,30 +67,30 @@ public class IsaacAndLoganControlScheme extends ControlScheme {
         m_logitechController.leftBumper().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     
         m_logitechController.rightBumper().toggleOnTrue(new InstantCommand(()->{grabberSubsystem.outtake();}));
-        m_logitechController.rightBumper().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
+        m_logitechController.rightBumper().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();})); */
 
         //LOGAN
 
-        m_xboxController.povDown().onTrue(driveSubsystem.driveToReefPosition(0));
-    m_xboxController.povUp().onTrue(driveSubsystem.driveToReefPosition(3));
-    m_xboxController.povUpLeft().onTrue(driveSubsystem.driveToReefPosition(4));
-    m_xboxController.povUpRight().onTrue(driveSubsystem.driveToReefPosition(2));
-    m_xboxController.povDownLeft().onTrue(driveSubsystem.driveToReefPosition(5));
-    m_xboxController.povDownRight().onTrue(driveSubsystem.driveToReefPosition(1));
+     /*    m_xboxController.povDown().whileTrue(driveSubsystem.driveToReefPosition(0));
+    m_xboxController.povUp().whileTrue(driveSubsystem.driveToReefPosition(3));
+    m_xboxController.povUpLeft().whileTrue(driveSubsystem.driveToReefPosition(4));
+    m_xboxController.povUpRight().whileTrue(driveSubsystem.driveToReefPosition(2));
+    m_xboxController.povDownLeft().whileTrue(driveSubsystem.driveToReefPosition(5));
+    m_xboxController.povDownRight().whileTrue(driveSubsystem.driveToReefPosition(1)); 
 
-    m_xboxController.b().onTrue(driveSubsystem.driveToRightIntake());
-    m_xboxController.x().onTrue(driveSubsystem.driveToLeftIntake());
+    m_xboxController.b().whileTrue(driveSubsystem.driveToRightIntake());
+    m_xboxController.x().whileTrue(driveSubsystem.driveToLeftIntake()); */
 
-    m_xboxController.leftTrigger().toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
+  /*   m_xboxController.leftTrigger().toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
     m_xboxController.leftTrigger().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     
     m_xboxController.rightTrigger().toggleOnTrue(new InstantCommand(()->{grabberSubsystem.outtake();}));
-    m_xboxController.rightTrigger().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
+    m_xboxController.rightTrigger().toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();})); */
 
 
 
 
-    m_xboxController.leftStick().onTrue((reefTargeter.setBranchSide(ReefBranchSide.LEFT)
+  /*   m_xboxController.leftStick().onTrue((reefTargeter.setBranchSide(ReefBranchSide.LEFT)
     .andThen(Commands.runOnce(() -> driveSubsystem.getDrive().field.getObject(
                                                  "target")
                                                                     .setPose(
@@ -106,4 +105,4 @@ public class IsaacAndLoganControlScheme extends ControlScheme {
     m_logitechController.button(8).toggleOnTrue(driveSubsystem.switchFieldRel());
     }
     
-}
+} */

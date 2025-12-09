@@ -64,16 +64,16 @@ public class GrabberSubsystem extends SubsystemBase {
     rMotorConfig.closedLoop.p(0.05).i(0).d(0.1);
     
     //make motors
-    grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
+    //grabberMotor = new SparkMax(Constants.GrabberConstants.rotationMotorId, MotorType.kBrushless);
     sidewaysMotor = new SparkMax(Constants.GrabberConstants.sidewaysMotorId, MotorType.kBrushless);
     // get encoder
     encoder = grabberMotor.getEncoder();
  
     // config motors
-    grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    //grabberMotor.configure(grabberMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     sidewaysMotor.configure(rMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     
-    pidController = grabberMotor.getClosedLoopController();
+    //pidController = grabberMotor.getClosedLoopController();
     rPid = sidewaysMotor.getClosedLoopController();
     rEncoder = sidewaysMotor.getEncoder();
 
@@ -81,7 +81,7 @@ public class GrabberSubsystem extends SubsystemBase {
   }
 
   public void moveToSetpoint() {
-    pidController.setReference(target, ControlType.kPosition);
+    //pidController.setReference(target, ControlType.kPosition);
     rPid.setReference(rTarget, ControlType.kPosition);
   }
 
@@ -179,4 +179,4 @@ public class GrabberSubsystem extends SubsystemBase {
 
   }
 
-}
+} 

@@ -5,32 +5,28 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DepositCoral;
-import frc.robot.commands.IntakeCoral;
 import frc.robot.controlschemes.AbrarAndGavinControlScheme;
-import frc.robot.controlschemes.ControlScheme;
 import frc.robot.controlschemes.ExampleControlScheme;
-import frc.robot.controlschemes.OliviaAndCharlesControlScheme;
-import frc.robot.controlschemes.StandardControlScheme;
-import frc.robot.subsystems.GrabberSubsystem;
+import frc.robot.controlschemes.IsaacAndLoganControlScheme;
+//import frc.robot.subsystems.GrabberSubsystem;
 import swervelib.SwerveInputStream;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+//import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.FirewoodSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 import java.util.Arrays;
-import java.util.List;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.config.RobotConfig;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
@@ -38,23 +34,17 @@ public class RobotContainer {
 
   public static RobotContainer instance = null;
 
-  public ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  // public ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   public DriveSubsystem driveSubsystem = new DriveSubsystem();
-  public GrabberSubsystem grabberSubsystem = new GrabberSubsystem();
-  public ReefTarget reefTargeter = new ReefTarget();
+  // public FirewoodSubsystem firewoodSubsystem = new FirewoodSubsystem();
+  // public ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  // // public ReefTarget reefTargeter = new ReefTarget();
   private final SendableChooser<Command> autoChooser;
 
-  public boolean controlsConfigured = false;
-
-  public Vision vision;
-
-  public ControlScheme defaultControlScheme;
-  public List<ControlScheme> controlSchemes;
-
-  private final SendableChooser<ControlScheme> m_controlsChooser = new SendableChooser<>();
-  public ControlScheme controls;
+  // public Vision vision;
 
   UsbCamera camera;
+  UsbCamera camera2;
   RobotConfig config;
 
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
@@ -63,85 +53,152 @@ public class RobotContainer {
   public SendableChooser<String> driveChooser;
 
   public RobotContainer() {
-    
-    camera = CameraServer.startAutomaticCapture(0);
-    camera.setFPS(30);
+    // camera2 = CameraServer.startAutomaticCapture(0);
+    // camera = CameraServer.startAutomaticCapture(1);
+    // camera.setFPS(30);
+    // camera2.setFPS(30);
     instance = this;
-    defaultControlScheme = new StandardControlScheme();
-    controlSchemes = Arrays.asList(new ExampleControlScheme(), new OliviaAndCharlesControlScheme(), new AbrarAndGavinControlScheme());
-    NamedCommands.registerCommand("DepositCoral", new DepositCoral(elevatorSubsystem, grabberSubsystem));
-    NamedCommands.registerCommand("Go To Right Intake Station", driveSubsystem.driveToRightIntake());
-    NamedCommands.registerCommand("Go To Left Intake Station", driveSubsystem.driveToLeftIntake());
-    NamedCommands.registerCommand("Go To Beginning Of Reef", driveSubsystem.driveToReefPosition(0));
-    NamedCommands.registerCommand("Go To Bottom-Left Of Reef", driveSubsystem.driveToReefPosition(1));
-    NamedCommands.registerCommand("Go To Bottom-Right Of Reef", driveSubsystem.driveToReefPosition(5));
-    NamedCommands.registerCommand("Intake Coral", new IntakeCoral(elevatorSubsystem, grabberSubsystem));
-    autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser.setDefaultOption("SingleCoralCenter", new PathPlannerAuto("SingleCoralCenter"));
-    setupDashboard();
+    // controlSchemes = Arrays.asList(new ExampleControlScheme(), new
+    // AbrarAndGavinControlScheme(), new IsaacAndLoganControlScheme());
+    // NamedCommands.registerCommand("DepositCoral", new
+    // DepositCoral(elevatorSubsystem, grabberSubsystem));
+    // NamedCommands.registerCommand("Go To Right Intake Station",
+    // driveSubsystem.driveToRightIntake());
+    // NamedCommands.registerCommand("Go To Left Intake Station",
+    // driveSubsystem.driveToLeftIntake());
+    // NamedCommands.registerCommand("Go To Beginning Of Reef",
+    // driveSubsystem.driveToReefPosition(0));
+    // NamedCommands.registerCommand("Go To Bottom-Left Of Reef",
+    // driveSubsystem.driveToReefPosition(1));
+    // NamedCommands.registerCommand("Go To Bottom-Right Of Reef",
+    // driveSubsystem.driveToReefPosition(5));
+    // //NamedCommands.registerCommand("Intake Coral", new
+    // IntakeCoral(elevatorSubsystem, grabberSubsystem));
 
-
-  }
-
-  public void setupDashboard(){
-    m_controlsChooser.setDefaultOption(defaultControlScheme.getName(), defaultControlScheme);
-    for (ControlScheme controlScheme : controlSchemes) {m_controlsChooser.addOption(controlScheme.getName(), controlScheme);}
-    SmartDashboard.putData("Control Scheme", m_controlsChooser);
-    SmartDashboard.putData("Choose Autonomous Command", autoChooser);
     driveChooser = new SendableChooser<>();
     driveChooser.addOption("Joystick", "Joystick");
     driveChooser.addOption("Controller", "Controller");
     driveChooser.addOption("Richard Command", "Richard Command");
-    driveChooser.addOption("Xbox Drive", "Xbox Drive");
-    driveChooser.setDefaultOption("Controller", "Controller");
-    SmartDashboard.putData("Choose the Drive", driveChooser);
+    autoChooser = AutoBuilder.buildAutoChooser();
     
+    setupDashboard();
   }
 
-  public void teleopInit(){
-    if(!controlsConfigured){
-    controls = m_controlsChooser.getSelected();
-    controls.configureUniversalBindings();
-    controls.configureBindings();
-    controlsConfigured = true;
-    }
+  public void setupDashboard() {
+    
+    SmartDashboard.putData("Choose the Drive", driveChooser);
+
   }
 
-  public void teleopPeriodic(){
-     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-                                                                () -> m_logitechController.getLeftY() * -1,
-                                                                () -> m_logitechController.getLeftX() * -1)
-                                                            .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
-                                                            .deadband(0.2)
-                                                            .scaleTranslation(1)
-                                                            .allianceRelativeControl(true);
+  public void teleopInit() {
 
-  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
-                                                                                             ()->m_logitechController.getRightY() * -1)
-                                                           .headingWhile(true);
-Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
-  Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
-    if(RobotContainer.instance.driveChooser != null){
-  switch (driveChooser.getSelected()) {
-    case "Joystick":
-      driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());
-      break;
-    case "Controller":
-      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
-      break;
-    case "Richard Command":
-      driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
-      break;
-    default:
-      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
-      break;
-  }}
-  else{driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);}
-    }
-
+    configureUniversalBindings();
+    configureBindings();
+  }
   
+  public void teleopPeriodic() {
+    SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
+        () -> m_logitechController.getLeftY() * -1,
+        () -> m_logitechController.getLeftX() * -1)
+        .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
+        .deadband(0.2)
+        .scaleTranslation(1)
+        .allianceRelativeControl(true);
+        
+        SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
+        .withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
+        () -> m_logitechController.getRightY() * -1)
+        .headingWhile(true);
+    Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
+    Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
+    if (RobotContainer.instance.driveChooser != null) {
+      switch (driveChooser.getSelected()) {
+        case "Joystick":
+          driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());
+          break;
+          // autoChooser.setDefaultOption("SingleCoralCenter", new PathPlannerAuto("SingleCoralCenter"));
+        case "Controller":
+          driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+          break;
+        case "Richard Command":
+          driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
+          break;
+        default:
+          driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+          break;
+      }
+    } else {
+      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+    }
+  }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    // return autoChooser.getSelected();
+    return new InstantCommand(() -> {
+      driveSubsystem.lockModules();
+    });
+  }
+
+  public final void configureUniversalBindings() {
+
+    SwerveInputStream xboxDriveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
+        () -> m_xboxController.getLeftY() * -1,
+        () -> m_xboxController.getLeftX() * -1)
+        .withControllerRotationAxis(() -> m_xboxController.getRightX() * -1)
+        .deadband(0.2)
+        .scaleTranslation(0.9)
+        .allianceRelativeControl(true);
+
+    SwerveInputStream xboxDriveDirectAngle = xboxDriveAngularVelocity.copy()
+        .withControllerHeadingAxis(() -> m_xboxController.getRightX() * -1,
+            () -> m_xboxController.getRightY() * -1)
+        .headingWhile(true);
+
+    SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
+        () -> m_logitechController.getLeftY() * -1,
+        () -> m_logitechController.getLeftX() * -1)
+        .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
+        .deadband(0.2)
+        .scaleTranslation(0.9)
+        .allianceRelativeControl(true);
+
+    SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
+        .withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
+            () -> m_logitechController.getRightY() * -1)
+        .headingWhile(true);
+    Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
+    Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
+    if (RobotContainer.instance.driveChooser != null) {
+      switch (RobotContainer.instance.driveChooser.getSelected()) {
+        case "Joystick":
+          driveSubsystem.setDefaultCommand(driveSubsystem.getDefaultCommand());
+          break;
+        case "Controller":
+          driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+          break;
+        case "Richard Command":
+          driveSubsystem.setDefaultCommand(driveFieldOrientedDirectAngle);
+          break;
+        case "Xbox Drive":
+          driveSubsystem.setDefaultCommand(driveSubsystem.driveWithTheSpeeds(xboxDriveDirectAngle));
+
+        default:
+          driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+          break;
+      }
+    } else {
+      driveSubsystem.setDefaultCommand(driveFieldOrientedAngular);
+    }
+  }
+
+  public void configureBindings() {
+    // m_xboxController.rightTrigger().onTrue(shooterSubsystem.outtake());
+    // m_xboxController.rightTrigger().onFalse(shooterSubsystem.stop());
+
+    // m_xboxController.povUp().onTrue(firewoodSubsystem.outtakeFirewood());
+    // m_xboxController.povUp().onFalse(firewoodSubsystem.stopFirewood());
+
+    // m_xboxController.povDown().onTrue(firewoodSubsystem.intakeFirewood());
+    // m_xboxController.povDown().onFalse(firewoodSubsystem.stopFirewood());
   }
 }

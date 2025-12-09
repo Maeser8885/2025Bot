@@ -1,9 +1,9 @@
 package frc.robot.controlschemes;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+//import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.ReefTarget.ReefBranchSide;
-import frc.robot.Constants;
+//import frc.robot.Constants;
 
 public class StandardControlScheme extends ControlScheme {
 
@@ -17,7 +17,8 @@ public class StandardControlScheme extends ControlScheme {
   }
 
   public void configureBindings(){
-    //trigger
+    //trigger 
+    /* 
     m_driverController.button(1).toggleOnTrue(new InstantCommand(()->{grabberSubsystem.intake();}));
     m_driverController.button(1).toggleOnFalse(new InstantCommand(()->{grabberSubsystem.stop();}));
     //sideButton
@@ -139,7 +140,7 @@ public class StandardControlScheme extends ControlScheme {
       elevatorSubsystem.setTarget(Constants.ElevatorConstants.intakeSetpoint);
       grabberSubsystem.setTarget(Constants.GrabberConstants.intakeSetpoint);
     }));
-
+*/
     m_logitechController.button(8).toggleOnTrue(driveSubsystem.switchFieldRel());
     
     //dpad down - drives to nearest branch

@@ -21,6 +21,18 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+
+  public static class PreseasonConstants {
+    public static final int kFWIntake = 13; //TODO: update ports
+    public static final int tlShooterPort = 11;
+    public static final int trShooterPort = 12;
+    public static final int blShooterPort = 9;
+    public static final int brShooterPort = 10;
+    public static final double shooterOutSpeed = -0.1;
+    public static final double fwinSpeed = 0.1;
+    public static final double fwoutSpeed = -0.1;
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -49,7 +61,7 @@ public final class Constants {
   }
 
   public static class GrabberConstants {
-    public static final int rotationMotorId = 13;
+    //public static final int rotationMotorId = 13;
     public static final int opencloseMotorId = 12;
     public static final int sidewaysMotorId = 11;
     public static final double downSetpoint = -3;
@@ -72,42 +84,42 @@ public final class Constants {
     public static final Translation2d center = new Translation2d(Units.inchesToMeters(176.746),
         Units.inchesToMeters(158.501));
     public static final Pose2d rightIntake = new Pose2d(
-        Units.inchesToMeters(33.526),
-        Units.inchesToMeters(25.824),
-        Rotation2d.fromDegrees(54.011));
+        1.25,
+        1.25,
+        Rotation2d.fromDegrees(-123));
 
     public static final Pose2d leftIntake = new Pose2d(
         rightIntake.getX(),
-        Units.inchesToMeters(317) - rightIntake.getY(),
+        8 - rightIntake.getY(),
         Rotation2d.fromRadians(-rightIntake.getRotation().getRadians()));
 
-    public static final Pose2d Processer = new Pose2d(Units.inchesToMeters(235.726), 0, Rotation2d.fromDegrees(90));
+    public static final Pose2d Processer = new Pose2d(6.000, 1.000, Rotation2d.fromDegrees(-90));
 
     public static final Pose2d[] reefPositions = new Pose2d[] {
         new Pose2d(
-            Units.inchesToMeters(135),
-            Units.inchesToMeters(158.500),
-            Rotation2d.fromDegrees(180)),
-        new Pose2d(
-            Units.inchesToMeters(160.373),
-            Units.inchesToMeters(186.857),
-            Rotation2d.fromDegrees(120)),
-        new Pose2d(
-            Units.inchesToMeters(193.116),
-            Units.inchesToMeters(186.858),
-            Rotation2d.fromDegrees(60)),
-        new Pose2d(
-            Units.inchesToMeters(209.489),
-            Units.inchesToMeters(158.502),
+            3.0,
+            4.0,
             Rotation2d.fromDegrees(0)),
         new Pose2d(
-            Units.inchesToMeters(193.118),
-            Units.inchesToMeters(130.145),
-            Rotation2d.fromDegrees(-60)),
+          3.750,
+            2.7,
+            Rotation2d.fromDegrees(60)),
         new Pose2d(
-            Units.inchesToMeters(160.375),
-            Units.inchesToMeters(130.144),
-            Rotation2d.fromDegrees(-120))
+          5.250,
+          2.660,
+            Rotation2d.fromDegrees(120)),
+        new Pose2d(
+            6.0,
+            4.0,
+            Rotation2d.fromDegrees(180)),
+        new Pose2d(
+          5.216,
+          5.273,
+            Rotation2d.fromDegrees(240)),
+        new Pose2d(
+          3.750,
+          5.333,
+            Rotation2d.fromDegrees(300))
     }; // Starting from driver station going in clockwise order
 
     public static final ArrayList<Map<ReefHeight, Pose3d>> branchPositions = new ArrayList<>(13); // Starting at the

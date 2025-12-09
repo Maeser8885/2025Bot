@@ -6,15 +6,15 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.ReefTarget;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.GrabberSubsystem;
+//import frc.robot.subsystems.ElevatorSubsystem;
+//import frc.robot.subsystems.GrabberSubsystem;
 import swervelib.SwerveInputStream;
 
 public abstract class ControlScheme {
 
     DriveSubsystem driveSubsystem;
-    ElevatorSubsystem elevatorSubsystem;
-    GrabberSubsystem grabberSubsystem;
+  //  ElevatorSubsystem elevatorSubsystem;
+  //  GrabberSubsystem grabberSubsystem;
     ReefTarget reefTargeter;
     CommandJoystick m_driverController;
     CommandXboxController m_xboxController;
@@ -22,9 +22,9 @@ public abstract class ControlScheme {
 
     public ControlScheme() {
         driveSubsystem = RobotContainer.instance.driveSubsystem;
-        grabberSubsystem = RobotContainer.instance.grabberSubsystem;
-        elevatorSubsystem = RobotContainer.instance.elevatorSubsystem;
-        reefTargeter = RobotContainer.instance.reefTargeter;
+   //     grabberSubsystem = RobotContainer.instance.grabberSubsystem;
+    //    elevatorSubsystem = RobotContainer.instance.elevatorSubsystem;
+        // reefTargeter = RobotContainer.instance.reefTargeter;
         m_driverController = RobotContainer.m_driverController;
         m_xboxController = RobotContainer.m_xboxController;
         m_logitechController = RobotContainer.m_logitechController;
