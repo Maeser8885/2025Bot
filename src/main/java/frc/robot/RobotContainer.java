@@ -36,16 +36,16 @@ public class RobotContainer {
 
   // public ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   public DriveSubsystem driveSubsystem = new DriveSubsystem();
-  // public FirewoodSubsystem firewoodSubsystem = new FirewoodSubsystem();
-  // public ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  public FirewoodSubsystem firewoodSubsystem = new FirewoodSubsystem();
+  public ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   // // public ReefTarget reefTargeter = new ReefTarget();
   private final SendableChooser<Command> autoChooser;
 
   // public Vision vision;
 
-  UsbCamera camera;
-  UsbCamera camera2;
-  RobotConfig config;
+  // UsbCamera camera;
+  // UsbCamera camera2;
+  // RobotConfig config;
 
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   public static final CommandXboxController m_xboxController = new CommandXboxController(1);
@@ -78,7 +78,7 @@ public class RobotContainer {
     driveChooser = new SendableChooser<>();
     driveChooser.addOption("Joystick", "Joystick");
     driveChooser.addOption("Controller", "Controller");
-    driveChooser.addOption("Richard Command", "Richard Command");
+    // driveChooser.addOption("Richard Command", "Richard Command");
     autoChooser = AutoBuilder.buildAutoChooser();
     
     setupDashboard();
@@ -192,13 +192,13 @@ public class RobotContainer {
   }
 
   public void configureBindings() {
-    // m_xboxController.rightTrigger().onTrue(shooterSubsystem.outtake());
-    // m_xboxController.rightTrigger().onFalse(shooterSubsystem.stop());
+    m_xboxController.rightTrigger().onTrue(shooterSubsystem.outtake());
+    m_xboxController.rightTrigger().onFalse(shooterSubsystem.stop());
 
-    // m_xboxController.povUp().onTrue(firewoodSubsystem.outtakeFirewood());
-    // m_xboxController.povUp().onFalse(firewoodSubsystem.stopFirewood());
+    m_xboxController.povUp().onTrue(firewoodSubsystem.outtakeFirewood());
+    m_xboxController.povUp().onFalse(firewoodSubsystem.stopFirewood());
 
-    // m_xboxController.povDown().onTrue(firewoodSubsystem.intakeFirewood());
-    // m_xboxController.povDown().onFalse(firewoodSubsystem.stopFirewood());
+    m_xboxController.povDown().onTrue(firewoodSubsystem.intakeFirewood());
+    m_xboxController.povDown().onFalse(firewoodSubsystem.stopFirewood());
   }
 }

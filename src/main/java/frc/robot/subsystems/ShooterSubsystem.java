@@ -31,7 +31,7 @@ public class ShooterSubsystem extends SubsystemBase{
 
         SparkMaxConfig invertedConfig = new SparkMaxConfig();
         invertedConfig.inverted(true);
-        invertedConfig.follow(trMotor);
+        invertedConfig.follow(trMotor, true);
 
         brMotor = new SparkMax(Constants.PreseasonConstants.brShooterPort, MotorType.kBrushless);
         brMotor.configure(invertedConfig,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -49,6 +49,7 @@ public class ShooterSubsystem extends SubsystemBase{
     public Command outtake(){
         return new InstantCommand(() -> {trMotor.set(Constants.PreseasonConstants.shooterOutSpeed);}, this);
     }
+    
 
     public Command stop(){
         return new InstantCommand(() -> {trMotor.set(0);}, this);

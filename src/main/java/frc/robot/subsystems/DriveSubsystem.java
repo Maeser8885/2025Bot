@@ -41,7 +41,6 @@ public class DriveSubsystem extends SubsystemBase {
   boolean fieldRel;
   RobotConfig config;
   public final boolean visionDriveTest = true;
-  
 
   public DriveSubsystem() {
     try {
@@ -55,22 +54,22 @@ public class DriveSubsystem extends SubsystemBase {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    if(visionDriveTest){
-    setupPhotonVision();
+    // // if(visionDriveTest){
+    // // setupPhotonVision();
 
-    swerveDrive.stopOdometryThread();
-    }
-  
+    // swerveDrive.stopOdometryThread();
+    // }
 
     fieldRel = true;
     SmartDashboard.putData("Field", swerveDrive.field);
-  
+
     setupPathPlanner();
   }
 
-  public void setupPhotonVision(){
+  public void setupPhotonVision() {
     vision = new Vision(swerveDrive::getPose, swerveDrive.field);
   }
+
   public void setupPathPlanner() {
     try {
       config = RobotConfig.fromGUISettings();
@@ -108,7 +107,6 @@ public class DriveSubsystem extends SubsystemBase {
     PathfindingCommand.warmupCommand().schedule();
   }
 
-
   public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative,
       double speedFactor) {
     swerveDrive.drive(SwerveMath.scaleTranslation(new Translation2d(
@@ -131,10 +129,14 @@ public class DriveSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("IsFieldRelative", fieldRel);
     });
   }
-//change field relativity based on driver preference
+  // change field relativity based on driver preference
 
-  public Command getNormalDriveCommand(){
-    return this.run(()->{drive(-RobotContainer.m_xboxController.getLeftY(), -RobotContainer.m_xboxController.getLeftX(), -RobotContainer.m_xboxController.getRightX(), fieldRel, 1);});}
+  public Command getNormalDriveCommand() {
+    return this.run(() -> {
+      drive(-RobotContainer.m_xboxController.getLeftY(), -RobotContainer.m_xboxController.getLeftX(),
+          -RobotContainer.m_xboxController.getRightX(), fieldRel, 1);
+    });
+  }
 
   // change field relativity based on driver preference
   public Command getDriveCommand() {
@@ -172,26 +174,27 @@ public class DriveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Is It Field Relative?", fieldRel);
-    
-      if(visionDriveTest){
-        swerveDrive.updateOdometry();
-        vision.updatePoseEstimation(swerveDrive);
-      }
-      }
 
-  public void lockModules(){
+    // if(visionDriveTest){
+    // swerveDrive.updateOdometry();
+    // vision.updatePoseEstimation(swerveDrive);
+    // }
+  }
+
+  public void lockModules() {
     swerveDrive.lockPose();
   }
 
-  public SwerveDrive getDrive(){
+  public SwerveDrive getDrive() {
     return this.swerveDrive;
   }
 
-   public Command driveWithTheSpeeds(Supplier<ChassisSpeeds> velocity)
-  {
-    if(fieldRel){return run(() -> {
-      swerveDrive.driveFieldOriented(velocity.get());
-    });}
+  public Command driveWithTheSpeeds(Supplier<ChassisSpeeds> velocity) {
+    if (fieldRel) {
+      return run(() -> {
+        swerveDrive.driveFieldOriented(velocity.get());
+      });
+    }
     return run(() -> {
       driveRobotRelativeWithSpeeds(velocity.get());
     });
@@ -216,8 +219,8 @@ public class DriveSubsystem extends SubsystemBase {
   public Command driveToProcesser() {
     if (PoseAlliances.shouldFlip()) {
       var pose = PoseAlliances.flip(Constants.FieldConstants.Processer);
-      //8 is here because field height is 8m
-      return driveToPose(new Pose2d(pose.getX(), 8-pose.getY(), pose.getRotation()));
+      // 8 is here because field height is 8m
+      return driveToPose(new Pose2d(pose.getX(), 8 - pose.getY(), pose.getRotation()));
     } else {
       return driveToPose(Constants.FieldConstants.Processer);
     }
@@ -232,7 +235,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public Command driveToCages(){
+  public Command driveToCages() {
     if (PoseAlliances.shouldFlip()) {
       return driveToPose(PoseAlliances.flip(Constants.FieldConstants.middleOfCages));
     } else {

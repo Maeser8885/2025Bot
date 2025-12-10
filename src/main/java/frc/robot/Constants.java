@@ -28,9 +28,9 @@ public final class Constants {
     public static final int trShooterPort = 12;
     public static final int blShooterPort = 9;
     public static final int brShooterPort = 10;
-    public static final double shooterOutSpeed = -0.1;
-    public static final double fwinSpeed = 0.1;
-    public static final double fwoutSpeed = -0.1;
+    public static final double shooterOutSpeed = 0.25;
+    public static final double fwinSpeed = 0.25;
+    public static final double fwoutSpeed = -0.25;
   }
 
   public static class OperatorConstants {
