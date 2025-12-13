@@ -19,6 +19,8 @@ public class ShooterSubsystem extends SubsystemBase{
     SparkMax brMotor;
     SparkMax blMotor;
 
+    float currentSpeed = 0.2f;
+
     public ShooterSubsystem() {
 
         trMotor = new SparkMax(Constants.PreseasonConstants.trShooterPort, MotorType.kBrushless);
@@ -53,6 +55,10 @@ public class ShooterSubsystem extends SubsystemBase{
 
     public Command stop(){
         return new InstantCommand(() -> {trMotor.set(0);}, this);
+    }
+
+    public Command changeSpeed(float speed){
+        return new InstantCommand(() -> {currentSpeed = speed;}, this);
     }
 
     @Override

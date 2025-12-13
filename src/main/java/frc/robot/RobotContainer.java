@@ -5,9 +5,9 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.controlschemes.AbrarAndGavinControlScheme;
-import frc.robot.controlschemes.ExampleControlScheme;
-import frc.robot.controlschemes.IsaacAndLoganControlScheme;
+// import frc.robot.controlschemes.AbrarAndGavinControlScheme;
+// import frc.robot.controlschemes.ExampleControlScheme;
+// import frc.robot.controlschemes.IsaacAndLoganControlScheme;
 //import frc.robot.subsystems.GrabberSubsystem;
 import swervelib.SwerveInputStream;
 import frc.robot.subsystems.DriveSubsystem;
@@ -49,7 +49,8 @@ public class RobotContainer {
 
   public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   public static final CommandXboxController m_xboxController = new CommandXboxController(1);
-  public static final CommandXboxController m_logitechController = new CommandXboxController(2);
+
+  //public static final CommandXboxController m_logitechController = new CommandXboxController(2);
   public SendableChooser<String> driveChooser;
 
   public RobotContainer() {
@@ -78,7 +79,7 @@ public class RobotContainer {
     driveChooser = new SendableChooser<>();
     driveChooser.addOption("Joystick", "Joystick");
     driveChooser.addOption("Controller", "Controller");
-    // driveChooser.addOption("Richard Command", "Richard Command");
+    driveChooser.addOption("Richard Command", "Richard Command");
     autoChooser = AutoBuilder.buildAutoChooser();
     
     setupDashboard();
@@ -98,16 +99,16 @@ public class RobotContainer {
   
   public void teleopPeriodic() {
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-        () -> m_logitechController.getLeftY() * -1,
-        () -> m_logitechController.getLeftX() * -1)
-        .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
+        () -> m_xboxController.getRawAxis(1) * -1,
+        () -> m_xboxController.getRawAxis(0) * -1)
+        .withControllerRotationAxis(() -> m_xboxController.getRawAxis(2) * -1)
         .deadband(0.2)
         .scaleTranslation(1)
         .allianceRelativeControl(true);
         
         SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
-        .withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
-        () -> m_logitechController.getRightY() * -1)
+        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(2) * -1,
+        () -> m_xboxController.getRawAxis(3) * -1)
         .headingWhile(true);
     Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
@@ -142,29 +143,29 @@ public class RobotContainer {
   public final void configureUniversalBindings() {
 
     SwerveInputStream xboxDriveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-        () -> m_xboxController.getLeftY() * -1,
-        () -> m_xboxController.getLeftX() * -1)
-        .withControllerRotationAxis(() -> m_xboxController.getRightX() * -1)
+        () -> m_xboxController.getRawAxis(1) * -1,
+        () -> m_xboxController.getRawAxis(0) * -1)
+        .withControllerRotationAxis(() -> m_xboxController.getRawAxis(2) * -1)
         .deadband(0.2)
         .scaleTranslation(0.9)
         .allianceRelativeControl(true);
 
     SwerveInputStream xboxDriveDirectAngle = xboxDriveAngularVelocity.copy()
-        .withControllerHeadingAxis(() -> m_xboxController.getRightX() * -1,
-            () -> m_xboxController.getRightY() * -1)
+        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(2) * -1,
+            () -> m_xboxController.getRawAxis(3) * -1)
         .headingWhile(true);
 
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-        () -> m_logitechController.getLeftY() * -1,
-        () -> m_logitechController.getLeftX() * -1)
-        .withControllerRotationAxis(() -> m_logitechController.getRightX() * -1)
+        () -> m_xboxController.getRawAxis(1) * -1,
+        () -> m_xboxController.getRawAxis(0) * -1)
+        .withControllerRotationAxis(() -> m_xboxController.getRawAxis(2) * -1)
         .deadband(0.2)
         .scaleTranslation(0.9)
         .allianceRelativeControl(true);
 
     SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
-        .withControllerHeadingAxis(() -> m_logitechController.getRightX() * -1,
-            () -> m_logitechController.getRightY() * -1)
+        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(2) * -1,
+            () -> m_xboxController.getRawAxis(3) * -1)
         .headingWhile(true);
     Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
@@ -192,13 +193,15 @@ public class RobotContainer {
   }
 
   public void configureBindings() {
-    m_xboxController.rightTrigger().onTrue(shooterSubsystem.outtake());
-    m_xboxController.rightTrigger().onFalse(shooterSubsystem.stop());
+    m_driverController.button(1).onTrue(shooterSubsystem.outtake());
+    m_driverController.button(1).onFalse(shooterSubsystem.stop());
 
-    m_xboxController.povUp().onTrue(firewoodSubsystem.outtakeFirewood());
-    m_xboxController.povUp().onFalse(firewoodSubsystem.stopFirewood());
+    m_xboxController.button(10).toggleOnTrue(driveSubsystem.switchFieldRel());
 
-    m_xboxController.povDown().onTrue(firewoodSubsystem.intakeFirewood());
-    m_xboxController.povDown().onFalse(firewoodSubsystem.stopFirewood());
+    m_driverController.button(5).onTrue(firewoodSubsystem.intakeFirewood());
+    m_driverController.button(5).onFalse(firewoodSubsystem.stopFirewood());
+
+    m_driverController.button(6).onTrue(firewoodSubsystem.outtakeFirewood());
+    m_driverController.button(6).onFalse(firewoodSubsystem.stopFirewood());
   }
 }
