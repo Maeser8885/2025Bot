@@ -99,16 +99,16 @@ public class RobotContainer {
   
   public void teleopPeriodic() {
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-        () -> m_xboxController.getRawAxis(1) * -1,
-        () -> m_xboxController.getRawAxis(0) * -1)
+        () -> m_xboxController.getRawAxis(0) * 1,
+        () -> m_xboxController.getRawAxis(1) * -1)
         .withControllerRotationAxis(() -> m_xboxController.getRawAxis(2) * -1)
         .deadband(0.2)
-        .scaleTranslation(1)
+        .scaleTranslation(0.9)
         .allianceRelativeControl(true);
-        
-        SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
-        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(2) * -1,
-        () -> m_xboxController.getRawAxis(3) * -1)
+
+    SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
+        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(3) * 1,
+            () -> m_xboxController.getRawAxis(2) * -1)
         .headingWhile(true);
     Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
@@ -143,29 +143,29 @@ public class RobotContainer {
   public final void configureUniversalBindings() {
 
     SwerveInputStream xboxDriveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-        () -> m_xboxController.getRawAxis(1) * -1,
-        () -> m_xboxController.getRawAxis(0) * -1)
+        () -> m_xboxController.getRawAxis(0) * 1,
+        () -> m_xboxController.getRawAxis(1) * -1)
         .withControllerRotationAxis(() -> m_xboxController.getRawAxis(2) * -1)
         .deadband(0.2)
         .scaleTranslation(0.9)
         .allianceRelativeControl(true);
 
     SwerveInputStream xboxDriveDirectAngle = xboxDriveAngularVelocity.copy()
-        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(2) * -1,
-            () -> m_xboxController.getRawAxis(3) * -1)
+        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(3) * 1,
+            () -> m_xboxController.getRawAxis(2) * -1)
         .headingWhile(true);
 
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-        () -> m_xboxController.getRawAxis(1) * -1,
-        () -> m_xboxController.getRawAxis(0) * -1)
+        () -> m_xboxController.getRawAxis(0) * 1,
+        () -> m_xboxController.getRawAxis(1) * -1)
         .withControllerRotationAxis(() -> m_xboxController.getRawAxis(2) * -1)
         .deadband(0.2)
         .scaleTranslation(0.9)
         .allianceRelativeControl(true);
 
     SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
-        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(2) * -1,
-            () -> m_xboxController.getRawAxis(3) * -1)
+        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(3) * 1,
+            () -> m_xboxController.getRawAxis(2) * -1)
         .headingWhile(true);
     Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
