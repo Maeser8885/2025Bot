@@ -28,7 +28,7 @@ public final class Constants {
     public static final int trShooterPort = 12;
     public static final int blShooterPort = 9;
     public static final int brShooterPort = 10;
-    public static final double shooterOutSpeed = 0.4;
+    public static final double shooterOutSpeed = 1;
     public static final double fwinSpeed = 0.7;
     public static final double fwoutSpeed = -0.7;
   }
@@ -39,7 +39,7 @@ public final class Constants {
 
   public static class DriveConstants {
     // feet/sec
-    public static final double maxSpeed = 20;
+    public static final double maxSpeed = 5;
   }
 
   public static class VisionConstants {

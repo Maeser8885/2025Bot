@@ -7,13 +7,6 @@ package frc.robot.subsystems;
 import java.io.File;
 import java.util.function.Supplier;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.config.PIDConstants;
-import com.pathplanner.lib.config.RobotConfig;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-import com.pathplanner.lib.path.PathConstraints;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 //import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -38,8 +31,8 @@ public class DriveSubsystem extends SubsystemBase {
   double maximumSpeed = Units.feetToMeters(Constants.DriveConstants.maxSpeed);
   File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
   SwerveDrive swerveDrive;
-  boolean fieldRel;
-  RobotConfig config;
+  public boolean fieldRel = false;
+  // RobotConfig config;
   public final boolean visionDriveTest = true;
 
   public DriveSubsystem() {
@@ -63,22 +56,22 @@ public class DriveSubsystem extends SubsystemBase {
     fieldRel = true;
     SmartDashboard.putData("Field", swerveDrive.field);
 
-    setupPathPlanner();
+    // setupPathPlanner();
   }
 
   public void setupPhotonVision() {
     vision = new Vision(swerveDrive::getPose, swerveDrive.field);
   }
 
-  public void setupPathPlanner() {
+  /*public void setupPathPlanner() {
     try {
-      config = RobotConfig.fromGUISettings();
+      // config = RobotConfig.fromGUISettings();
     } catch (Exception e) {
       e.printStackTrace();
     }
 
     // Configure AutoBuilder last
-    AutoBuilder.configure(
+    /*AutoBuilder.configure(
         this::getPose, // gets pose
         this::resetPose, // resetOdometry
         this::getSpeeds, // MUST BE ROBOT RELATIVE
@@ -105,7 +98,7 @@ public class DriveSubsystem extends SubsystemBase {
         },
         this);
     PathfindingCommand.warmupCommand().schedule();
-  }
+  }*/
 
   public void drive(double translationX, double translationY, double angularRotationX, boolean isFieldRelative,
       double speedFactor) {
@@ -123,10 +116,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public Command switchFieldRel() {
     return runOnce(() -> {
-      fieldRel = !fieldRel;
-      if (fieldRel)
         swerveDrive.zeroGyro();
-      SmartDashboard.putBoolean("IsFieldRelative", fieldRel);
     });
   }
   // change field relativity based on driver preference
@@ -140,11 +130,12 @@ public class DriveSubsystem extends SubsystemBase {
 
   // change field relativity based on driver preference
   public Command getDriveCommand() {
-    return this.run(() -> {
-      drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(),
-          -RobotContainer.m_driverController.getTwist(), fieldRel,
-          1);
-    });
+    // return this.run(() -> {
+    //   drive(-RobotContainer.m_driverController.getY(), -RobotContainer.m_driverController.getX(),
+    //       -RobotContainer.m_driverController.getTwist(), fieldRel,
+    //       1);
+    // });
+    return null;
   }
 
   public Pose2d getPose() {
@@ -159,7 +150,7 @@ public class DriveSubsystem extends SubsystemBase {
     return swerveDrive.getRobotVelocity();
   }
 
-  public Command driveToPose(Pose2d poseTarget) {
+  /*public Command driveToPose(Pose2d poseTarget) {
     PathConstraints constraints = new PathConstraints(
         swerveDrive.getMaximumChassisVelocity(), 5.6,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(1947));
@@ -169,7 +160,7 @@ public class DriveSubsystem extends SubsystemBase {
         constraints,
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
     );
-  }
+  }*/
 
   @Override
   public void periodic() {
@@ -200,7 +191,7 @@ public class DriveSubsystem extends SubsystemBase {
     });
   }
 
-  public Command driveToLeftIntake() {
+  /*public Command driveToLeftIntake() {
     if (PoseAlliances.shouldFlip()) {
       return driveToPose(PoseAlliances.flip(Constants.FieldConstants.leftIntake));
     } else {
@@ -241,5 +232,10 @@ public class DriveSubsystem extends SubsystemBase {
     } else {
       return driveToPose(Constants.FieldConstants.middleOfCages);
     }
+  }*/
+
+  @Override
+  public void simulationPeriodic(){
+    
   }
 }

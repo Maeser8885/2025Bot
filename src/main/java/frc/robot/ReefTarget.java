@@ -106,7 +106,7 @@ public class ReefTarget {
     return targetBranch;
   }
 
-  public Command driveToCoralTarget(DriveSubsystem swerveDrive) {
+ /*  public Command driveToCoralTarget(DriveSubsystem swerveDrive) {
     return (Commands.runOnce(() -> {
       swerveDrive.getDrive().field.getObject("target").setPose(getCoralTargetPose());
     })).andThen(swerveDrive.driveToPose(getCoralTargetPose()));
@@ -116,7 +116,7 @@ public class ReefTarget {
     return (Commands.runOnce(() -> {
       swerveDrive.getDrive().field.getObject("target").setPose(getAlgaeTargetPose());
     })).andThen(swerveDrive.driveToPose(getAlgaeTargetPose()));
-  }
+  }*/
 
   public Pose2d getCoralTargetPose() {
     Pose2d scoringPose = Pose2d.kZero;

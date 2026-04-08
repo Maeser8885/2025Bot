@@ -17,10 +17,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 import java.util.Arrays;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.config.RobotConfig;
-
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -36,28 +33,28 @@ public class RobotContainer {
 
   // public ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   public DriveSubsystem driveSubsystem = new DriveSubsystem();
-  public FirewoodSubsystem firewoodSubsystem = new FirewoodSubsystem();
-  public ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
+  // public FirewoodSubsystem firewoodSubsystem = new FirewoodSubsystem();
+  // public ShooterSubsystem shooterSubsystem = new ShooterSubsystem();
   // // public ReefTarget reefTargeter = new ReefTarget();
-  private final SendableChooser<Command> autoChooser;
+  // private final SendableChooser<Command> autoChooser;
 
   // public Vision vision;
 
-  // UsbCamera camera;
-  // UsbCamera camera2;
+  // UsbCamera camera1;
+  UsbCamera camera0;
   // RobotConfig config;
 
-  public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
+  // public static final CommandJoystick m_driverController = new CommandJoystick(OperatorConstants.kDriverControllerPort);
   public static final CommandXboxController m_xboxController = new CommandXboxController(1);
 
   //public static final CommandXboxController m_logitechController = new CommandXboxController(2);
   public SendableChooser<String> driveChooser;
 
   public RobotContainer() {
-    // camera2 = CameraServer.startAutomaticCapture(0);
-    // camera = CameraServer.startAutomaticCapture(1);
-    // camera.setFPS(30);
-    // camera2.setFPS(30);
+    // camera1 = CameraServer.startAutomaticCapture(1);
+    // camera1.setFPS(30);
+    camera0 = CameraServer.startAutomaticCapture(0);
+    camera0.setFPS(30);
     instance = this;
     // controlSchemes = Arrays.asList(new ExampleControlScheme(), new
     // AbrarAndGavinControlScheme(), new IsaacAndLoganControlScheme());
@@ -78,9 +75,10 @@ public class RobotContainer {
 
     driveChooser = new SendableChooser<>();
     driveChooser.addOption("Joystick", "Joystick");
-    driveChooser.addOption("Controller", "Controller");
+    driveChooser.addOption("Controller Field Oriented", "Controller");
     driveChooser.addOption("Richard Command", "Richard Command");
-    autoChooser = AutoBuilder.buildAutoChooser();
+    driveChooser.addOption("Robot Oriented", "Robot Oriented");
+    // autoChooser = AutoBuilder.buildAutoChooser();
     
     setupDashboard();
   }
@@ -99,16 +97,16 @@ public class RobotContainer {
   
   public void teleopPeriodic() {
     SwerveInputStream driveAngularVelocity = SwerveInputStream.of(driveSubsystem.getDrive(),
-        () -> m_xboxController.getRawAxis(0) * 1,
-        () -> m_xboxController.getRawAxis(1) * -1)
+        () -> m_xboxController.getRawAxis(1) * -1,
+        () -> m_xboxController.getRawAxis(0) * -1)
         .withControllerRotationAxis(() -> m_xboxController.getRawAxis(2) * -1)
         .deadband(0.2)
         .scaleTranslation(0.9)
         .allianceRelativeControl(true);
 
     SwerveInputStream driveDirectAngle = driveAngularVelocity.copy()
-        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(3) * 1,
-            () -> m_xboxController.getRawAxis(2) * -1)
+        .withControllerHeadingAxis(() -> m_xboxController.getRawAxis(4) * -1,
+            () -> m_xboxController.getRawAxis(5) * -1)
         .headingWhile(true);
     Command driveFieldOrientedAngular = driveSubsystem.driveWithTheSpeeds(driveAngularVelocity);
     Command driveFieldOrientedDirectAngle = driveSubsystem.driveWithTheSpeeds(driveDirectAngle);
@@ -193,15 +191,15 @@ public class RobotContainer {
   }
 
   public void configureBindings() {
-    m_driverController.button(1).onTrue(shooterSubsystem.outtake());
-    m_driverController.button(1).onFalse(shooterSubsystem.stop());
+    // m_driverController.button(1).onTrue(shooterSubsystem.outtake());
+    // m_driverController.button(1).onFalse(shooterSubsystem.stop());
 
-    m_xboxController.button(10).toggleOnTrue(driveSubsystem.switchFieldRel());
+    m_xboxController.button(1).toggleOnTrue(driveSubsystem.switchFieldRel());
 
-    m_driverController.button(5).onTrue(firewoodSubsystem.intakeFirewood());
-    m_driverController.button(5).onFalse(firewoodSubsystem.stopFirewood());
+    // m_driverController.button(5).onTrue(firewoodSubsystem.intakeFirewood());
+    // m_driverController.button(5).onFalse(firewoodSubsystem.stopFirewood());
 
-    m_driverController.button(6).onTrue(firewoodSubsystem.outtakeFirewood());
-    m_driverController.button(6).onFalse(firewoodSubsystem.stopFirewood());
+    // m_driverController.button(6).onTrue(firewoodSubsystem.outtakeFirewood());
+    // m_driverController.button(6).onFalse(firewoodSubsystem.stopFirewood());
   }
 }
