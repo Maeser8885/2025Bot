@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
 /**
  * The methods in this class are called automatically corresponding to each
@@ -18,21 +20,23 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
 
-  private final RobotContainer m_robotContainer;
+    private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
 
-  /**
+    // --- Controllers ---
+    // We use two Logitech F310 gamepads (in X-input mode, which is Xbox-compatible).
+    // CommandXboxController is the command-based wrapper — it gives you Trigger objects for each
+    // button so you can attach commands with .onTrue(), .whileTrue(), etc.
+    // Port numbers must match how the controllers are plugged into the Driver Station laptop.
+    // IMPORTANT: The switch on the bottom of each F310 must be set to "X" (not "D").
+    private final CommandXboxController driverController = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort);   // Port 0
+
+    /**
    * This function is run when the robot is first startesd up and should be used
    * for any
    * initialization code.
    */
   public Robot() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-    RobotContainer.instance = m_robotContainer;
   }
 
   /**
@@ -67,18 +71,9 @@ public class Robot extends TimedRobot {
   public void disabledPeriodic() {
   }
 
-  /**
-   * This autonomous runs the autonomous command selected by your
-   * {@link RobotContainer} class.
-   */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+      drivetrain.zeroGyro();
   }
 
   /** This function is called periodically during autonomous. */
@@ -88,21 +83,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
-
-    m_robotContainer.teleopInit();
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-   m_robotContainer.teleopPeriodic();
   }
 
   @Override
