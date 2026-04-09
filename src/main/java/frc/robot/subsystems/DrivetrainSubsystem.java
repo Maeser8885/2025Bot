@@ -26,85 +26,90 @@ import java.io.File;
  *   <li><b>Field-oriented</b> (default) — "forward" on the joystick always means the same
  *       direction on the field, regardless of which way the robot is facing. The gyro
  *       compensates for robot heading.</li>
- *   <li><b>Robot-oriented</b> — "forward" means wherever the robot's front is pointing.
- *       Toggle with the Y button on the driver controller.</li>
  * </ul>
- *
- * <p>The driver also has a "slow mode" (left bumper) for precise alignment and a gyro reset
- * button (Start) to re-zero field-oriented drive.
  */
 public class DrivetrainSubsystem extends SubsystemBase {
 
-  private final SwerveDrive swerveDrive;
-  private boolean fieldOriented = DrivetrainConstants.kFieldOrientedDefault;
+    private final SwerveDrive swerveDrive;
+    private boolean fieldOriented = DrivetrainConstants.kFieldOrientedDefault;
 
-  public DrivetrainSubsystem() {
-    try {
-      File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
-      swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(DrivetrainConstants.kMaxSpeedMetersPerSecond);
-    } catch (Exception e) {
-      throw new RuntimeException("Failed to initialize swerve drive from JSON config", e);
+    public DrivetrainSubsystem() {
+        try {
+            File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
+            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(DrivetrainConstants.kMaxSpeedMetersPerSecond);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize swerve drive from JSON config", e);
+        }
     }
-  }
 
-  /**
-   * Drive the robot with translation and rotation inputs.
-   *
-   * @param translation Translation2d (x = forward/backward, y = left/right) in m/s
-   * @param rotation    Rotation speed in rad/s
-   * @param fieldRelative Whether to drive field-oriented or robot-oriented
-   */
-  public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
-    swerveDrive.drive(translation, rotation, fieldRelative, false);
-  }
-
-  /** Zero the gyro heading. Call this to re-zero field-oriented drive. */
-  public void zeroGyro() {
-    swerveDrive.zeroGyro();
-  }
-
-  /** Toggle between field-oriented and robot-oriented drive modes. */
-  public void toggleFieldOriented() {
-    fieldOriented = !fieldOriented;
-  }
-
-  /** Returns true if currently in field-oriented mode. */
-  public boolean isFieldOriented() {
-    return fieldOriented;
-  }
-
-  /**
-   * Returns a command that drives the robot straight forward (robot-oriented)
-   * at the given speed. Pair with .withTimeout() to limit distance.
-   */
-  public Command driveForward(double speedMetersPerSecond) {
-    return run(() -> drive(
-        new Translation2d(speedMetersPerSecond, 0),
-        0,
-        false // robot-oriented for auto
-    ));
-  }
-
-  /** Returns a command that immediately stops the drivetrain. */
-  public Command stopCommand() {
-    return runOnce(() -> drive(new Translation2d(0, 0), 0, false));
-  }
-
-  /** Expose the underlying SwerveDrive (e.g. for reading encoder values). */
-  public SwerveDrive getSwerveDrive() {
-    return swerveDrive;
-  }
-
-  @Override
-  public void periodic() {
-    SmartDashboard.putBoolean("Drive/Field Oriented", fieldOriented);
-    SmartDashboard.putNumber("Drive/Gyro Heading", swerveDrive.getYaw().getDegrees());
-    SmartDashboard.putString("Drive/Pose",
-        swerveDrive.getPose().getTranslation().toString());
-
-    for (SwerveModule module : swerveDrive.getModules()) {
-      String name = module.getConfiguration().name;
-      SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", module.getRawAbsolutePosition());
+    /**
+     * Drive the robot with translation and rotation inputs.
+     *
+     * @param translation   Translation2d (x = forward/backward, y = left/right) in m/s
+     * @param rotation      Rotation speed in rad/s
+     * @param fieldRelative Whether to drive field-oriented or robot-oriented
+     */
+    public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
+        swerveDrive.drive(translation, rotation, fieldRelative, false);
     }
-  }
+
+    /**
+     * Zero the gyro heading. Call this to re-zero field-oriented drive.
+     */
+    public void zeroGyro() {
+        swerveDrive.zeroGyro();
+    }
+
+    /**
+     * Toggle between field-oriented and robot-oriented drive modes.
+     */
+    public void toggleFieldOriented() {
+        fieldOriented = !fieldOriented;
+    }
+
+    /**
+     * Returns true if currently in field-oriented mode.
+     */
+    public boolean isFieldOriented() {
+        return fieldOriented;
+    }
+
+    /**
+     * Returns a command that drives the robot straight forward (robot-oriented)
+     * at the given speed. Pair with .withTimeout() to limit distance.
+     */
+    public Command driveForward(double speedMetersPerSecond) {
+        return run(() -> drive(
+                new Translation2d(speedMetersPerSecond, 0),
+                0,
+                false // robot-oriented for auto
+        ));
+    }
+
+    /**
+     * Returns a command that immediately stops the drivetrain.
+     */
+    public Command stopCommand() {
+        return runOnce(() -> drive(new Translation2d(0, 0), 0, false));
+    }
+
+    /**
+     * Expose the underlying SwerveDrive (e.g. for reading encoder values).
+     */
+    public SwerveDrive getSwerveDrive() {
+        return swerveDrive;
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putBoolean("Drive/Field Oriented", fieldOriented);
+        SmartDashboard.putNumber("Drive/Gyro Heading", swerveDrive.getYaw().getDegrees());
+        SmartDashboard.putString("Drive/Pose",
+                swerveDrive.getPose().getTranslation().toString());
+
+        for (SwerveModule module : swerveDrive.getModules()) {
+            String name = module.getConfiguration().name;
+            SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", module.getRawAbsolutePosition());
+        }
+    }
 }

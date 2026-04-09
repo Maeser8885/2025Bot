@@ -36,133 +36,139 @@ public class Robot extends TimedRobot {
     private final CommandXboxController driverController = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort);   // Port 0
 
     /**
-   * This function is run when the robot is first startesd up and should be used
-   * for any
-   * initialization code.
-   */
-  public Robot() {
-    // --- Print absolute encoder positions at startup for calibration ---
-    for (SwerveModule module : drivetrain.getSwerveDrive().getModules()) {
-      String name = module.getConfiguration().name;
-      double raw = module.getRawAbsolutePosition();
-      System.out.println("Encoder [" + name + "] raw absolute position: " + raw);
-      SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", raw);
+     * This function is run when the robot is first startesd up and should be used
+     * for any
+     * initialization code.
+     */
+    public Robot() {
+        // --- Print absolute encoder positions at startup for calibration ---
+        for (SwerveModule module : drivetrain.getSwerveDrive().getModules()) {
+            String name = module.getConfiguration().name;
+            double raw = module.getRawAbsolutePosition();
+            System.out.println("Encoder [" + name + "] raw absolute position: " + raw);
+            SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", raw);
+        }
+
+        double speed = DrivetrainConstants.kMaxSpeedMetersPerSecond;
+        double maxRotSpeed = DrivetrainConstants.kMaxAngularSpeedRadiansPerSecond;
+        double calibRotSpeed = maxRotSpeed * 0.25;
+
+        // Default command: joystick driving (also stops the bot when sticks are centered)
+        double deadband = Constants.OperatorConstants.kJoystickDeadband;
+        drivetrain.setDefaultCommand(drivetrain.run(() -> {
+            double forward = -MathUtil.applyDeadband(driverController.getLeftY(), deadband);
+            double strafe = -MathUtil.applyDeadband(driverController.getLeftX(), deadband);
+            double rot = -MathUtil.applyDeadband(driverController.getRightX(), deadband);
+
+            drivetrain.drive(
+                    new Translation2d(forward * speed, strafe * speed),
+                    rot * maxRotSpeed,
+                    drivetrain.isFieldOriented());
+        }));
+
+        // Start = toggle field-oriented / robot-oriented
+        driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.toggleFieldOriented()));
+
+        // Back = zero gyro
+        driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
+
+        // --- Calibration button bindings ---
+
+        // Y = forward, A = backward (robot-oriented)
+        driverController.y().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(speed, 0), 0, false)));
+        driverController.a().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(-speed, 0), 0, false)));
+
+        // X = strafe left, B = strafe right (robot-oriented)
+        driverController.x().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(0, speed), 0, false)));
+        driverController.b().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(0, -speed), 0, false)));
+
+        // LB = rotate counter-clockwise, RB = rotate clockwise
+        driverController.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), calibRotSpeed, false)));
+        driverController.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), -calibRotSpeed, false)));
     }
 
-    double speed = DrivetrainConstants.kMaxSpeedMetersPerSecond;
-    double maxRotSpeed = DrivetrainConstants.kMaxAngularSpeedRadiansPerSecond;
-    double calibRotSpeed = maxRotSpeed * 0.25;
+    /**
+     * This function is called every 20 ms, no matter the mode. Use this for items
+     * like diagnostics
+     * that you want ran during disabled, autonomous, teleoperated and test.
+     *
+     * <p>
+     * This runs after the mode specific periodic functions, but before LiveWindow
+     * and
+     * SmartDashboard integrated updating.
+     */
+    @Override
+    public void robotPeriodic() {
+        // Runs the Scheduler. This is responsible for polling buttons, adding
+        // newly-scheduled
+        // commands, running already-scheduled commands, removing finished or
+        // interrupted commands,
+        // and running subsystem periodic() methods. This must be called from the
+        // robot's periodic
+        // block in order for anything in the Command-based framework to work.
+        CommandScheduler.getInstance().run();
+        SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+    }
 
-    // Default command: joystick driving (also stops the bot when sticks are centered)
-    double deadband = Constants.OperatorConstants.kJoystickDeadband;
-    drivetrain.setDefaultCommand(drivetrain.run(() -> {
-      double forward = -MathUtil.applyDeadband(driverController.getLeftY(), deadband);
-      double strafe  = -MathUtil.applyDeadband(driverController.getLeftX(), deadband);
-      double rot     = -MathUtil.applyDeadband(driverController.getRightX(), deadband);
+    /**
+     * This function is called once each time the robot enters Disabled mode.
+     */
+    @Override
+    public void disabledInit() {
+    }
 
-      drivetrain.drive(
-          new Translation2d(forward * speed, strafe * speed),
-          rot * maxRotSpeed,
-          drivetrain.isFieldOriented());
-    }));
+    @Override
+    public void disabledPeriodic() {
+    }
 
-    // Start = toggle field-oriented / robot-oriented
-    driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.toggleFieldOriented()));
+    @Override
+    public void autonomousInit() {
+        drivetrain.zeroGyro();
+    }
 
-    // Back = zero gyro
-    driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
+    /**
+     * This function is called periodically during autonomous.
+     */
+    @Override
+    public void autonomousPeriodic() {
+    }
 
-    // --- Calibration button bindings ---
+    @Override
+    public void teleopInit() {
+    }
 
-    // Y = forward, A = backward (robot-oriented)
-    driverController.y().whileTrue(
-        drivetrain.run(() -> drivetrain.drive(new Translation2d(speed, 0), 0, false)));
-    driverController.a().whileTrue(
-        drivetrain.run(() -> drivetrain.drive(new Translation2d(-speed, 0), 0, false)));
+    /**
+     * This function is called periodically during operator control.
+     */
+    @Override
+    public void teleopPeriodic() {
+    }
 
-    // X = strafe left, B = strafe right (robot-oriented)
-    driverController.x().whileTrue(
-        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, speed), 0, false)));
-    driverController.b().whileTrue(
-        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, -speed), 0, false)));
+    @Override
+    public void testInit() {
+        // Cancels all running commands at the start of test mode.
+        CommandScheduler.getInstance().cancelAll();
+    }
 
-    // LB = rotate counter-clockwise, RB = rotate clockwise
-    driverController.leftBumper().whileTrue(
-        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), calibRotSpeed, false)));
-    driverController.rightBumper().whileTrue(
-        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), -calibRotSpeed, false)));
-  }
+    /**
+     * This function is called periodically during test mode.
+     */
+    @Override
+    public void testPeriodic() {
+    }
 
-  /**
-   * This function is called every 20 ms, no matter the mode. Use this for items
-   * like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
-   * and
-   * SmartDashboard integrated updating.
-   */
-  @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
-  }
+    /**
+     * This function is called once when the robot is first started up.
+     */
+    @Override
+    public void simulationInit() {
+    }
 
-  /** This function is called once each time the robot enters Disabled mode. */
-  @Override
-  public void disabledInit() {
-  }
+    /**
+     * This function is called periodically whilst in simulation.
+     */
+    @Override
+    public void simulationPeriodic() {
 
-  @Override
-  public void disabledPeriodic() {
-  }
-
-  @Override
-  public void autonomousInit() {
-      drivetrain.zeroGyro();
-  }
-
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {
-  }
-
-  @Override
-  public void teleopInit() {
-  }
-
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {
-  }
-
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-  }
-
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {
-  }
-
-  /** This function is called once when the robot is first started up. */
-  @Override
-  public void simulationInit() {
-  }
-
-  /** This function is called periodically whilst in simulation. */
-  @Override
-  public void simulationPeriodic() {
-    
-  }
+    }
 }
