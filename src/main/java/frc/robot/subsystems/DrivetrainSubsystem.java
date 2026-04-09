@@ -89,6 +89,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return runOnce(() -> drive(new Translation2d(0, 0), 0, false));
   }
 
+  /** Expose the underlying SwerveDrive (e.g. for reading encoder values). */
+  public SwerveDrive getSwerveDrive() {
+    return swerveDrive;
+  }
+
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Drive/Field Oriented", fieldOriented);

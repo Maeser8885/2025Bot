@@ -4,13 +4,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.DrivetrainConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import swervelib.SwerveModule;
 
 /**
  * The methods in this class are called automatically corresponding to each
@@ -37,6 +40,35 @@ public class Robot extends TimedRobot {
    * initialization code.
    */
   public Robot() {
+    // --- Print absolute encoder positions at startup for calibration ---
+    for (SwerveModule module : drivetrain.getSwerveDrive().getModules()) {
+      String name = module.getConfiguration().name;
+      double raw = module.getRawAbsolutePosition();
+      System.out.println("Encoder [" + name + "] raw absolute position: " + raw);
+      SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", raw);
+    }
+
+    // --- Calibration button bindings ---
+    double speed = DrivetrainConstants.kMaxSpeedMetersPerSecond;
+    double rotSpeed = DrivetrainConstants.kMaxAngularSpeedRadiansPerSecond * 0.25;
+
+    // Y = forward, A = backward (robot-oriented)
+    driverController.y().whileTrue(
+        drivetrain.run(() -> drivetrain.drive(new Translation2d(speed, 0), 0, false)));
+    driverController.a().whileTrue(
+        drivetrain.run(() -> drivetrain.drive(new Translation2d(-speed, 0), 0, false)));
+
+    // X = strafe left, B = strafe right (robot-oriented)
+    driverController.x().whileTrue(
+        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, speed), 0, false)));
+    driverController.b().whileTrue(
+        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, -speed), 0, false)));
+
+    // LB = rotate counter-clockwise, RB = rotate clockwise
+    driverController.leftBumper().whileTrue(
+        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), rotSpeed, false)));
+    driverController.rightBumper().whileTrue(
+        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), -rotSpeed, false)));
   }
 
   /**
