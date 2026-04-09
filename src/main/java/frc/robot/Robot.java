@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -48,9 +49,24 @@ public class Robot extends TimedRobot {
       SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", raw);
     }
 
-    // --- Calibration button bindings ---
     double speed = DrivetrainConstants.kMaxSpeedMetersPerSecond;
-    double rotSpeed = DrivetrainConstants.kMaxAngularSpeedRadiansPerSecond * 0.25;
+    double maxRotSpeed = DrivetrainConstants.kMaxAngularSpeedRadiansPerSecond;
+    double calibRotSpeed = maxRotSpeed * 0.25;
+
+    // Default command: joystick driving (also stops the bot when sticks are centered)
+    double deadband = Constants.OperatorConstants.kJoystickDeadband;
+    drivetrain.setDefaultCommand(drivetrain.run(() -> {
+      double forward = -MathUtil.applyDeadband(driverController.getLeftY(), deadband);
+      double strafe  = -MathUtil.applyDeadband(driverController.getLeftX(), deadband);
+      double rot     = -MathUtil.applyDeadband(driverController.getRightX(), deadband);
+
+      drivetrain.drive(
+          new Translation2d(forward * speed, strafe * speed),
+          rot * maxRotSpeed,
+          drivetrain.isFieldOriented());
+    }));
+
+    // --- Calibration button bindings ---
 
     // Y = forward, A = backward (robot-oriented)
     driverController.y().whileTrue(
@@ -66,9 +82,9 @@ public class Robot extends TimedRobot {
 
     // LB = rotate counter-clockwise, RB = rotate clockwise
     driverController.leftBumper().whileTrue(
-        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), rotSpeed, false)));
+        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), calibRotSpeed, false)));
     driverController.rightBumper().whileTrue(
-        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), -rotSpeed, false)));
+        drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), -calibRotSpeed, false)));
   }
 
   /**
