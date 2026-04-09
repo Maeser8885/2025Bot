@@ -13,7 +13,7 @@ package frc.robot.subsystems;
 public final class DrivetrainConstants {
   // Max speeds — start conservative, increase as drivers get comfortable
   public static final double kMaxSpeedMetersPerSecond = .5;
-  public static final double kMaxAngularSpeedRadiansPerSecond = 2 * Math.PI; // 1 rotation/sec
+  public static final double kMaxAngularSpeedRadiansPerSecond = .25 * Math.PI; // 1 rotation/sec
 
   // Slow mode multiplier (hold bumper)
   public static final double kSlowModeMultiplier = 0.25;
