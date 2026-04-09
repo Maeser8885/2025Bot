@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.DrivetrainConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import swervelib.SwerveModule;
 
@@ -24,6 +23,10 @@ import swervelib.SwerveModule;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
+    public static final int kDriverControllerPort = 1;
+    public static final int kOperatorControllerPort = 0;
+    public static final double kJoystickDeadband = 0.08;
+
 
     private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
 
@@ -33,7 +36,7 @@ public class Robot extends TimedRobot {
     // button so you can attach commands with .onTrue(), .whileTrue(), etc.
     // Port numbers must match how the controllers are plugged into the Driver Station laptop.
     // IMPORTANT: The switch on the bottom of each F310 must be set to "X" (not "D").
-    private final CommandXboxController driverController = new CommandXboxController(Constants.OperatorConstants.kDriverControllerPort);   // Port 0
+    private final CommandXboxController driverController = new CommandXboxController(kDriverControllerPort);   // Port 1
 
     /**
      * This function is run when the robot is first startesd up and should be used
@@ -41,50 +44,34 @@ public class Robot extends TimedRobot {
      * initialization code.
      */
     public Robot() {
-        // --- Print absolute encoder positions at startup for calibration ---
-        for (SwerveModule module : drivetrain.getSwerveDrive().getModules()) {
-            String name = module.getConfiguration().name;
-            double raw = module.getRawAbsolutePosition();
-            System.out.println("Encoder [" + name + "] raw absolute position: " + raw);
-            SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", raw);
-        }
-
-        double speed = DrivetrainConstants.kMaxSpeedMetersPerSecond;
-        double maxRotSpeed = DrivetrainConstants.kMaxAngularSpeedRadiansPerSecond;
-        double calibRotSpeed = maxRotSpeed * 0.25;
 
         // Default command: joystick driving (also stops the bot when sticks are centered)
-        double deadband = Constants.OperatorConstants.kJoystickDeadband;
+        double deadband = kJoystickDeadband;
         drivetrain.setDefaultCommand(drivetrain.run(() -> {
             double forward = -MathUtil.applyDeadband(driverController.getLeftY(), deadband);
             double strafe = -MathUtil.applyDeadband(driverController.getLeftX(), deadband);
             double rot = -MathUtil.applyDeadband(driverController.getRightX(), deadband);
-
-            drivetrain.drive(
-                    new Translation2d(forward * speed, strafe * speed),
-                    rot * maxRotSpeed,
-                    drivetrain.isFieldOriented());
+            drivetrain.drive(forward, strafe, rot);
         }));
 
         // Start = toggle field-oriented / robot-oriented
-        driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.toggleFieldOriented()));
+        driverController.start().onTrue(drivetrain.runOnce(drivetrain::toggleFieldOriented));
 
         // Back = zero gyro
-        driverController.back().onTrue(drivetrain.runOnce(() -> drivetrain.zeroGyro()));
+        driverController.back().onTrue(drivetrain.runOnce(drivetrain::zeroGyro));
 
         // --- Calibration button bindings ---
+        // Y = forward, A = backward
+        driverController.y().whileTrue(drivetrain.run(() -> drivetrain.drive(1, 0, 0)));
+        driverController.a().whileTrue(drivetrain.run(() -> drivetrain.drive(-1, 0, 0)));
 
-        // Y = forward, A = backward (robot-oriented)
-        driverController.y().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(speed, 0), 0, false)));
-        driverController.a().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(-speed, 0), 0, false)));
-
-        // X = strafe left, B = strafe right (robot-oriented)
-        driverController.x().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(0, speed), 0, false)));
-        driverController.b().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(0, -speed), 0, false)));
+        // X = strafe left, B = strafe right
+        driverController.x().whileTrue(drivetrain.run(() -> drivetrain.drive(0, 1, 0)));
+        driverController.b().whileTrue(drivetrain.run(() -> drivetrain.drive(0, -1, 0)));
 
         // LB = rotate counter-clockwise, RB = rotate clockwise
-        driverController.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), calibRotSpeed, false)));
-        driverController.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.drive(new Translation2d(0, 0), -calibRotSpeed, false)));
+        driverController.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.drive(0, 0, 1)));
+        driverController.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.drive(0, 0, -1)));
     }
 
     /**

@@ -29,14 +29,22 @@ import java.io.File;
  * </ul>
  */
 public class DrivetrainSubsystem extends SubsystemBase {
+    // Max speeds — start conservative, increase as drivers get comfortable
+    public static final double kMaxSpeedMetersPerSecond = .5;
+    public static final double kMaxAngularSpeedRadiansPerSecond = .25 * Math.PI; // 1 rotation/sec
+    // Slow mode multiplier (hold bumper)
+    public static final double kSlowModeMultiplier = 0.25;
+    // Field-oriented drive enabled by default
+    public static final boolean kFieldOrientedDefault = true;
+
 
     private final SwerveDrive swerveDrive;
-    private boolean fieldOriented = DrivetrainConstants.kFieldOrientedDefault;
+    private boolean fieldOriented = kFieldOrientedDefault;
 
     public DrivetrainSubsystem() {
         try {
             File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
-            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(DrivetrainConstants.kMaxSpeedMetersPerSecond);
+            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(kMaxSpeedMetersPerSecond);
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize swerve drive from JSON config", e);
         }
@@ -45,12 +53,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     /**
      * Drive the robot with translation and rotation inputs.
      *
-     * @param translation   Translation2d (x = forward/backward, y = left/right) in m/s
-     * @param rotation      Rotation speed in rad/s
-     * @param fieldRelative Whether to drive field-oriented or robot-oriented
+     *  Percent range: 0 - 1
      */
-    public void drive(Translation2d translation, double rotation, boolean fieldRelative) {
-        swerveDrive.drive(translation, rotation, fieldRelative, false);
+    public void drive(double forwardPercent, double leftPercent, double rotationPercent) {
+        swerveDrive.drive(
+                new Translation2d(forwardPercent * kMaxSpeedMetersPerSecond, leftPercent * kMaxSpeedMetersPerSecond),
+                rotationPercent * kMaxAngularSpeedRadiansPerSecond,
+                fieldOriented,
+                false);
     }
 
     /**
@@ -75,41 +85,30 @@ public class DrivetrainSubsystem extends SubsystemBase {
     }
 
     /**
-     * Returns a command that drives the robot straight forward (robot-oriented)
-     * at the given speed. Pair with .withTimeout() to limit distance.
-     */
-    public Command driveForward(double speedMetersPerSecond) {
-        return run(() -> drive(
-                new Translation2d(speedMetersPerSecond, 0),
-                0,
-                false // robot-oriented for auto
-        ));
-    }
-
-    /**
      * Returns a command that immediately stops the drivetrain.
      */
     public Command stopCommand() {
-        return runOnce(() -> drive(new Translation2d(0, 0), 0, false));
+        return runOnce(() -> drive(0, 0, 0));
     }
 
     /**
      * Expose the underlying SwerveDrive (e.g. for reading encoder values).
      */
-    public SwerveDrive getSwerveDrive() {
-        return swerveDrive;
+    public void publishStats() {
+        SmartDashboard.putBoolean("Drive/Field Oriented", fieldOriented);
+        SmartDashboard.putNumber("Drive/Gyro Heading", swerveDrive.getYaw().getDegrees());
+        SmartDashboard.putString("Drive/Pose", swerveDrive.getPose().getTranslation().toString());
+
+        for (SwerveModule module : swerveDrive.getModules()) {
+            String name = module.getConfiguration().name;
+            double raw = module.getRawAbsolutePosition();
+            SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", raw);
+        }
+
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Drive/Field Oriented", fieldOriented);
-        SmartDashboard.putNumber("Drive/Gyro Heading", swerveDrive.getYaw().getDegrees());
-        SmartDashboard.putString("Drive/Pose",
-                swerveDrive.getPose().getTranslation().toString());
-
-        for (SwerveModule module : swerveDrive.getModules()) {
-            String name = module.getConfiguration().name;
-            SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", module.getRawAbsolutePosition());
-        }
+        publishStats();
     }
 }
