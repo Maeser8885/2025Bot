@@ -66,6 +66,9 @@ public class Robot extends TimedRobot {
           drivetrain.isFieldOriented());
     }));
 
+    // Start = toggle field-oriented / robot-oriented
+    driverController.start().onTrue(drivetrain.runOnce(() -> drivetrain.toggleFieldOriented()));
+
     // --- Calibration button bindings ---
 
     // Y = forward, A = backward (robot-oriented)
