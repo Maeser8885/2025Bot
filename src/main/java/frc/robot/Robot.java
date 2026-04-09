@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
      * initialization code.
      */
     public Robot() {
+        drivetrain.publishStats();
 
         // Default command: joystick driving (also stops the bot when sticks are centered)
         double deadband = kJoystickDeadband;
