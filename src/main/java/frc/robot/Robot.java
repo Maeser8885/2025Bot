@@ -5,15 +5,12 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.DrivetrainSubsystem;
-import swervelib.SwerveModule;
 
 /**
  * The methods in this class are called automatically corresponding to each
@@ -23,9 +20,8 @@ import swervelib.SwerveModule;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-    public static final int kDriverControllerPort = 1;
-    public static final int kOperatorControllerPort = 0;
-    public static final double kJoystickDeadband = 0.08;
+    public static final int DRIVER_CONTROLLER_PORT = 1;
+    public static final double JOYSTICK_DEADBAND = 0.08;
 
 
     private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
@@ -36,7 +32,7 @@ public class Robot extends TimedRobot {
     // button so you can attach commands with .onTrue(), .whileTrue(), etc.
     // Port numbers must match how the controllers are plugged into the Driver Station laptop.
     // IMPORTANT: The switch on the bottom of each F310 must be set to "X" (not "D").
-    private final CommandXboxController driverController = new CommandXboxController(kDriverControllerPort);   // Port 1
+    private final CommandXboxController driverController = new CommandXboxController(DRIVER_CONTROLLER_PORT);   // Port 1
 
     /**
      * This function is run when the robot is first startesd up and should be used
@@ -47,11 +43,10 @@ public class Robot extends TimedRobot {
         drivetrain.publishStats();
 
         // Default command: joystick driving (also stops the bot when sticks are centered)
-        double deadband = kJoystickDeadband;
         drivetrain.setDefaultCommand(drivetrain.run(() -> {
-            double forward = -MathUtil.applyDeadband(driverController.getLeftY(), deadband);
-            double strafe = -MathUtil.applyDeadband(driverController.getLeftX(), deadband);
-            double rot = -MathUtil.applyDeadband(driverController.getRightX(), deadband);
+            double forward = -MathUtil.applyDeadband(driverController.getLeftY(), JOYSTICK_DEADBAND);
+            double strafe = -MathUtil.applyDeadband(driverController.getLeftX(), JOYSTICK_DEADBAND);
+            double rot = -MathUtil.applyDeadband(driverController.getRightX(), JOYSTICK_DEADBAND);
             drivetrain.drive(forward, strafe, rot);
         }));
 
@@ -73,12 +68,13 @@ public class Robot extends TimedRobot {
         // LB = rotate counter-clockwise, RB = rotate clockwise
         driverController.leftBumper().whileTrue(drivetrain.run(() -> drivetrain.drive(0, 0, 1)));
         driverController.rightBumper().whileTrue(drivetrain.run(() -> drivetrain.drive(0, 0, -1)));
+
+        drivetrain.zeroGyro();
     }
 
     /**
      * This function is called every 20 ms, no matter the mode. Use this for items
-     * like diagnostics
-     * that you want ran during disabled, autonomous, teleoperated and test.
+     * like diagnostics that you want ran during disabled, autonomous, teleoperated and test.
      *
      * <p>
      * This runs after the mode specific periodic functions, but before LiveWindow
@@ -87,20 +83,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        // Runs the Scheduler. This is responsible for polling buttons, adding
-        // newly-scheduled
-        // commands, running already-scheduled commands, removing finished or
-        // interrupted commands,
-        // and running subsystem periodic() methods. This must be called from the
-        // robot's periodic
-        // block in order for anything in the Command-based framework to work.
+        // Runs the Scheduler. This is responsible for polling buttons, adding newly-scheduled
         CommandScheduler.getInstance().run();
         SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     }
 
-    /**
-     * This function is called once each time the robot enters Disabled mode.
-     */
     @Override
     public void disabledInit() {
     }
@@ -111,12 +98,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        drivetrain.zeroGyro();
     }
 
-    /**
-     * This function is called periodically during autonomous.
-     */
     @Override
     public void autonomousPeriodic() {
     }
@@ -125,36 +108,22 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
     }
 
-    /**
-     * This function is called periodically during operator control.
-     */
     @Override
     public void teleopPeriodic() {
     }
 
     @Override
     public void testInit() {
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
     }
 
-    /**
-     * This function is called periodically during test mode.
-     */
     @Override
     public void testPeriodic() {
     }
 
-    /**
-     * This function is called once when the robot is first started up.
-     */
     @Override
     public void simulationInit() {
     }
 
-    /**
-     * This function is called periodically whilst in simulation.
-     */
     @Override
     public void simulationPeriodic() {
 

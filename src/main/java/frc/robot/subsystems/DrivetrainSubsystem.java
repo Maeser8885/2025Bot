@@ -29,22 +29,18 @@ import java.io.File;
  * </ul>
  */
 public class DrivetrainSubsystem extends SubsystemBase {
-    // Max speeds — start conservative, increase as drivers get comfortable
-    public static final double kMaxSpeedMetersPerSecond = .5;
-    public static final double kMaxAngularSpeedRadiansPerSecond = .25 * Math.PI; // 1 rotation/sec
-    // Slow mode multiplier (hold bumper)
-    public static final double kSlowModeMultiplier = 0.25;
-    // Field-oriented drive enabled by default
-    public static final boolean kFieldOrientedDefault = true;
+    public static final double MAX_SPEED_METERS_PER_SECOND = .5;
+    public static final double MAX_ANGULAR_SPEED_RADIANS_PER_SECOND = .25 * Math.PI; // 1 rotation/sec
+    public static final boolean FIELD_ORIENTED_DEFAULT = true;
 
 
     private final SwerveDrive swerveDrive;
-    private boolean fieldOriented = kFieldOrientedDefault;
+    private boolean fieldOriented = FIELD_ORIENTED_DEFAULT;
 
     public DrivetrainSubsystem() {
         try {
             File swerveJsonDirectory = new File(Filesystem.getDeployDirectory(), "swerve");
-            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(kMaxSpeedMetersPerSecond);
+            swerveDrive = new SwerveParser(swerveJsonDirectory).createSwerveDrive(MAX_SPEED_METERS_PER_SECOND);
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize swerve drive from JSON config", e);
         }
@@ -57,8 +53,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
      */
     public void drive(double forwardPercent, double leftPercent, double rotationPercent) {
         swerveDrive.drive(
-                new Translation2d(forwardPercent * kMaxSpeedMetersPerSecond, leftPercent * kMaxSpeedMetersPerSecond),
-                rotationPercent * kMaxAngularSpeedRadiansPerSecond,
+                new Translation2d(forwardPercent * MAX_SPEED_METERS_PER_SECOND, leftPercent * MAX_SPEED_METERS_PER_SECOND),
+                rotationPercent * MAX_ANGULAR_SPEED_RADIANS_PER_SECOND,
                 fieldOriented,
                 false);
     }
