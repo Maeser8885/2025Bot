@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.parser.SwerveParser;
 
 import java.io.File;
@@ -100,5 +101,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Drive/Gyro Heading", swerveDrive.getYaw().getDegrees());
     SmartDashboard.putString("Drive/Pose",
         swerveDrive.getPose().getTranslation().toString());
+
+    for (SwerveModule module : swerveDrive.getModules()) {
+      String name = module.getConfiguration().name;
+      SmartDashboard.putNumber("Calibration/" + name + " Raw Abs", module.getRawAbsolutePosition());
+    }
   }
 }
